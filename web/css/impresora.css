@@ -1,0 +1,47 @@
+/* Estilos generales */
+*{font-family: Arial, Helvetica, sans-serif;}
+body {
+	font-size: 0.7em;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	background-color: #2575AF;
+}
+
+a{
+	text-decoration: none;
+}
+img{
+border: 0;
+}
+body#impresion{
+	background-color:#FFFFFF;
+	margin:1cm;	
+}
+#windowFolder{
+	color:#000000;border:#000000 solid 1px;
+	width: 15cm;
+}
+.folder table{
+	border:#000000 solid 1px;
+/*	width:15cm;
+	height:3cm;*/
+}
+
+/* FORMULARIO GENERAL */
+form table tr td, form table tr th  {
+	line-height: 18px;
+	padding-right: 8px;
+	padding-bottom: 0px;
+	padding-left: 8px;
+}
+
+/* TABLA GENERAL */
+table {
+	border-collapse: collapse;
+	border-spacing:0px;
+	text-align: left;
+}
+td{
+	vertical-align:top;
+}

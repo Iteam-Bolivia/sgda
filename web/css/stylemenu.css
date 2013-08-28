@@ -1,0 +1,70 @@
+/* LISTADO MENU */
+ul#menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul#menu li {
+	font-size: 0.90em !important;
+	float: left;
+	display: block;
+	clear: both;
+}
+
+ul#menu li a {
+	font-size: 1.00em;
+	color: #e4d5e3;
+	line-height: 29px;
+	text-decoration: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul#menu li a:hover {
+	color: #fff;
+}
+
+ul#menu li .pagAct {
+	color: #fff;
+	font-weight: 700;
+	background: url(../lib/bg_active_menu.gif) no-repeat;
+}
+
+/* LISTADO SUBMENU */
+ul.submenu {
+	clear: both;
+	margin: 0;
+	margin-left: 30px;
+	padding: 0;
+	list-style: none;
+}
+
+ul.submenu li {
+	float: left;
+	display: block;
+	clear: both;
+}
+
+ul.submenu li a {
+	display: block;
+	font-size: 0.90em !important;
+	color: #fff !important;
+	line-height: 24px !important;
+	text-decoration: none;
+	padding-left: 10px !important;
+}
+
+ul.submenu li a:hover {
+	color: #e4d5e3 !important;
+}
+
+ul.submenu li .suboptAct {
+	color: #fff !important;
+	font-weight: 700 !important;
+	background: url(../lib/bullet_01.gif) no-repeat left;
+}
+
+.clear {
+	clear: both;
+}
