@@ -1,0 +1,579 @@
+<?php
+
+/**
+ * nuevoExpedienteController
+ *
+ * @package
+ * @author lic. castellon
+ * @copyright ITEAM
+ * @version $Id$ 2012
+ * @access public
+ */
+class nuevoExpedienteController Extends baseController {
+
+    function index() {
+        $series = new series();
+        $usuario = new usuario();
+        $adm = $usuario->esAdm();
+        $this->registry->template->exp_id = "";
+        if (isset($_REQUEST['ser_id']))
+            $this->registry->template->ser_id = $_REQUEST['ser_id'];
+        else 
+            $this->registry->template->ser_id = 0;
+        
+
+        $this->registry->template->PATH_B = $series->loadMenu($adm, "");
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+        $this->registry->template->PATH_EVENT = "add";
+        $this->registry->template->GRID_SW = "false";
+        $this->registry->template->PATH_J = "jquery";
+        $this->menu = new menu();
+        $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
+        $this->registry->template->men_titulo = $this->liMenu;
+        $this->registry->template->show('headerG');
+        $this->registry->template->show('nuevoExpedienteg.tpl');
+        $this->registry->template->show('footer');
+    }
+
+    function add() {
+
+	$_SESSION ['SER_ID'] = 1;
+        $usuario = new usuario();
+        $adm = $usuario->esAdm();
+        $this->series = new series();
+        $contenedor = new contenedor();
+        $this->registry->template->nur = $_SESSION['NUR'];
+        //$this->registry->template->series = $this->series->obtenerSelect($adm, $_SESSION['USU_ID']);
+        $this->registry->template->series = $this->series->obtenerSelectDefault($_SESSION['USU_ID'], $_SESSION['SER_ID']);
+
+
+        $this->registry->template->contenedores = $contenedor->loadSelect($_SESSION['USU_ID']);
+        $this->registry->template->suc_id = "";
+        $this->registry->template->exp_id = "";
+        $this->registry->template->exp_nombre = "";
+        $this->registry->template->exp_descripcion = "";
+        $this->registry->template->exp_codigo = "";
+        $this->registry->template->exf_fecha_exi = date("Y-m-d");
+        $this->registry->template->exf_fecha_exf = "";
+        $this->registry->template->exp_ocf = "";
+
+        $seccion = new seccion();
+        $this->registry->template->sec_id = $seccion->selectSeccion($_SESSION['USU_ID'], $_SESSION['UNI_ID']);
+
+        $sopfisico = new sopfisico();
+        $this->registry->template->sof_id = $sopfisico->obtenerSelect();
+        $this->registry->template->exp_nroejem = "1";
+        $this->registry->template->exp_tomovol = "1";
+
+        // Include dynamic fields
+        $expcampo = new expcampo();
+        //$ser_id = $this->series->obtenerIdSerie($_SESSION['SERIE_NAME']);
+        $ser_id = $_SESSION['SER_ID'];
+        $this->registry->template->expcampo = $expcampo->obtenerSelectCampos($ser_id);
+
+        // Project
+        $proyecto = new proyecto();
+        $this->registry->template->lista_tramos = $proyecto->obtenerCheck();
+
+        //palabras clave
+        $palclave = new palclave();
+        $this->registry->template->pac_nombre = $palclave->listaPC('Expediente');
+
+        $this->registry->template->titulo = "Nuevo";
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+        $this->registry->template->PATH_EVENT = "save";
+        $this->registry->template->GRID_SW = "true";
+        $this->registry->template->PATH_J = "jquery-1.4.1";
+        $this->menu = new menu();
+        $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
+        $this->registry->template->men_titulo = $this->liMenu;
+
+        $this->registry->template->show('headerF');
+        $this->registry->template->show('nuevoExpediente.tpl');
+        $this->registry->template->show('footer');
+    }
+
+    function edit() {
+        header("Location: " . PATH_DOMAIN . "/nuevoExpediente/view/" . $_REQUEST["exp_id"] . "/");
+    }
+
+    function view() {
+        if(! VAR3){ die("Error del sistema 404"); }
+        $this->expediente = new tab_expediente();
+        $this->series = new series();
+        $contenedor = new contenedor();
+        $rows = $this->expediente->dbselectByField("exp_id", VAR3);
+        if(! $rows){ die("Error del sistema 404"); }
+        if (empty($rows)) {
+            echo 'Error: No existe el expediente';
+            die;
+        }
+
+        $this->registry->template->series = $this->series->obtenerSelectDefault($_SESSION['USU_ID'], $_SESSION['SER_ID']);
+        $row = $rows[0];
+        $this->registry->template->exp_id = $row->exp_id;
+
+        // Save expnur data
+        $this->expnur = new tab_expnur();
+        $rows = $this->expnur->dbselectByField("exp_id", VAR3);
+        $this->expnur = $rows[0];
+        $exn_nur = $this->expnur->exn_nur;
+        $this->registry->template->nur = $exn_nur;
+
+        $exc = new Tab_expcontenedor();
+        $row_con = $exc->dbselectBy2Field("exp_id", VAR3, "exc_estado", 1);
+        $suc_id = "";
+        if (!is_null($row_con) && count($row_con) > 0)
+            $suc_id = $row_con[0]->suc_id;
+
+        $eus = new Tab_expusuario();
+        $row_eus = $eus->dbselectBy2Field("exp_id", VAR3, "eus_estado", 1);
+        $usu_id = $_SESSION['USU_ID'];
+        if (!is_null($row_eus) && count($row_eus) > 0)
+            $usu_id = $row_eus[0]->usu_id;
+
+//        $this->series = new series();
+//        $this->registry->template->series = $this->series->getTitle($row->ser_id) . '<input name="ser_id" id="ser_id" type="hidden"
+//		value="' . $row->ser_id . '" />';
+        $tab_subcontenedor = new tab_subcontenedor();
+        $row_suc = $tab_subcontenedor->dbselectByField("suc_id", $suc_id);
+
+        $this->registry->template->contenedores = $contenedor->loadSelect($usu_id, $row_suc[0]->con_id);
+        $subcontenedor = new subcontenedor();
+        $this->registry->template->suc_id = $subcontenedor->selectSuc($suc_id, $row_suc[0]->con_id);
+        $this->registry->template->exp_nombre = $row->exp_nombre;
+        $this->registry->template->exp_descripcion = $row->exp_descripcion;
+        $this->registry->template->exp_codigo = $row->exp_codigo;
+        $this->registry->template->exp_ocf = $row->exp_ocf;
+
+        $seccion = new seccion();
+        $this->registry->template->sec_id = $seccion->selectSeccion($_SESSION['USU_ID'], $_SESSION['UNI_ID'], $row_eus[0]->sec_id);
+
+        $sopfisico = new sopfisico();
+        $this->registry->template->sof_id = $sopfisico->obtenerSelect($row->sof_id);
+        $this->registry->template->exp_nroejem = $row->exp_nroejem;
+        $this->registry->template->exp_tomovol = $row->exp_tomovol;
+
+        $exf = new Tab_expfondo();
+        $row_exf = $exf->dbselectBy2Field("exp_id", VAR3, "exf_estado", 1);
+        $this->registry->template->exf_fecha_exi = $row_exf[0]->exf_fecha_exi;
+        $this->registry->template->exf_fecha_exf = $row_exf[0]->exf_fecha_exf;
+
+
+        // Include dynamic fields
+        $expcampo = new expcampo();
+        //$ser_id = $this->series->obtenerIdSerie($_SESSION['SERIE_NAME']);
+        $ser_id = $_SESSION['SER_ID'];
+        $this->registry->template->expcampo = $expcampo->obtenerSelectCamposEdit($ser_id, VAR3);
+
+
+        $proyecto = new proyecto();
+        $this->registry->template->lista_tramos = $proyecto->obtenerCheck($row->exp_id);
+
+        //palabras clave
+        $palclave = new palclave();
+        $this->registry->template->pac_nombre = $palclave->listaPC('Expediente');
+
+        $this->registry->template->titulo = "Editar";
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+        $this->registry->template->PATH_EVENT = "update";
+        $this->registry->template->GRID_SW = "true";
+        $this->registry->template->PATH_J = "jquery-1.4.1";
+        $this->menu = new menu();
+        $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
+        $this->registry->template->men_titulo = $this->liMenu;
+        $this->registry->template->show('headerF');
+        $this->registry->template->show('nuevoExpediente.tpl');
+        $this->registry->template->show('footer');
+    }
+
+    function add2() {
+        header("Location: " . PATH_DOMAIN . "/nuevoExpediente/addview/" . $_REQUEST["ser_id"] . "/");
+    }
+
+    function addview() {
+        if(! VAR3){ die("Error del sistema 404"); }
+        $this->expediente = new tab_expediente();
+        $contenedor = new contenedor();
+        $rows = $this->expediente->dbselectByField("exp_id", VAR3);
+        //if(! $rows){ die("Error del sistema 404"); }
+        if (empty($rows)) {
+            echo 'Error: No existe el expediente';
+            die;
+        }
+        $row = $rows[0];
+        $this->registry->template->exp_id = $row->exp_id;
+
+        $exc = new Tab_expcontenedor();
+        $row_con = $exc->dbselectBy2Field("exp_id", VAR3, "exc_estado", 1);
+        $con_id = "";
+        if (!is_null($row_con) && count($row_con) > 0)
+            $con_id = $row_con[0]->con_id;
+
+        $eus = new Tab_expusuario();
+        $row_eus = $eus->dbselectBy2Field("exp_id", VAR3, "eus_estado", 1);
+        $usu_id = $_SESSION['USU_ID'];
+        if (!is_null($row_eus) && count($row_eus) > 0)
+            $usu_id = $row_eus[0]->usu_id;
+
+        $this->series = new series();
+        $this->registry->template->series = $this->series->getTitle($row->ser_id) . '<input name="ser_id" id="ser_id" type="hidden"
+		value="' . $row->ser_id . '" />';
+        $this->registry->template->contenedores = $contenedor->loadSelect($usu_id, $con_id);
+        $this->registry->template->exp_nombre = $row->exp_nombre;
+        $this->registry->template->exp_descripcion = $row->exp_descripcion;
+        $this->registry->template->exp_codigo = $row->exp_codigo;
+        $this->registry->template->exp_ocf = $row->exp_ocf;
+
+        $exf = new Tab_expfondo();
+        $row_exf = $exf->dbselectBy2Field("exp_id", VAR3, "exf_estado", 1);
+        $this->registry->template->exf_fecha_exi = $row_exf[0]->exf_fecha_exi;
+        $this->registry->template->exf_fecha_exf = $row_exf[0]->exf_fecha_exf;
+        $this->registry->template->titulo = "Editar";
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+        $this->registry->template->PATH_EVENT = "update";
+        $this->registry->template->GRID_SW = "true";
+        $this->registry->template->PATH_J = "jquery-1.4.1";
+        $this->menu = new menu();
+        $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
+        $this->registry->template->men_titulo = $this->liMenu;
+        $this->registry->template->show('headerF');
+        $this->registry->template->show('nuevoExpediente.tpl');
+        $this->registry->template->show('footer');
+    }
+
+    function save() {
+
+        $hoy = date("Y-m-d");
+        $this->expediente = new tab_expediente();
+        $this->expediente->setRequest2Object($_REQUEST);
+        $this->expediente->setExp_id($_REQUEST['exp_id']);
+        $this->expediente->setSer_id($_REQUEST['ser_id']);
+        $this->expediente->setExp_nombre($_REQUEST['exp_nombre']);
+        $this->expediente->setExp_descripcion($_REQUEST['exp_descripcion']);
+        $this->expediente->setExp_codigo("0");
+        $this->expediente->setExp_fecha_exi($_REQUEST['exf_fecha_exi']);
+        $this->expediente->setExp_fecha_exf(NULL);
+        $this->expediente->setExp_orden("0");
+        $this->expediente->setSof_id($_REQUEST['sof_id']);
+        $this->expediente->setExp_nroejem($_REQUEST['exp_nroejem']);
+        $this->expediente->setExp_tomovol($_REQUEST['exp_tomovol']);
+        $this->expediente->setExp_fecha_crea(date("Y-m-d"));
+        $this->expediente->setExp_ocf($_REQUEST['exp_ocf']);
+        $this->expediente->setExp_estado(1);
+        $this->expediente->setTrm_id(1);
+        $exp_id = $this->expediente->insert();
+
+        // Save expnur data
+        $this->expnur = new tab_expnur();
+        $this->expnur->setExp_id($exp_id);
+        $this->expnur->setExn_nur($_REQUEST['nur']);
+        $this->expnur->setExn_pass('0');
+        $this->expnur->setExn_user($_SESSION['USU_ID']);
+        $this->expnur->setExn_estado(1);
+        $this->expnur->insert();
+
+        // Update expediente code
+        $series = new series();
+        $this->expediente->setExp_id($exp_id);
+        $this->expediente->setExp_codigo($series->obtenerCodigoSerie($_REQUEST['ser_id']) . DELIMITER . $exp_id);
+        $this->expediente->update();
+
+        // Save data dynamic
+        $this->expcampo = new expcampo();
+        $row = $this->expcampo->obtenerCampos($_REQUEST['ser_id']);
+        if (count($row) > 0) {
+            foreach ($row as $val) {
+                if ($val->ecp_tipdat == 'Lista') {
+                    $ecp_id = $val->ecp_id;
+                    $ecp_valor = $_REQUEST[$ecp_id];
+                    // Save data dynamic
+                    $this->expcampovalor = new tab_expcampovalor();
+                    $this->expcampovalor->setExp_id($exp_id);
+                    $this->expcampovalor->setEcp_id($ecp_id);
+                    // Set value of list
+                    $this->expcampovalor->setEcl_id($ecp_valor);
+                    //
+                    $this->expcampovalor->setEcv_valor($ecp_valor);
+                    $this->expcampovalor->setEcv_estado(1);
+                    $this->expcampovalor->insert();
+                } else {
+                    $ecp_id = (string) $val->ecp_id;
+                    $ecp_valor = $_REQUEST[$ecp_id];
+                    // Save data dynamic
+                    $this->expcampovalor = new tab_expcampovalor();
+                    $this->expcampovalor->setExp_id($exp_id);
+                    $this->expcampovalor->setEcp_id($ecp_id);
+                    $this->expcampovalor->setEcv_valor($ecp_valor);
+                    $this->expcampovalor->setEcv_estado(1);
+                    $this->expcampovalor->insert();
+                }
+            }
+        }
+        // Save expfondo data
+        $texf = new Tab_expfondo();
+        $texf->exf_estado = 1;
+        $texf->exf_fecha_crea = $hoy;
+        $texf->exf_fecha_exi = $hoy;
+        $texf->exf_fecha_exf = date("Y-m-d");
+        $texf->exf_usu_crea = $_SESSION['USU_ID'];
+        $texf->exp_id = $exp_id;
+        $usuario = new usuario();
+        $fon_id = $usuario->getFon_id($_SESSION['USU_ID']);
+        $texf->fon_id = $fon_id;
+        $texf->exf_estado = '1';
+        $texf->insert();
+
+        // Save expusuario data
+        $this->expusuario = new expusuario();
+        $this->expusuario->saveExp($exp_id, $_SESSION['USU_ID'], $_REQUEST['sec_id']);
+
+        // Save expcontenedor data
+        $con = new expcontenedor();
+        $con->saveExpCont($_REQUEST['suc_id'], $exp_id);
+
+        // Save proyecto list data (tramos)
+        if (isset($_REQUEST['lista_tramo'])) {
+            $proyectos = $_REQUEST['lista_tramo'];
+            foreach ($proyectos as $proyecto) {
+                $exp = new tab_expproyecto();
+                $exp->setExp_id($exp_id);
+                $exp->setPry_id($proyecto);
+                $exp->setEpp_estado(1);
+                $exp->insert();
+            }
+        }
+
+        //Guardar palabra clave
+
+        if (isset($_REQUEST['pac_nombre'])) {
+            $this->palclave = new tab_palclave();
+            $pac_nombre = trim($_REQUEST['exp_descripcion']);
+            $sql = "select pac_id from tab_palclave where pac_estado = 1 AND pac_nombre='" . $pac_nombre . "'";
+            $row = $this->palclave->dbSelectBySQL($sql);
+            if (count($row) == 0) {
+
+                //$this->palclave->setPac_id();
+                $this->palclave->setPac_nombre(trim($_REQUEST['exp_descripcion']));
+                $this->palclave->setPac_formulario('Expediente');
+                $this->palclave->setPac_estado(1);
+                $this->palclave->insert();
+            }
+        }
+
+        //Header("Location: " . PATH_DOMAIN . "/nuevoExpediente/");
+        Header("Location: " . PATH_DOMAIN . "/nuevoExpediente/index/");
+    }
+
+    function update() {
+        $this->expediente = new tab_expediente();
+        $this->expediente->setRequest2Object($_REQUEST);
+
+        $rows = $this->expediente->dbselectByField("exp_id", $_REQUEST['exp_id']);
+        $this->expediente = $rows[0];
+        $id = $this->expediente->exp_id;
+        $exp_id = $this->expediente->exp_id;
+        $this->expediente->setExp_id($_REQUEST['exp_id']);
+        $this->expediente->setSer_id($_REQUEST['ser_id']);
+        $this->expediente->setExp_nombre($_REQUEST['exp_nombre']);
+        $this->expediente->setExp_descripcion($_REQUEST['exp_descripcion']);
+        $this->expediente->setExp_codigo($_REQUEST['exp_codigo']);
+        $this->expediente->setExp_fecha_exi($_REQUEST['exf_fecha_exi']);
+        $this->expediente->setExp_fecha_exf($_REQUEST['exf_fecha_exf']);
+        $this->expediente->setSof_id($_REQUEST['sof_id']);
+        $this->expediente->setExp_nroejem($_REQUEST['exp_nroejem']);
+        $this->expediente->setExp_tomovol($_REQUEST['exp_tomovol']);
+        $this->expediente->setExp_ocf($_REQUEST['exp_ocf']);
+        $this->expediente->update();
+
+        // Save expnur data
+        $this->expnur = new tab_expnur();
+        $rows = $this->expnur->dbselectByField("exp_id", $_REQUEST['exp_id']);
+        $this->expnur = $rows[0];
+        $exn_id = $this->expnur->exn_id;
+
+        $this->expnur->setExn_id($exn_id);
+        $this->expnur->setExp_id($exp_id);
+        $this->expnur->setExn_nur($_REQUEST['nur']);
+        $this->expnur->setExn_pass('0');
+        $this->expnur->setExn_user($_SESSION['USU_ID']);
+        $this->expnur->setExn_estado(1);
+        $this->expnur->update();
+
+        // Update data dynamic
+        $expcampo = new expcampo();
+        $row = $expcampo->obtenerCampos($_REQUEST['ser_id']);
+        if(count($row)>0){
+        foreach ($row as $val) {
+            if ($val->ecp_tipdat == 'Lista') {
+                $ecp_id = $val->ecp_id;
+                $ecp_valor = $_REQUEST[$ecp_id];
+                // Find ecv_id
+                $expcampovalor = new expcampovalor();
+                $ecv_id = $expcampovalor->obtenerIdCampoValorporExpediente($ecp_id, $exp_id);
+                // Save data dynamic                
+                $this->expcampovalor = new tab_expcampovalor();
+                $this->expcampovalor->setEcv_id($ecv_id);
+                $this->expcampovalor->setExp_id($exp_id);
+                $this->expcampovalor->setEcp_id($ecp_id);
+                // Set value of list
+                $this->expcampovalor->setEcl_id($ecp_valor);
+                //
+                $this->expcampovalor->setEcv_valor($ecp_valor);
+                $this->expcampovalor->setEcv_estado(1);
+                $this->expcampovalor->update();
+            } else {
+                // Find ecv_id
+                $ecp_id = $val->ecp_id;
+                $expcampovalor = new expcampovalor();
+                $ecv_id = $expcampovalor->obtenerIdCampoValorporExpediente($ecp_id, $exp_id);
+                $ecp_id = (string) $val->ecp_id;
+                $ecp_valor = $_REQUEST[$ecp_id];
+                // Save data dynamic
+                $this->expcampovalor = new tab_expcampovalor();
+                $this->expcampovalor->setEcv_id($ecv_id);
+                $this->expcampovalor->setExp_id($exp_id);
+                $this->expcampovalor->setEcp_id($ecp_id);
+                $this->expcampovalor->setEcv_valor($ecp_valor);
+                $this->expcampovalor->setEcv_estado(1);
+                $this->expcampovalor->update();
+            }
+        }
+        }
+        $exp = new expproyecto();
+        $exp->delete($id);
+        if (isset($_REQUEST['lista_tramo'])) {
+            $proyectos = $_REQUEST['lista_tramo'];
+            foreach ($proyectos as $proyecto) {
+                // damos de baja todas las ocurrencias
+                // damos de alta las que se encuentran en $series o insertamos en caso de q no existan
+                $use_id = $exp->existe($proyecto, $id);
+                if ($use_id != null) {
+                    //update
+                    $texp = new tab_expproyecto();
+                    $texp->setEpp_id($ext_id);
+                    $texp->setExp_id($id);
+                    $texp->setPry_id($proyecto);
+                    $texp->setEpp_estado('1');
+                    $texp->update();
+                } else {
+                    //insert
+                    $texp = new tab_expproyecto();
+                    $texp->setExp_id($id);
+                    $texp->setPry_id($proyecto);
+                    $texp->setEpp_estado('1');
+                    $texp->insert();
+                }
+            }
+        }
+
+
+        $tcon = new tab_expcontenedor();
+        $row_con = $tcon->dbselectByField("exp_id", $_REQUEST['exp_id']);
+        if (count($row_con) > 0) {
+            $tcon = $row_con[0];
+            $tcon->suc_id = $_REQUEST['suc_id'];
+            $tcon->exc_estado = 1;
+            $tcon->update();
+        } else {
+            $con = new expcontenedor();
+            $con->saveExpCont($_REQUEST['suc_id'], $_REQUEST['exp_id']);
+        }
+
+        $expusuario = new tab_expusuario();
+        $row_con = $expusuario->dbselectByField("exp_id", $_REQUEST['exp_id']);
+        if (count($row_con) > 0) {
+            $expusuario = $row_con[0];
+            $expusuario->sec_id = $_REQUEST['sec_id'];
+            $expusuario->eus_estado = 1;
+            $expusuario->update();
+        } else {
+            $expusuario = new expusuario();
+            $expusuario->saveExp($_REQUEST['exp_id'], $_SESSION['USU_ID'], $_REQUEST['sec_id']);
+        }
+
+        //Guardar palabra clave
+
+        if (isset($_REQUEST['pac_nombre'])) {
+            $this->palclave = new tab_palclave();
+            $pac_nombre = trim($_REQUEST['exp_descripcion']);
+            $sql = "select pac_id from tab_palclave where pac_estado = 1 AND pac_nombre='" . $pac_nombre . "'";
+            $row = $this->palclave->dbSelectBySQL($sql);
+            if (count($row) == 0) {
+
+                //$this->palclave->setPac_id();
+                $this->palclave->setPac_nombre(trim($_REQUEST['exp_descripcion']));
+                $this->palclave->setPac_formulario('Expediente');
+                $this->palclave->setPac_estado(1);
+                $this->palclave->insert();
+            }
+        }
+
+        //Header("Location: " . PATH_DOMAIN . "/nuevoExpediente/");
+        Header("Location: " . PATH_DOMAIN . "/nuevoExpediente/index/");
+    }
+
+    function verifSeries() {
+        $use = new usu_serie();
+        echo $use->tieneSeries($_SESSION['USU_ID']);
+    }
+
+    function verifCodigo() {
+        $exp_cod = $_REQUEST['exp_codigo'];
+        $ser_id = $_REQUEST['ser_id'];
+        $exp = new expediente();
+        $msg = "OK";
+        if ($exp_cod != '' && $msg != '' && $exp->existeCodigo($exp_cod, $ser_id)) {
+            $msg = "El c&oacute;digo ya existe en esta serie";
+        }
+        echo $msg;
+    }
+
+    function cierre_exp() {
+        $this->expediente = new Tab_expediente();
+        $this->expediente->setExp_id($_REQUEST['exp_id']);
+        $this->expediente->setExp_fecha_exf(date("Y-m-d"));
+        $this->expediente->update();
+    }
+
+    // verifFechaFin
+    // Revisar codigo Fred For
+    function verifFechaFin() {
+        $expediente = new tab_expediente ();
+        $exp_id = $_POST["Exp_id"];
+
+        $sql = "SELECT exp_fecha_exf FROM tab_expediente WHERE exp_id='$exp_id'";
+        $row = $expediente->dbselectBySQL($sql);
+        if ($row[0]->exp_fecha_exf) {
+            echo 'El expediente fue cerrado';
+        } else {
+            echo '';
+        }
+    }
+    
+    
+    function verifNurTipoDoc(){
+        $tab_expediente = new Tab_expediente();
+        $nur = trim($_POST['Nur']);
+        //$exp_ocf = $_POST['Exp_ocf'];
+        $sql = "SELECT exn.exn_id,exn.exn_pass,exn.exn_user,exn.exn_nur,exn.exn_estado,exn.exp_id,exp.exp_ocf
+FROM tab_expnur AS exn INNER JOIN tab_expediente AS exp ON exn.exn_id = exp.exp_id
+WHERE exn.exn_nur = '$nur' AND exp.exp_ocf = 'Original'";
+        $row = $tab_expediente->dbSelectBySQL($sql);
+        
+        if(count($row)>0){
+            echo 'El NUR/NURI ya esta en formato original';
+        }else{
+            echo '';
+        }
+        
+        
+    }
+
+}
+
+?>
