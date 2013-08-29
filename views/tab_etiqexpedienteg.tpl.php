@@ -21,7 +21,7 @@
         dataType: 'json',
         colModel : [
             {display: 'Id', name : 'exp_id', width : 40, sortable : true, align: 'center'},
-            {display: 'Serie', name : 'ser_categoria', width : 150, sortable : true, align: 'left'},
+            {display: 'Series', name : 'ser_categoria', width : 150, sortable : true, align: 'left'},
             {display: 'Codigo', name : 'exp_codigo', width : 120, sortable : true, align: 'left'},
             {display: 'Nombre', name : 'exp_titulo', width : 350, sortable : true, align: 'left'},
             {display: 'Fecha inicio', name : 'exp_fecha_exi', width : 60, sortable : true, align: 'center'},
@@ -68,8 +68,9 @@
         buttons : [
             {name: 'Borrar', bclass: 'delete', onpress : test},{separator: true},
             {name: 'Borrar Todo', bclass: 'delete', onpress : test},{separator: true},
+            {name: 'Marbetes', bclass: 'print', onpress : test},{separator: true},
             {name: 'Cajas', bclass: 'print', onpress : test},{separator: true},
-            {name: 'Caratulas', bclass: 'print', onpress : test},{separator: true},
+            {name: 'Caratulas', bclass: 'print', onpress : test},{separator: true},            
             {name: 'Folders', bclass: 'print', onpress : test}<?php echo ($PATH_B != '' ? ',' . $PATH_B : '') ?>
         ],
         searchitems : [
