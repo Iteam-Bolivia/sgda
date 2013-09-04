@@ -32,6 +32,14 @@ FROM tab_prestamos AS p
         $num = $this->prestamo->countBySQL($sql);
         return $num;
     }
+    
+    function ObtenerPrestamos($id){
+        $tab_docprestamo=new Tab_docprestamo();
+        $sql="select* from tab_docprestamo where spr_id=$id";
+        $dato=$tab_docprestamo->dbSelectBySQL($sql);
+        return $dato;
+        
+    }
 
 }
 

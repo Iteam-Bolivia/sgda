@@ -9,21 +9,24 @@
  * @version $Id$ 2012
  * @access public
  */
-class tab_solicitud_prestamo extends db {
+class Tab_solprestamo extends db {
 
     var $spr_id;
     var $spr_tipo;
     var $spr_fecha;
     var $uni_id;
+    var $usu_id;
+    var $usur_id; 
+    var $usua_id;
     var $spr_docsolen;
     var $int_id;
     var $spr_solicitante;
     var $spr_email;
     var $spr_tel;
     var $unid_id;
-    var $spr_fecini;
-    var $spr_fecfin;
+    var $spr_fecdev;
     var $spr_fecren;
+    var $spr_fecent;
     var $spr_obs;
     var $spr_estado;
 
@@ -54,6 +57,14 @@ class tab_solicitud_prestamo extends db {
     function setSpr_fecha($spr_fecha) {
         $this->spr_fecha = $spr_fecha;
     }
+        function getSpr_fecdev() {
+        return $this->spr_fecdev;
+    }
+
+    function setSpr_fecdev($spr_fecdev) {
+        $this->spr_fecdev = $spr_fecdev;
+    }
+    
 
     function getUni_id() {
         return $this->uni_id;
@@ -61,6 +72,28 @@ class tab_solicitud_prestamo extends db {
 
     function setUni_id($uni_id) {
         $this->uni_id = $uni_id;
+    }
+        function getUsu_id() {
+        return $this->$usu_id;
+    }
+
+    function setUsu_id($usu_id) {
+        $this->usu_id = $usu_id;
+    }
+
+       function getUsua_id() {
+        return $this->usua_id;
+    }
+
+    function setUsua_id($usua_id) {
+        $this->usua_id = $usua_id;
+    }
+           function getUsur_id() {
+        return $this->usur_id;
+    }
+
+    function setUsur_id($usur_id) {
+        $this->usur_id = $usur_id;
     }
 
     function getSpr_docsolen() {
@@ -103,29 +136,14 @@ class tab_solicitud_prestamo extends db {
         $this->spr_tel = $spr_tel;
     }
 
-    function getUnid_id() {
-        return $this->unid_id;
+    function getSpr_fecent() {
+        return $this->spr_fecent;
     }
 
-    function setUnid_id($unid_id) {
-        $this->unid_id = $unid_id;
+    function setSpr_fecent($spr_fecent) {
+        $this->spr_fecent = $spr_fecent;
     }
 
-    function getSpr_fecini() {
-        return $this->spr_fecini;
-    }
-
-    function setSpr_fecini($spr_fecini) {
-        $this->spr_fecini = $spr_fecini;
-    }
-
-    function getSpr_fecfin() {
-        return $this->spr_fecfin;
-    }
-
-    function setSpr_fecfin($fec_fin) {
-        $this->fec_fin = $fec_fin;
-    }
 
     function getSpr_fecren() {
         return $this->spr_fecren;

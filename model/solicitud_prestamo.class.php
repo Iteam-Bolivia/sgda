@@ -9,11 +9,11 @@
  * @version $Id$ 2012
  * @access public
  */
-class solicitud_prestamo extends tab_solicitud_prestamo {
+class solicitud_prestamo extends tab_solprestamo {
 
     function __construct() {
         //parent::__construct();
-        $this->solicitud_prestamo = new tab_solicitud_prestamo();
+        $this->solicitud_prestamo = new Tab_solprestamo();
     }
 
     function obtenerSelect($default) {
@@ -41,7 +41,7 @@ class solicitud_prestamo extends tab_solicitud_prestamo {
 
     function count($default) {
         $uni_id = $_SESSION['UNI_ID'];
-        $serie = new Tab_solicitud_prestamo();
+        $serie = new tab_solprestamo();
         $num = 0;
         if ($default) {
             $sql = "SELECT count(spr_id)
@@ -57,6 +57,35 @@ class solicitud_prestamo extends tab_solicitud_prestamo {
         }
         $num = $serie->countBySQL($sql);
         return $num;
+    }
+      function count3($tipo, $value1) {
+        $prestamos = new tab_solprestamo ();
+        $num = 0;
+        $where = "";
+        if ($value1 != "") {
+            if ($tipo == 'spr_id')
+                $where = " and $tipo = '$value1' ";
+            else
+                $where = " and $tipo LIKE '%$value1%' ";
+        }
+        $sql = "select count(spr_id) as num
+		from tab_solprestamo
+		WHERE spr_estado = '1' $where ";
+        $num = $prestamos->countBySQL($sql);
+
+        return $num;
+    }
+    
+    function ObtenerUsuario($id_usuario){
+        $usuario=new tab_usuario();
+        $sql="select* from tab_usuario where usu_id=$id_usuario";
+        $dt=$usuario->dbSelectBySQL($sql);
+        foreach($dt as $row){
+            $nombre=$row->usu_nombres;
+            $apellido=$row->usu_apellidos;
+        }
+       $nombrecompleto=$nombre." ".$apellido;
+       return $nombrecompleto;
     }
 
 }

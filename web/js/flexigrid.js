@@ -7,9 +7,9 @@
  *
  * $Date: 2008-07-14 00:09:43 +0800 (Tue, 14 Jul 2008) $
  */
- 
+
 (function($){
-		  
+		
     $.addFlex = function(t,p)
     {
 
@@ -413,7 +413,8 @@
                     p.total = +$('rows total',data).text();
                 else
                     p.total = data.total;
-					
+                //$("#d_cantidad").val(p.total)
+				//document.getElementById("d_cantidad").innerHTML=p.total;	
                 if (p.total==0)
                 {
                     $('tr, a, td, div',t).unbind();

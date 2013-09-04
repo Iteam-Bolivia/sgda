@@ -257,9 +257,9 @@ pading-bottom: 0;*/
 
 /* Inicio modified-castellon */
 #contentIn0 {
-	float: right;
+	float: left;
 	overflow: hidden;
-	width: 88%;          
+	width: 100%;          
 	padding-right: 0px;  /*15px*/
         padding-left: 0px;  /*15px*/
         padding-top: 0px;  /*15px*/
@@ -296,9 +296,10 @@ pading-bottom: 0;*/
 /* Fin modified-iteam */
 
 #boxMenu {
-	width: 190px;   /*235px*/
+	width: 990px;   /*235px*/
 	margin-bottom: 12px;  /*12px*/
 	background-color: #E8EEF4;
+        /*border: 1px solid red;*/
 }
 
 #boxMenu .boxMenutop {
@@ -307,15 +308,15 @@ pading-bottom: 0;*/
 	text-align: left;
 	/*background: url(../lib/bg_menu_top.gif) no-repeat top;*/
 	/*width: 230px;*/
-	width: 60%;  /*100%*/
-	padding: 0px;
+	width:990px;  /*100%*/
+	padding: 0px;height: 45px
 }
 
 /* menu4 */
 #dlmenu {
-	height: 18em;
-	margin-bottom: 300px;
-	margin-left: 5px;
+	
+	
+	margin-left: 0px;
 	margin-right: 0;
 	margin-top: 5px;
 	padding: 0px;
@@ -347,7 +348,7 @@ pading-bottom: 0;*/
 	border-top-style: solid;
 	border-top-width: thin;
 	margin: 0px;
-	width: 150px;  /*223px*/
+	   /* freddy */ width: 100%;  /*223px*/
 	padding: 0px;
 	list-style-type: none;
 	position: absolute;
@@ -361,7 +362,7 @@ pading-bottom: 0;*/
 }
 
 #menu4 li {
-	text-align: left;
+	text-align: center;
 	display: block;
 	margin-bottom: 0;
 	margin-left: 0;
@@ -374,6 +375,8 @@ pading-bottom: 0;*/
 	position: relative;
 	z-index: 100;
 	border: 1px solid #C1D5E8;
+        /* freddy */float:left;width: 135px
+            
 }
 
 #menu4 dl a {
@@ -381,13 +384,14 @@ pading-bottom: 0;*/
 	text-decoration: none;
 	height: 20px;
 	padding-bottom: 0;
-	padding-left: 10px;
+	padding-left: 0;
 	padding-right: 0;
-	padding-top: 8px;
+	padding-top: 8px
 }
 
 #menu4 li dd,#menu4 li a td dl dd {
 	display: none;
+      
 }
 
 #menu4 li:hover dl dt a,#menu4 li dl dt a:hover,#menu4 li a:hover td dt a,#menu4 li td dt a:hover,#menu4 li:hover dl.Act dt a,#menu4 li dl.Act dt a:hover,#menu4 li a:hover td dl.Act dt a,#menu4 li td dl.Act dt a:hover
@@ -402,7 +406,7 @@ pading-bottom: 0;*/
 	background-repeat: no-repeat;
 	color: #224268;
 	padding-bottom: 0;
-	padding-left: 10px;
+	padding-left: 0px;
 	padding-right: 0;
 	padding-top: 8px;
 	font-weight: bold;
@@ -419,7 +423,7 @@ pading-bottom: 0;*/
 	background-repeat: no-repeat;
 	color: #00004A;
 	padding-bottom: 0;
-	padding-left: 10px;
+	padding-left: 0px;
 	padding-right: 0;
 	padding-top: 8px;
 	font-weight: bold;
@@ -518,7 +522,7 @@ margin-top:-4px;*/
 	margin-left: 0;
 	margin-right: 0;
 	margin-top: 0;
-	width: 150px;  /*223px*/
+	width: 135px;  /*223px*/
 }
 /* End modified-castellon */
 
@@ -1448,6 +1452,9 @@ a.linkCinco:hover {
 .flexigrid div.fbutton .coins {
 	background: url(flexigrid/images/coins.png) no-repeat center left;
 }
+.flexigrid div.fbutton .devolt {
+	background: url(flexigrid/images/arrow_redo.png) no-repeat center left;
+}
 .flexigrid div.fbutton .ingreso {
 	background: url(flexigrid/images/coins_add.png) no-repeat center left;
 }
@@ -1500,7 +1507,9 @@ a.linkCinco:hover {
 .flexigrid div.fbutton .agua {
 	background: url(flexigrid/images/agua.png) no-repeat center left;
 }
-
+.flexigrid div.fbutton .folder_table {
+	background: url(flexigrid/images/folder_table.png) no-repeat center left;
+}
 /*  */
 /* fin FLEXIGRID */
 

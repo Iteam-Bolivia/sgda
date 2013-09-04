@@ -422,7 +422,8 @@
                     p.total = +$('rows total',data).text();
                 else
                     p.total = data.total;
-
+                    $("#d_cantidad").val(p.total);
+                    
                 if (p.total==0)
                 {
                     $('tr, a, td, div',t).unbind();
