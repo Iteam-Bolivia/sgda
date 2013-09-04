@@ -29,7 +29,8 @@
             {display: 'Custodio', name : 'custodios', width : 100, sortable : true, align: 'center'}
         ],
         buttons : [
-            {name: 'Agregar', bclass: 'add', onpress : test}<?php echo ($PATH_A != '' ? ',' . $PATH_A : '') ?>
+            {name: 'Agregar', bclass: 'add', onpress : test} 
+            <?php echo ($PATH_A != '' ? ',' . $PATH_A : '') ?>
         ],
         searchitems : [
             {display: 'Id', name : 'exp_id'},
@@ -176,7 +177,29 @@
                 }
             }else{
                 alert("Seleccione un registro");
-            }  
+            }             
+        }else if (com=='Marbetes'){
+            if($('.trSelected div',grid).html()){ 
+                $('#tipo').val('MARBETES');
+                $("#exp_id").val($('.trSelected div',grid).html());
+                $.ajax({                    
+                    url: "<?php echo $PATH_DOMAIN ?>/etiqexpediente/getNroInicial/",
+                    type: "POST",
+                    data: 'Tipo='+$('#tipo').val()+ '&Exp_id='+$('#exp_id').val(),
+                    dataType: "json",
+                    success: function(datos){
+                        if(datos!=''){
+                            jQuery.each(datos, function(i,item){
+                                $('#nro_ini0').val(datos.nro_inicial);
+                                $('#nro_fin0').val(datos.nro_final);                                					    	   
+                            });                            
+                        }
+                        $('#dialogMarbetesNro').dialog('open');
+                    }
+                });
+            }else{
+                alert("Seleccione un registro");
+            }            
         }else if (com=='Cajas'){
             if($('.trSelected div',grid).html()){ 
                 $('#tipo').val('cajas');
@@ -260,7 +283,17 @@
     }    
 </script>
 
-<div id="dialogNro" title="N&uacute;mero correlativo de etiquetado: CAJAS" align="left">
+
+<div id="dialogMarbetesNro" title="N&uacute;mero correlativo etiquetado de documentos: MARBETES" align="left">
+    <form name="formNro" id="formNro">
+        <span id="alert">N&uacute;mero inicial de etiquetado: </span>
+        <input name="nro_ini0" id="nro_ini0" type="text" value="" size="5" maxlength="11" class="required" />
+        <br /><span>N&uacute;mero final de etiquetado: </span>
+        <input name="nro_fin0" id="nro_fin0" type="text" value="" size="5" maxlength="5" />
+    </form>
+</div>
+
+<div id="dialogNro" title="N&uacute;mero correlativo etiquetado: CAJAS" align="left">
     <form name="formNro" id="formNro">
         <span id="alert">N&uacute;mero inicial de etiquetado: </span>
         <input name="nro_ini" id="nro_ini" type="text" value="" size="5" maxlength="11" class="required" />
@@ -276,6 +309,39 @@
 
 <script>
     $(function() {
+        
+        $("#dialogMarbetesNro").dialog({
+            stackfix: true,
+            autoOpen: false,
+            height: 200,
+            width: 300,
+            modal: true,
+            buttons: {
+                Aceptar: function() {
+                    if($('#nro_ini0').val()){
+                        $('#nro_inicial').val($('#nro_ini0').val());                        
+                        if($('#nro_fin0').val()){
+                            $('#nro_final').val($('#nro_fin0').val());
+                            if($('#nro_fin0').val()<$('#nro_ini0').val()){
+                                alert("El número final no puede ser menor que el inicial");
+                            }else{
+                                $('#formImprimir').submit();
+                                $(this).dialog('close');
+                            }
+                        }else{
+                          $('#formImprimir').submit();
+                          $(this).dialog('close');
+                        }
+                    
+                     }else{
+                        alert("Ingrese el numero correlativo...");
+                    }
+                }
+            },
+            close: function() {
+            }
+        });        
+        
         $("#dialogNro").dialog({
             stackfix: true,
             autoOpen: false,
@@ -285,22 +351,19 @@
             buttons: {
                 Aceptar: function() {
                     if($('#nro_ini').val()){
-                    $('#nro_inicial').val($('#nro_ini').val());
-                    $('#nro_final').val($('#nro_fin').val());
-                    if($('#nro_fin').val()){
-                        if($('#nro_fin').val()<$('#nro_ini').val()){
-                            alert("El número final no puede ser menor que el inicial");
-                        }
-                        else{
-                            $('#formImprimir').submit();
-                            $(this).dialog('close');
-                        }
-                    }
-                    else{
-                      $('#formImprimir').submit();
-                      $(this).dialog('close');
-                    }
-                    
+                        $('#nro_inicial').val($('#nro_ini').val());                    
+                        if($('#nro_fin').val()){
+                            $('#nro_final').val($('#nro_fin').val());
+                            if($('#nro_fin').val()<$('#nro_ini').val()){
+                                alert("El número final no puede ser menor que el inicial");
+                            }else{
+                                $('#formImprimir').submit();
+                                $(this).dialog('close');
+                            }
+                        }else{
+                          $('#formImprimir').submit();
+                          $(this).dialog('close');
+                        }                    
                      }else{
                         alert("Ingrese el numero correlativo...");
                     }

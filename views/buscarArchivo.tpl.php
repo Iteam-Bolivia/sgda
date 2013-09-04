@@ -7,51 +7,7 @@
     <table width="100%" border="0">
         <caption class="titulo">BUSQUEDA DE EXPEDIENTES Y DOCUMENTOS</caption>        
         
-        <tr>
-            <td>Fondo o Subfondo:</td>
-            <td><select name="fon_id" type="text" id="fon_id" 
-                        title="Fondo o Subfondo del Expediente o Documento">
-                    <option value="">(seleccionar)</option>
-                    <?php echo $fon_id; ?>
-                </select></td>
-        </tr>   
 
-        <tr>
-            <td>Seccion o Subseccion:</td>
-            <td><select name="uni_id" type="text" id="uni_id" 
-                        title="Sección o Subsección Expediente o Documento">
-                    <?php echo $uni_id; ?>                        
-                </select></td>
-        </tr>    
-        
-        <tr>
-            </td>
-            <td>Serie:</td>
-            <td>
-                <select name="ser_id" id="ser_id" title="Serie" >
-                    <?php echo $ser_id; ?>
-                </select>
-            </td>
-        </tr> 
-
-        <tr>
-            <td>Grupo documental:</td>
-            <td colspan="3">
-                <select name="tra_id" id="tra_id" autocomplete="off" 
-                        title="Tr&aacute;mite" />
-                    <?php echo $tra_id; ?>
-                </select>
-            </td>
-        </tr>
-        
-        <tr>
-            <td>Tipo Documental:</td>
-            <td colspan="3">
-                <select name="cue_id" id="cue_id" autocomplete="off" title="Tipos Documentales" />
-                    <?php echo $cue_id; ?>
-                </select>
-            </td>
-        </tr>
         
         <tr>
             <td>T&iacute;tulo del Expediente:</td>
@@ -62,56 +18,10 @@
             </td>
         </tr>
         
-<!--        <tr>
-            <td>Fecha Extrema Inicial:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exi" type="text" id="exf_fecha_exi"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exi" />
-            </td>
-        </tr>
 
-        <tr>
-            <td>Fecha Extrema Final:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exf" type="text" id="exf_fecha_exf"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exf" />
-            </td>
-        </tr>-->
+
         
-        
-        
-        
-        <tr>
-            <td>T&iacute;tulo del Documento:</td>
-            <td>
-                <input type="text" name="fil_titulo" id="fil_titulo"
-                       value="" size="100" autocomplete="off" maxlength="255"
-                       class="alphanum" title="Título del Documento" value="" />
-            </td>
-        </tr>
-        
-<!--        <tr>
-            <td width="166">Tipo de Documento:</td>
-            <td colspan="3">
-                <input type="radio" name="fil_tipoarch" value="ADM" 
-                    title="Solo los documentos que han pasado por el proceso administrativo institucional"/>Administrativo
-                <input type="radio" name="fil_tipoarch" value="CON" 
-                    title="Sólo los documentos que pasan por el proceso administrativo contable y /o comercial tienen valor fiscal o contable. Documentos relacionados con mecanismos de control presupuestario, operaciones de gasto y ejecución presupuestaria"/>Financiero
-                <input type="radio" name="fil_tipoarch" value="LEG" 
-                    title="Sólo los documentos originales propios del proceso administrativo institucional, comercial y/o notarial tiene valor legal intrínseco"/>Legal
-                <input type="radio" name="fil_tipoarch" value="TEC" 
-                    title="Sólo los documentos originales propios del proceso administrativo institucional, tecnico tiene valor legal intrínseco"/>T&eacute;cnico
-            </td>
-        </tr>-->
-        
-        <tr>
-            <td>Palabras Clave (separadas por <?php echo SEPARATOR_SEARCH; ?> ):</td>
-            <td>
-                <input name="pac_nombre" type="text" id="pac_nombre" 
-                       value="" size="100" autocomplete="off" maxlength="255" class="alphanum"
-                       title="Palabras clave de búsqueda"/>
-            </td>
-        </tr>
+
             
         <tr>
             <td>NUR/NURI:</td>
@@ -135,14 +45,73 @@
         <table width="100%" border="0">  
             
             <tr>
-                <td>Departamento:</td>
-                <td><select name="dep_id" type="text" id="dep_id" 
-                            title="Departamento del Fondo">
+                <td>Fondo o Subfondo:</td>
+                <td><select name="fon_id" type="text" id="fon_id" 
+                            title="Fondo o Subfondo del Expediente o Documento">
                         <option value="">(seleccionar)</option>
-                        <?php //echo $dep_id; ?>
+                        <?php echo $fon_id; ?>
                     </select></td>
+            </tr>   
+
+            <tr>
+                <td>Seccion o Subseccion:</td>
+                <td><select name="uni_id" type="text" id="uni_id" 
+                            title="Sección o Subsección Expediente o Documento">
+                        <?php echo $uni_id; ?>                        
+                    </select></td>
+            </tr>    
+
+            <tr>
+                </td>
+                <td>Serie:</td>
+                <td>
+                    <select name="ser_id" id="ser_id" title="Serie" >
+                        <?php echo $ser_id; ?>
+                    </select>
+                </td>
             </tr> 
+
+            <tr>
+                <td>Grupo documental:</td>
+                <td colspan="3">
+                    <select name="tra_id" id="tra_id" autocomplete="off" 
+                            title="Tr&aacute;mite" />
+                        <?php echo $tra_id; ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Tipo Documental:</td>
+                <td colspan="3">
+                    <select name="cue_id" id="cue_id" autocomplete="off" title="Tipos Documentales" />
+                        <?php echo $cue_id; ?>
+                    </select>
+                </td>
+            </tr>
         
+
+            <tr>
+                 <td>T&iacute;tulo del Expediente:</td>
+                 <td colspan="3">
+                     <input name="exp_titulo" type="text" id="exp_titulo"
+                         value="" size="100" autocomplete="off" maxlength="255"
+                         class="alphanum" title="Título del Expediente" />
+                 </td>
+             </tr>        
+
+
+
+             <tr>
+                 <td>T&iacute;tulo del Documento:</td>
+                 <td>
+                     <input type="text" name="fil_titulo" id="fil_titulo"
+                            value="" size="100" autocomplete="off" maxlength="255"
+                            class="alphanum" title="Título del Documento" value="" />
+                 </td>
+             </tr>
+                    
+             
             <tr>
                 <td>Subtitulo:</td>
                 <td><input name="fil_subtitulo" type="text" id="fil_subtitulo"
@@ -168,7 +137,49 @@
                 <td><input name="fil_cargo" type="text" id="fil_cargo"
                            value="" size="150" autocomplete="off" maxlength="20"
                            class="alphanum" title="Cargo de la persona que elabora el documento" /></td>
-            </tr>             
+            </tr>   
+            
+            
+<!--        <tr>
+            <td>Fecha Extrema Inicial:</td>
+            <td colspan="3">
+                <input name="exf_fecha_exi" type="text" id="exf_fecha_exi"
+                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exi" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Fecha Extrema Final:</td>
+            <td colspan="3">
+                <input name="exf_fecha_exf" type="text" id="exf_fecha_exf"
+                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exf" />
+            </td>
+        </tr>-->            
+            
+        <tr>
+            <td width="166">Tipo de Documento:</td>
+            <td colspan="3">
+                <input type="radio" name="fil_tipoarch" value="ADM" 
+                    title="Solo los documentos que han pasado por el proceso administrativo institucional"/>Administrativo
+                <input type="radio" name="fil_tipoarch" value="CON" 
+                    title="Sólo los documentos que pasan por el proceso administrativo contable y /o comercial tienen valor fiscal o contable. Documentos relacionados con mecanismos de control presupuestario, operaciones de gasto y ejecución presupuestaria"/>Financiero
+                <input type="radio" name="fil_tipoarch" value="LEG" 
+                    title="Sólo los documentos originales propios del proceso administrativo institucional, comercial y/o notarial tiene valor legal intrínseco"/>Legal
+                <input type="radio" name="fil_tipoarch" value="TEC" 
+                    title="Sólo los documentos originales propios del proceso administrativo institucional, tecnico tiene valor legal intrínseco"/>T&eacute;cnico
+            </td>
+        </tr>         
+        
+        <tr>
+            <td>Palabras Clave (separadas por <?php echo SEPARATOR_SEARCH; ?> ):</td>
+            <td>
+                <input name="pac_nombre" type="text" id="pac_nombre" 
+                       value="" size="100" autocomplete="off" maxlength="255" class="alphanum"
+                       title="Palabras clave de búsqueda"/>
+            </td>
+        </tr>        
+        
+        
         </table>              
     </div>        
     </p>        

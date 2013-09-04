@@ -1273,7 +1273,7 @@ class archivoController extends baseController {
     }
     
 
-    
+    // Print Marbete
     function viewFicha() {
         $id = VAR3;
         $fil_id = VAR4;
