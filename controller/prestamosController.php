@@ -18,11 +18,13 @@ class prestamosController extends baseController {
             $series = $tseries->obtenerSelectTodas();
         } else {
             $series = $tseries->obtenerSelectSeries();
-        }        
+        }      
+   
         $departamento = new departamento();        
         $this->registry->template->dep_id = $departamento->obtenerSelect();        
         $fondo = new fondo();        
         $this->registry->template->fon_id = $fondo->obtenerSelectFondos();
+  
         $this->registry->template->uni_id = "";
         $this->registry->template->ser_id = ""; 
         //$this->registry->template->exp_id = ""; 
@@ -714,6 +716,7 @@ class prestamosController extends baseController {
         echo $json;   
     }
     function guardarPrestamo(){
+        unset($_SESSION["id_lista"]); 
          $this->solicitud_prestamo = new tab_solprestamo();
          $this->docprestamo=new tab_docprestamo();
          $documento=new docprestamo();
@@ -768,7 +771,8 @@ for($i=0;$i<$cantidad;$i++){
         $this->docprestamo->setDpr_orden($inc);
         $this->docprestamo->insert();
 }  
-       
+       //$_SESSION['id_lista']="";
+
         Header("Location: " . PATH_DOMAIN . "/prestamos/listarprestamo/");
         
     }

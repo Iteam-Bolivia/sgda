@@ -128,7 +128,7 @@
         <tr>
             <td>Correo electrónico:</td>
             <td><input type="text" name="usu_correo" type="text" id="usu_correo" 
-                       title="Correo electrónico del usuario" size="47" onfocus="loadarhivos()">
+                       title="Correo electrónico del usuario" size="47" onfocus="loadarhivos()" class="required email">
                                   
                 </td>
         </tr>    
@@ -137,7 +137,7 @@
             </td>
             <td>Teléfono:</td>
             <td>
-                <input type="text" name="usu_telefono" id="usu_telefono" title="Serie" >
+                <input type="text" name="usu_telefono" id="usu_telefono" title="Serie" class="required">
               
           
             </td>

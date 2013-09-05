@@ -1,11 +1,15 @@
 <link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
 <script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
-
 <div class="clear"></div><div align="left">
-    <a href="<?php echo $PATH_DOMAIN."/prestamos/listarprestamo/" ?>" id="boton_google">Listar prestamos</a>
-    
+  <?php
+  if(isset($_SESSION['id_lista'])){
+   $dtt=$_SESSION['id_lista'];
+  }else{
+   $dtt=0;
+  }
+  ?>
 </div>
-
+<input type="hidden" id="sesi" value="<?php echo $dtt?>">
 <form id="formA" name="formA" method="post" class="validable" 
       action="<?php echo $PATH_DOMAIN ?>/buscarArchivo/<?php echo $PATH_EVENT ?>/">
     <input name="sql" id="sql" type="hidden" value="" />
@@ -148,7 +152,11 @@
         <tr>
             <td class="botones" colspan="4" style="padding: 20px;border-top:1px dotted #3F5A7C">
                 <input id="btnClear" type="button" value="Limpiar" class="button"/>
-                <input id="btnSubB" type="button" value="Buscar" class="button"/></td>
+                <input id="btnSubB" type="button" value="Buscar" class="button"/>
+                <a href="<?php echo $PATH_DOMAIN."/prestamos/listarprestamo/" ?>"  style="color: #4C4C4C;border: none;padding: 10px;text-align: left" class="button3">Listar-prestamos</a>
+    
+             
+            </td>
         </tr>
     </table>
 </form>
@@ -163,7 +171,8 @@
 
 <script type="text/javascript">
    var cantidad=0;
-
+   
+var sessioncant="";
     $("#flex1").flexigrid
     ({
         url: '<?php echo $PATH_DOMAIN ?>/buscarArchivo/search/',
@@ -267,8 +276,9 @@
 //        }
 //    }
 
+
 function checkAllNotes(){
-  
+
 cantidad=document.getElementById("d_cantidad").value;    
 if($("#checkAll").val()==1){
     var t=1;
@@ -329,17 +339,17 @@ if(cadena==""){
             $("#archivos").val("");
                $(".pReload",".flexigrid").click();
                }
+               $("#sesi").val(id_archivos);
 }
 if (com=='Ver-lista'){
-        
+       if($("#sesi").val()==0){
+          $.msgbox("Adicione un registro a la lista");
+       } else{
     window.location.href="<?php echo $PATH_DOMAIN."/prestamos/listado/";?>";
-   
+   }
 
 }
-
-        //var valor=$(".fil_chk1").val();
-       
-         
+        
         
         if (com=='Exportar'){
             if($('.fil_chk',grid).length > 0){
