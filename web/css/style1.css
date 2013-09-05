@@ -1779,15 +1779,3 @@ table.printTable{
         /*font-family: 'Arial';*/
 	font-size: 12px;
 }
-#boton_google{
-border:1px solid #DADADA;background:#F4F4F4;padding:10px;font-family:Tahoma, Geneva, sans-serif;color:#3F5A7C;padding: 8px;display: block;width: 120px;font-size: 15px;text-align: center;margin-bottom: 10px
-}
-#boton_google:hover{
-background:-o-radial-gradient(#F7F7F7 50px,#999 350px);
-background:-webkit-radial-gradient(#F7F7F7 50px,#999 350px);
-background:-moz-radial-gradient(#F7F7F7 50px,#999 350px);
-background:-ms-radial-gradient(#F7F7F7 50px,#999 350px);
-color:#333333;
-box-shadow:0px 1px 5px #CCCCCC;border:1px solid #CCCCCC;
-
-}

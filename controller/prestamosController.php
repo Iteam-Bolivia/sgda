@@ -18,12 +18,7 @@ class prestamosController extends baseController {
             $series = $tseries->obtenerSelectTodas();
         } else {
             $series = $tseries->obtenerSelectSeries();
-        }
-  
-  
-                    
-     
-                    
+        }        
         $departamento = new departamento();        
         $this->registry->template->dep_id = $departamento->obtenerSelect();        
         $fondo = new fondo();        
@@ -32,7 +27,7 @@ class prestamosController extends baseController {
         $this->registry->template->ser_id = ""; 
         //$this->registry->template->exp_id = ""; 
         $this->registry->template->tra_id = "";
-
+        $this->registry->template->cue_id = "";
         
         $tmenu = new menu ();
         $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
@@ -773,8 +768,8 @@ for($i=0;$i<$cantidad;$i++){
         $this->docprestamo->setDpr_orden($inc);
         $this->docprestamo->insert();
 }  
-        exit();
-        Header("Location: " . PATH_DOMAIN . "/devolucion_prestamo/");
+       
+        Header("Location: " . PATH_DOMAIN . "/prestamos/listarprestamo/");
         
     }
     function listarprestamo(){

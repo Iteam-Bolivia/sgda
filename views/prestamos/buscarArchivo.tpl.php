@@ -2,7 +2,8 @@
 <script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
 
 <div class="clear"></div><div align="left">
-    <a href="<?php echo $PATH_DOMAIN."/prestamos/listarprestamo/" ?>" style="color: #0A246A;">Listar prestamos</a>
+    <a href="<?php echo $PATH_DOMAIN."/prestamos/listarprestamo/" ?>" id="boton_google">Listar prestamos</a>
+    
 </div>
 
 <form id="formA" name="formA" method="post" class="validable" 
@@ -11,8 +12,54 @@
     
     <table width="100%" border="0">
         <caption class="titulo">BUSQUEDA DE EXPEDIENTES Y DOCUMENTOS</caption>        
-        
         <tr>
+            <td>T&iacute;tulo del Expediente:</td>
+            <td colspan="3">
+                <input name="exp_titulo" type="text" id="exp_titulo"
+                    value="" size="100" autocomplete="off" maxlength="255"
+                    class="alphanum" title="Título del Expediente" />
+            </td>
+        </tr>
+        <tr>
+            <td>T&iacute;tulo del Documento:</td>
+            <td>
+                <input type="text" name="fil_titulo" id="fil_titulo"
+                       value="" size="100" autocomplete="off" maxlength="255"
+                       class="alphanum" title="Título del Documento" value="" />
+            </td>
+        </tr>
+               
+        <tr>
+            <td>Palabras Clave (separadas por <?php echo SEPARATOR_SEARCH; ?> ):</td>
+            <td>
+                <input name="pac_nombre" type="text" id="pac_nombre" 
+                       value="" size="100" autocomplete="off" maxlength="255" class="alphanum"
+                       title="Palabras clave de búsqueda"/>
+            </td>
+        </tr>
+            
+        <tr>
+            <td>NUR/NURI:</td>
+            <td><input name="fil_nur" type="text" id="fil_nur"
+                       value="" size="20" autocomplete="off" maxlength="20"
+                       class="alphanum" title="NUR/NURI" /></td>
+        </tr> 
+            
+     </table>
+         
+    <p>        
+    <table border="0">   
+    <tr>
+    <td>
+    <input type="button" align="left" value="+ BÚSQUEDA AVANZADA POR DOCUMENTO" onclick='$("#div2").toggle(500);'>
+    </td>
+    </tr>
+    </table>
+    
+    <div id="div2" style="background-color:#eeeeee;border:0px solid;display:none">
+        <table width="100%" border="0">  
+            
+              <tr>
             <td>Fondo o Subfondo:</td>
             <td><select name="fon_id" type="text" id="fon_id" 
                         title="Fondo o Subfondo del Expediente o Documento">
@@ -56,88 +103,7 @@
                    
                 </select>
             </td>
-        </tr>
-        
-        <tr>
-            <td>T&iacute;tulo del Expediente:</td>
-            <td colspan="3">
-                <input name="exp_titulo" type="text" id="exp_titulo"
-                    value="" size="100" autocomplete="off" maxlength="255"
-                    class="alphanum" title="Título del Expediente" />
-            </td>
-        </tr>
-        
-<!--        <tr>
-            <td>Fecha Extrema Inicial:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exi" type="text" id="exf_fecha_exi"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exi" />
-            </td>
-        </tr>
-
-        <tr>
-            <td>Fecha Extrema Final:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exf" type="text" id="exf_fecha_exf"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exf" />
-            </td>
-        </tr>-->
-        
-        
-        
-        
-        <tr>
-            <td>T&iacute;tulo del Documento:</td>
-            <td>
-                <input type="text" name="fil_titulo" id="fil_titulo"
-                       value="" size="100" autocomplete="off" maxlength="255"
-                       class="alphanum" title="Título del Documento" value="" />
-            </td>
-        </tr>
-        
-<!--        <tr>
-            <td width="166">Tipo de Documento:</td>
-            <td colspan="3">
-                <input type="radio" name="fil_tipoarch" value="ADM" 
-                    title="Solo los documentos que han pasado por el proceso administrativo institucional"/>Administrativo
-                <input type="radio" name="fil_tipoarch" value="CON" 
-                    title="Sólo los documentos que pasan por el proceso administrativo contable y /o comercial tienen valor fiscal o contable. Documentos relacionados con mecanismos de control presupuestario, operaciones de gasto y ejecución presupuestaria"/>Financiero
-                <input type="radio" name="fil_tipoarch" value="LEG" 
-                    title="Sólo los documentos originales propios del proceso administrativo institucional, comercial y/o notarial tiene valor legal intrínseco"/>Legal
-                <input type="radio" name="fil_tipoarch" value="TEC" 
-                    title="Sólo los documentos originales propios del proceso administrativo institucional, tecnico tiene valor legal intrínseco"/>T&eacute;cnico
-            </td>
-        </tr>-->
-        
-        <tr>
-            <td>Palabras Clave (separadas por <?php echo SEPARATOR_SEARCH; ?> ):</td>
-            <td>
-                <input name="pac_nombre" type="text" id="pac_nombre" 
-                       value="" size="100" autocomplete="off" maxlength="255" class="alphanum"
-                       title="Palabras clave de búsqueda"/>
-            </td>
-        </tr>
-            
-        <tr>
-            <td>NUR/NURI:</td>
-            <td><input name="fil_nur" type="text" id="fil_nur"
-                       value="" size="20" autocomplete="off" maxlength="20"
-                       class="alphanum" title="NUR/NURI" /></td>
         </tr> 
-            
-     </table>
-         
-    <p>        
-    <table border="0">   
-    <tr>
-    <td>
-    <input type="button" align="left" value="+ BÚSQUEDA AVANZADA POR DOCUMENTO" onclick='$("#div2").toggle(500);'>
-    </td>
-    </tr>
-    </table>
-    
-    <div id="div2" style="background-color:#eeeeee;border:0px solid;display:none">
-        <table width="100%" border="0">  
             
             <tr>
                 <td>Departamento:</td>
@@ -178,9 +144,9 @@
     </div>        
     </p>        
     
-    <table width="100%" border="0">
+    <table width="100%" border="0" >
         <tr>
-            <td class="botones" colspan="4">
+            <td class="botones" colspan="4" style="padding: 20px;border-top:1px dotted #3F5A7C">
                 <input id="btnClear" type="button" value="Limpiar" class="button"/>
                 <input id="btnSubB" type="button" value="Buscar" class="button"/></td>
         </tr>
@@ -431,13 +397,14 @@ if (com=='Ver-lista'){
     }
 	
     $(function() {
-$("#button").button();
+
 
    $(".folder_table").css("display","block");
         $("#btnSubB").click(function(){
             $(".pReload",".flexigrid").click();
         });
         $("#btnClear").click(function(){
+            alert("adsd")
             $("#uni_id").find("option").remove();
             $("#ser_id").find("option").remove();
             $("#tra_id").find("option").remove();
@@ -563,4 +530,5 @@ $("#button").button();
          
 </script>
 <div id="recarga"></div>
+
 

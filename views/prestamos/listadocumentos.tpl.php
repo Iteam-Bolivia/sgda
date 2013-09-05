@@ -1,6 +1,10 @@
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
+
 <div class="clear"></div>
 
-
+<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/prestamos/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
+</div>
 
 <div class="clear"></div>
 <input type="hidden" name="d_cantidad" id="d_cantidad">
@@ -13,12 +17,12 @@
     <input name="sql" id="sql" type="hidden" value="" />
     <input type="hidden" name="archivos" id="archivos" value="">
     <table width="100%" border="0">
-        <caption class="titulo">DATOS DEL PRESTAMOS</caption>        
+        <caption class="titulo">DATOS DEL PRESTAMO</caption>        
         
         <tr>
             <td>Solicitante:</td>
             <td><select name="usu_solicitante" type="text" id="usu_solicitante" 
-                        title="Nombre del solicitante" onclick="loadarhivos()">
+                        title="Nombre del solicitante" onchange="cagarusuario(this.value)" >
                     <option value="">(seleccionar)/ o ninguno</option>
                     <?php $usuario=new tab_usuario();
                     $dato=$usuario->dbSelectBySQL("select* from tab_usuario where usu_estado=1");
@@ -141,7 +145,7 @@
    <tr>
             </td>
             <td>Observación:</td>
-            <td>
+            <td style="padding-bottom: 10px">
                 <textarea name="usu_observ" id="usu_observ" cols="55" rows="4" onfocus="loadarhivos()"></textarea>
           
             </td>
@@ -157,7 +161,7 @@
     
     <table width="100%" border="0">
         <tr>
-            <td class="botones" colspan="4">
+            <td class="botones" colspan="4" style="padding: 20px;border-top:1px dotted #3F5A7C">
                  <input id="btnSubB" type="submit" value="Guardar" class="button"/>
                 <input id="btnClear" type="submit" value="Limpiar" class="button"/>
                </td>
@@ -272,7 +276,6 @@ if(cadena==""){
     t++;    
     }
 
-    
     }
     function test(com,grid)
     {
@@ -349,7 +352,12 @@ $( "#spr_fecfin" ).datepicker();
         $("#btnSubB").click(function(){
             //$(".pReload",".flexigrid").click();
                loadarhivos();
-               
+     var dathay=document.getElementById("archivos").value
+    if(dathay==""){
+        $.msgbox("Por favor seleccione un lista");
+        return false;
+    }
+    //window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/listarprestamo/";
         
             
         });
@@ -374,6 +382,9 @@ $( "#spr_fecfin" ).datepicker();
 <script languaje="javascript">
 function NuevoRegistro(){
     $("#nuevoUsu").show("fast");
+   // document.getElementById("usu_solicitante")se
+    //$("#usu_solicitante").che();
+    document.forms['formA']['usu_solicitante'].value = '';
     document.getElementById("textNuevo").innerHTML='<a href="javascript:void(0)" style="color: #3F5A7C" onclick="CerrarRegistro()">Cerrar X</a>';
 }
 function CerrarRegistro(){
@@ -382,6 +393,15 @@ function CerrarRegistro(){
     document.getElementById("textNuevo").innerHTML='<a href="javascript:void(0)" style="color: #3F5A7C" onclick="NuevoRegistro()">Nuevo</a>';
 
 }
+function cagarusuario(st){
+    if(st==""){
+        NuevoRegistro();
+    }else{
+        $("#nuevoUsu").val("");
+        CerrarRegistro();
+    }
+}
+
 </script>
 
 <div id="recarga"></div>

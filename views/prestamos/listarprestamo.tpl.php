@@ -1,20 +1,13 @@
 <link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
 <script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
-<link href="<?php echo $PATH_WEB ?>/lightbox/themes/evolution/jquery.lightbox.css" rel="stylesheet" type="text/css" />
-<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/lightbox/jquery.lightbox.js"></script>
 
-<div class="clear"></div>
+<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/prestamos/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
+</div>
+    <div class="clear"></div>
 <p>
 <table id="flex1" style="display: none"></table>
 </p>
 <div class="clear"></div>
-
-
-<p>
-<table id="flex2" style="display:none"></table>
-</p>
-
-
 
 <form id="formA" name="formA" method="post" class="validable" 
       action="<?php echo $PATH_DOMAIN ?>/prestamos/<?php echo $PATH_EVENT ?>/">
@@ -40,7 +33,7 @@
         buttons : [
             //{name: 'Adicionar', bclass: 'add', onpress : test},
             {name: 'Devolver', bclass: 'devolt', onpress : test},
-            {name: 'Editar', bclass: 'edit', onpress : test},
+          //  {name: 'Editar', bclass: 'edit', onpress : test},
             {separator: true}
         ],
         searchitems : [
@@ -58,46 +51,9 @@
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 200
+        height: 250
     });
 
-  $("#flex2").flexigrid
-    ({
-        url: '<?php echo $PATH_DOMAIN ?>/prestamos/gridprestamo/',
-        dataType: 'json',
-        colModel : [
-            {display: 'Id', name : 'spr_id', width : 25, sortable : true, align: 'center'},            
-        {display: 'Fecha de Registro', name : 'spr_fecha', width : 130, sortable : true, align: 'left'},        
-        {display: 'Solicitante', name : 'spr_solicitante', width : 155, sortable : true, align: 'left'},        
-        {display: 'Fecha de Entrega', name : 'spr_fecent', width : 130, sortable : true, align: 'left'},
-        {display: 'Fecha de Vencimiento', name : 'spr_fecdev', width : 130, sortable : true, align: 'left'},
-        {display: 'Correo', name : 'spr_email', width : 130, sortable : true, align: 'left'},
-        {display: 'Télefono', name : 'spr_tel', width : 80, sortable : true, align: 'left'},
-        {display: 'Observación', name : 'spr_obs', width : 275, sortable : true, align: 'left'},
-          ],
-        buttons : [
-            //{name: 'Adicionar', bclass: 'add', onpress : test},
-            {name: 'Devolver', bclass: 'devolt', onpress : test},
-            {name: 'Editar', bclass: 'edit', onpress : test},
-            {separator: true}
-        ],
-        searchitems : [
-         
-            {display: 'Solicitante', name : 'spr_solicitante'},
-            {display: 'Correo', name : 'spr_email'},
-            {display: 'Observación', name : 'spr_obs'}
-        ],
-        sortname: "spr_id",
-        sortorder: "asc",
-        usepager: true,
-        title: 'LISTA DE PRESTAMOS',
-        useRp: true,
-        rp: 10,
-        minimize: <?php echo $GRID_SW ?>,
-        showTableToggleBtn: true,
-        width: "100%",
-        height: 200
-    });
 
     function dobleClik(grid){
      if($('.trSelected div',grid).html())
