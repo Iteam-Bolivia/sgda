@@ -88,4 +88,5 @@ $registry->router->loader();
 
 
 // Nuevo código
+///
 ?>
