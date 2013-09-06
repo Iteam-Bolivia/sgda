@@ -85,4 +85,7 @@ $registry->template = new template($registry);
 
 /* * * load the controller ** */
 $registry->router->loader();
+
+
+// Nuevo código
 ?>
