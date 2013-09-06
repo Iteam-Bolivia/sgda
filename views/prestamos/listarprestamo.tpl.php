@@ -24,6 +24,7 @@
             {display: 'Id', name : 'spr_id', width : 25, sortable : true, align: 'center'},            
         {display: 'Fecha de Registro', name : 'spr_fecha', width : 130, sortable : true, align: 'left'},        
         {display: 'Solicitante', name : 'spr_solicitante', width : 155, sortable : true, align: 'left'},        
+        {display: 'Autoriza', name : 'usua_id', width : 155, sortable : true, align: 'left'},        
         {display: 'Fecha de Entrega', name : 'spr_fecent', width : 130, sortable : true, align: 'left'},
         {display: 'Fecha de Vencimiento', name : 'spr_fecdev', width : 130, sortable : true, align: 'left'},
         {display: 'Correo', name : 'spr_email', width : 130, sortable : true, align: 'left'},
@@ -33,8 +34,8 @@
         buttons : [
             //{name: 'Adicionar', bclass: 'add', onpress : test},
             {name: 'Devolver', bclass: 'devolt', onpress : test},
-          //  {name: 'Editar', bclass: 'edit', onpress : test},
-            {separator: true}
+            {separator: true},
+            {name: 'Reporte', bclass: 'pdf', onpress : test},
         ],
         searchitems : [
          
@@ -143,6 +144,23 @@
                 $.msgbox("Seleccione un registro especifico");
             }
         }
+           else if (com=='Reporte'){
+            if($('.trSelected div',grid).html()){
+                $("#spr_id").val($('.trSelected div',grid).html());
+                
+     var id=$('.trSelected div',grid).html();          
+    window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/verRpte_prestamo/"+id+"/";
+     // window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/verRpte_prestamo/";
+     
+                // $(".pReload",".flexigrid").click();
+            }
+            else
+            {
+                $.msgbox("Seleccione un registro especifico");
+            }
+        }
+        
+        
     }
     
 </script>

@@ -218,6 +218,7 @@ var sessioncant="";
             {name: 'Exportar', bclass: 'pdf', onpress : test},{separator: true},
            
            {name: 'Ver-lista', bclass: 'folder_table', onpress : test},{separator: true},
+           {name: 'Cancelar', bclass: 'cancel', onpress : test},{separator: true},
            
                     ],
         searchitems : [
@@ -340,6 +341,14 @@ if(cadena==""){
                $(".pReload",".flexigrid").click();
                }
                $("#sesi").val(id_archivos);
+}
+if (com=='Cancelar'){
+
+var urlhack="<?php echo $PATH_DOMAIN ?>/prestamos/eliminarsession/";
+$("#recarga").load(urlhack);
+$(".pReload",".flexigrid").click();
+$("#sesi").val(0);
+            
 }
 if (com=='Ver-lista'){
        if($("#sesi").val()==0){

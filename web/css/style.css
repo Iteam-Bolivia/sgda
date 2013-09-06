@@ -968,6 +968,16 @@ a.viewMore:hover {
 	width: 70px;
 	height: 33px;
 }
+.button3 {
+	cursor: pointer;
+	color: #2980c4;
+	text-align: center;
+	font-weight: bold;
+	border: none;
+	background: url(../lib/btn_form22.gif) no-repeat;
+	width: 120px;
+	height: 33px;
+}
 
 .button2 {
 	cursor: pointer;
@@ -1449,6 +1459,9 @@ a.linkCinco:hover {
 }
 
 /*codigo de freddy*/
+.flexigrid div.fbutton .cancel {
+	background: url(flexigrid/images/cancel.png) no-repeat center left;
+}
 .flexigrid div.fbutton .coins {
 	background: url(flexigrid/images/coins.png) no-repeat center left;
 }

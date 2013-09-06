@@ -34,7 +34,19 @@
                 <input type="text" name="nuevoUsu" id="nuevoUsu" onfocus="loadarhivos()" style="display: none" size="45">
             </td>
         </tr>
-   
+           <tr>
+            <td>Autoriza:</td>
+            <td><select name="usu_autoriza" type="text" id="usu_autoriza" 
+                        title="Nombre del solicitante">
+                    <option value="">(seleccionar)/ o ninguno</option>
+                    <?php $usuario=new tab_usuario();
+                    $dato=$usuario->dbSelectBySQL("select* from tab_usuario where usu_estado=1");
+                   foreach($dato as $row){ ?>
+                    <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
+                       <?php } ?>
+                </select>
+            </td>
+        </tr>
 
   <tr>
             <td>Fecha Inicial:</td>
@@ -213,6 +225,7 @@
         buttons : [
              {name: 'Imprimir', bclass: 'print', onpress : test},{separator: true},
             {name: 'Exportar', bclass: 'pdf', onpress : test},{separator: true},
+            {name: 'Cancelar', bclass: 'cancel', onpress : test},{separator: true},
            
                    ],
         searchitems : [
@@ -286,7 +299,13 @@ $("#archivos").val($('.trSelected div',grid).html());
             $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/buscarArchivo/rpteBuscar/");
             document.getElementById('formA').submit();                        
         }
+if (com=='Cancelar'){
 
+var urlhack="<?php echo $PATH_DOMAIN ?>/prestamos/eliminarsession/";
+$("#recarga").load(urlhack);
+     window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/";
+        
+}
          
         
         if (com=='Exportar'){
@@ -405,7 +424,7 @@ function cagarusuario(st){
 </script>
 
 <div id="recarga"></div>
-<input type="hidden" id="d_cantidad" value="3">
+
 <div>
 
 </div>

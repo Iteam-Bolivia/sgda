@@ -730,7 +730,7 @@ class prestamosController extends baseController {
          $anio1=$_REQUEST['anio1'];
          $fecha_inicio=$anio."-".$mes."-".$dia;
          $fecha_final=$anio1."-".$mes1."-".$dia1;
-     
+    
          
          
     if($_REQUEST['usu_solicitante']==""){
@@ -747,6 +747,7 @@ class prestamosController extends baseController {
         $this->solicitud_prestamo->setRequest2Object($_REQUEST);
         $this->solicitud_prestamo->setUsu_id($usu);
         $this->solicitud_prestamo->setSpr_solicitante($_REQUEST['nuevoUsu']);
+        $this->solicitud_prestamo->setUsua_id($_REQUEST['usu_autoriza']);
         $this->solicitud_prestamo->setSpr_tel($_REQUEST['usu_telefono']);
         $this->solicitud_prestamo->setSpr_email($_REQUEST['usu_correo']);
         $this->solicitud_prestamo->setSpr_fecent($fecha_inicio);
@@ -867,6 +868,7 @@ for($i=0;$i<$cantidad;$i++){
          }else{
              $solicitante=$un->spr_solicitante;
          }
+          $autoriza=$solprestamos->ObtenerUsuario($un->usua_id);
             if ($rc)
                     
                 $json .= ",";
@@ -875,6 +877,7 @@ for($i=0;$i<$cantidad;$i++){
             $json .= "cell:['" . $un->spr_id . "'";
             $json .= ",'" . addslashes($fecharegistro) . "'";
             $json .= ",'" . addslashes($solicitante) . "'";
+            $json .= ",'" . addslashes($autoriza) . "'";
             $json .= ",'" . addslashes($feinicio) . "'";
             $json .= ",'" . addslashes($fefinal) . "'";   
             $json .= ",'" . addslashes($un->spr_email) . "'"; 
@@ -1106,12 +1109,271 @@ echo "<font style='font-size:15px;font-weight:400'>".$fechaInicio."</font>";
        }
         
     }
+    function eliminarsession(){
+        unset($_SESSION['id_lista']);
+    }
+    
+    function verRpte_prestamo(){
+       $id_prestamo=VAR3;
+   
+       
+        $sql="SELECT
+tab_solprestamo.spr_id,
+tab_fondo.fon_cod,
+tab_unidad.uni_codigo,
+tab_series.ser_codigo,
+tab_expediente.exp_codigo,
+tab_archivo.fil_codigo,
+tab_solprestamo.spr_fecha,
+tab_solprestamo.uni_id,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usu_id AND usu_estado = '1') AS usu_solicitante,
+tab_solprestamo.spr_solicitante,
+tab_solprestamo.spr_email,
+tab_solprestamo.spr_tel,
+tab_solprestamo.spr_fecent,
+tab_solprestamo.spr_fecren,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usua_id AND usu_estado = '1') AS usu_autoriza,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usur_id AND usu_estado = '1') AS usu_registrado,
+tab_solprestamo.spr_fecdev,
+tab_solprestamo.spr_obs,
+tab_solprestamo.spr_estado,
+tab_docprestamo.fil_id,
+tab_docprestamo.dpr_orden,
+tab_docprestamo.dpr_obs,
+tab_archivo.fil_titulo,
+tab_archivo.fil_proc,
+tab_archivo.fil_tomovol,
+tab_archivo.fil_ori,
+tab_archivo.fil_cop,
+tab_archivo.fil_fot,
+tab_archivo.fil_sala,
+tab_archivo.fil_estante,
+tab_archivo.fil_cuerpo,
+tab_archivo.fil_balda,
+tab_archivo.fil_nrocaj,
+tab_archivo.fil_obs,
+tab_expisadg.exp_fecha_exi,
+tab_expisadg.exp_fecha_exf,
+tab_sopfisico.sof_codigo,
+tab_unidad.uni_descripcion
+FROM
+tab_solprestamo
+INNER JOIN tab_docprestamo ON tab_solprestamo.spr_id = tab_docprestamo.spr_id
+INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_docprestamo.fil_id
+INNER JOIN tab_exparchivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+INNER JOIN tab_expediente ON tab_expediente.exp_id = tab_exparchivo.exp_id
+INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+INNER JOIN tab_series ON tab_series.ser_id = tab_expediente.ser_id
+INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
+INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
+WHERE
+tab_docprestamo.spr_id =".$id_prestamo."";
+        $expediente = new Tab_solprestamo();
+        $result = $expediente->dbSelectBySQL($sql);
+        $listado=$result;
+        $result=$result[0];      
+$cadenatitulo="<br/><br/><br/><br/><br/><br/>";
+$cadenatitulo.='<table width="740" border="0" style="font-family:Arial, Helvetica, sans-serif">';
+  $cadenatitulo.='<tr>';
+    $cadenatitulo.='<td align="center">ADMINISTRADORA BOLIVIANA DE CARRETERAS';
+    $cadenatitulo.='<br />';
+    $cadenatitulo.='SECRETARIA GENERAL(SG)<br />GESTION DOCUMENTAL/ARCHIVO(GD/ARCH)<br />';
+    $cadenatitulo.='<b style="font-size:35px">FORMULARIO DE SALIDA DOCUMENTAL</b><br />';
+    $cadenatitulo.='(Para uso de la diferentes unidades y/o areas solicitantes)';
+    $cadenatitulo.='</td>';
+  $cadenatitulo.='</tr>';
+$cadenatitulo.='</table>';
+$cadenah = "<br/>";
+        
+$cadenah.='<table width="750" height="99" border="1" style="font-size:24px;font-family:Arial, Helvetica, sans-serif">';
+  $cadenah.='<tr>';
+    $cadenah.='<td height="19" colspan="3" bgcolor="#CCCCCC">FECHA SOLICITUD</td>';
+    $cadenah.='<td colspan="2">';
+    $fecha1=$result->spr_fecha;
+    $explode=explode("-",$fecha1);
+    $fecha=$explode[2]."-".$explode[1]."-".$explode[0];
+            $cadenah.=''.$fecha.'</td>';
+    $cadenah.='<td colspan="2" bgcolor="#CCCCCC">UBICADO</td>';
+    $cadenah.='<td colspan="4">'.$fecha.'&nbsp;</td>';
+  
+    $cadenah.='<td colspan="3" bgcolor="#CCCCCC">Nº DE PRESTAMO</td>';
+    $cadenah.='<td>'.$result->spr_id.'</td>';
+ $cadenah.='</tr>';
+  $cadenah.='<tr>';
+    $cadenah.='<td height="18" colspan="3" bgcolor="#CCCCCC">GCIA/UNIDAD/AREA:</td>';
+    $cadenah.='<td colspan="2" align="center" >'.$result->uni_descripcion.'</td>';
+    $cadenah.='<td colspan="2" bgcolor="#CCCCCC">SOLICITADO POR:</td>';
+    $cadenah.='<td colspan="8">';
+
+   if($result->spr_solicitante==""){
+       $cadenah.=''.$result->usu_solicitante.'';
+   }else{
+        $cadenah.=''.$result->spr_solicitante.'';
+   }
+ 
+    $cadenah.='</td>';
+   
+   
+  $cadenah.='</tr>';
+  $cadenah.='<tr>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC">Nº</td>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC">CODIGO DE REFERENCIA</td>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC" align="center">DOCUMENTO SOLICITADO</td>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC">FECHAS EXREMAS</td>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC">TOMO VOLUMEN</td>';
+    $cadenah.='<td rowspan="2" bgcolor="#CCCCCC">SOPORTE FISICO</td>';
+    $cadenah.='<td height="16" colspan="3" bgcolor="#CCCCCC">DOCUMENTO</td>';
+    $cadenah.='<td height="16" colspan="5" bgcolor="#CCCCCC">LOCALIZACION TOPOGRAFICA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">&nbsp;</td>';
+  $cadenah.='</tr>';
+  $cadenah.='<tr>';
+    $cadenah.='<td bgcolor="#CCCCCC">ORIGINA</td>';
+    $cadenah.='<td height="16" bgcolor="#CCCCCC">COPIA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">FOTOCOPIA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">SALA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">ESTANTE</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">CUERPO</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">BALDA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">CAJA</td>';
+    $cadenah.='<td bgcolor="#CCCCCC">OBSERVACIONES</td>';
+  $cadenah.='</tr>';
+ $i=1;
+  foreach ($listado as $list){
+ 
+  $cadenah.='<tr>';
+    $cadenah.='<td height="16">'.$i.'</td>';
+    $cadenah.='<td>'.$list->fon_cod.$list->uni_codigo.$list->ser_codigo.$list->exp_codigo.$list->fil_codigo.'</td>';
+    $cadenah.='<td>'.$list->fil_titulo.'</td>';
+    $cadenah.='<td>';
+       $fecha3=$result->exp_fecha_exi;
+    $explode3=explode("-",$fecha3);
+    $fecha3=$explode3[2]."-".$explode3[1]."-".$explode3[0];
+          $fecha4=$result->exp_fecha_exi;
+    $explode4=explode("-",$fecha4);
+    $fecha44=$explode4[2]."-".$explode4[1]."-".$explode4[0];
+    $cadenah.=$fecha3." ".$fecha44.'</td>';
+ 
+    $cadenah.='<td>'.$list->fil_tomovol.'</td>';
+    $cadenah.='<td>'.$result->sof_codigo.'</td>';
+    $cadenah.='<td>'.$list->fil_ori.'</td>';
+    $cadenah.='<td>'.$list->fil_cop.'</td>';
+    $cadenah.='<td>'.$list->fil_fot.'</td>';
+    $cadenah.='<td>'.$list->fil_sala.'</td>';
+    $cadenah.='<td>'.$list->fil_estante.'</td>';
+    $cadenah.='<td>'.$list->fil_cuerpo.'</td>';
+    $cadenah.='<td>'.$list->fil_balda.'</td>';
+    $cadenah.='<td>'.$list->fil_nrocaj.'</td>';
+    $cadenah.='<td>'.$list->fil_obs.'</td>';
+  $cadenah.='</tr>';
+  $i++;
+  
+  }
+  
+$cadenah.='</table><br/>';
+
+
+        require_once ('tcpdf/config/lang/eng.php');
+        require_once ('tcpdf/tcpdf.php');
+        $pdf = new TCPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->setFontSubsetting(FALSE);
+         $pdf->SetAuthor("ITEAM");
+        $pdf->SetTitle('Reporte de Prestamos');
+        $pdf->SetSubject('Reporte de Prestamos');
+//        aumentado
+        $pdf->SetKeywords('Iteam, TEAM DIGITAL');
+        // set default header data
+        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'ABC', 'ADMINISTRADORA BOLIVIANA DE CARRETERAS (ABC)');
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+//        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+//
+
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(5, 30, 10);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+//        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 14);
+//        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+        $pdf->SetFont('helvetica', '', 10);
+        // add a page
+        $pdf->AddPage();
+
+//        $pdf->SetXY(110, 200);
+        $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
+
+$cadena = "";
+$cadena.='<table width="750" border="1" style="font-size:30px">';
+$cadena.='<tr>';
+    $cadena.='<td width="206" bgcolor="#CCCCCC" height="25">NOMBRE COMPLETO DEL SOLICITANTE</td>';
+    $cadena.='<td width="260" >';
+      if($result->spr_solicitante==""){
+       $cadena.=''.$result->usu_solicitante.'';
+   }else{
+        $cadena.=''.$result->spr_solicitante.'';
+   }
+    $cadena.='</td>';
+    $cadena.='<td width="284" ><font size="-1">Firma</font></td>';
+  $cadena.='</tr>';
+ /* $cadena.='<tr>';
+    $cadena.='<td bgcolor="#CCCCCC" height="20">DOCUMENTO RETIRADO DEL ARCHIVO:</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+  $cadena.='</tr>';*/
+  $cadena.='<tr>';
+    $cadena.='<td bgcolor="#CCCCCC" height="20">FECHA ENTREGA DOC.</td>';
+    $cadena.='<td>';
+        $fecha2=$result->spr_fecha;
+    $explode1=explode("-",$fecha2);
+    $fecha1=$explode1[2]."-".$explode1[1]."-".$explode1[0];
+            $cadena.=''.$fecha1.'</td>';
     
     
-    
-    
-    
-}
+    $cadena.='<td>&nbsp;</td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td bgcolor="#CCCCCC" height="20">NOMBRE COMPLETO EL QUE AUTORIZA</td>';
+    $cadena.='<td>'.$result->usu_autoriza.'</td>';
+    $cadena.='<td><font size="-1">Firma</font></td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td bgcolor="#CCCCCC" height="20">ARCHIVISTA RESPONSABLE</td>';
+    $cadena.='<td>'.$result->usu_registrado.'</td>';
+    $cadena.='<td><font size="-1">Firma</font></td>';
+  $cadena.='</tr>';
+$cadena.='</table>';
+$cadena.='<p>Llenado unicamente por el personal de archivo </p>';
+$cadena.='<table width="750" border="1" style="font-size:30px">';
+  $cadena.='<tr>';
+    $cadena.='<td width="207" bgcolor="#CCCCCC" height="25">FECHA DE DEVOLUCION</td>';
+    $cadena.='<td width="543">';
+     $fecha3=$result->spr_fecdev;
+    $explode2=explode("-",$fecha3);
+    $fecha2=$explode2[2]."-".$explode2[1]."-".$explode2[0];
+            $cadena.=''.$fecha2.'</td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td bgcolor="#CCCCCC" height="25">OBSERVACIONES</td>';
+    $cadena.='<td>'.$result->spr_obs.'</td>';
+  $cadena.='</tr>';
+$cadena.='</table>';
+    $cadena.='<b>Nota:</b> A través de este formulario cada funcionario se responzabiliza por el cuidado o cualquier deterioro del documento.';
+
+        $cadena = $cadenatitulo.$cadenah . $cadena;
+        $pdf->writeHTML($cadena, true, false, false, false, '');
+
+        // -----------------------------------------------------------------------------
+        //Close and output PDF document
+        $pdf->Output('reporte_prestamos.pdf', 'I');
+    }
+   
+    }
+
 
 
 
