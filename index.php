@@ -13,7 +13,7 @@ define("PATH_LANG", "es");
 //define("PATH_ROOT", $_SERVER ['DOCUMENT_ROOT']);
 //define("PATH_WEB", "http://archivo-prueba.abc.gob.bo/web");
 
-/* * * Define Variables Globales server applications . * * */
+/* * * Defintere Variables Globales server applications . * * */
 define("PATH_DOMAIN", "http://localhost/archivo-prueba");
 define("PATH_ROOT", $_SERVER ['DOCUMENT_ROOT'] . "/archivo-prueba");
 define("PATH_WEB", "http://localhost/archivo-prueba/web");

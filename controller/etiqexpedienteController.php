@@ -753,37 +753,37 @@ class etiqexpedienteController extends baseController {
         foreach ($result as $value) {
             $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;        
 
-            //  BAR CODE
-            // CODE 39 + CHECKSUM
-            $pdf->Cell(0, 0, 'ABC', 0, 1);
-            $pdf->write1DBarcode($codigo, 'C39', '', '', '', 18, 0.4, $style, 'N');
+//            //  BAR CODE
+//            // CODE 39 + CHECKSUM
+//            $pdf->Cell(0, 0, 'ABC', 0, 1);
+//            $pdf->write1DBarcode($codigo, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
             
-//            // BAR CODE 2
-//            // define barcode style
-//            $style2 = array(
-//                'position' => '',
-//                'align' => '',
-//                'stretch' => true,
-//                'fitwidth' => false,
-//                'cellfitalign' => '',
-//                'border' => true,
-//                'hpadding' => 'auto',
-//                'vpadding' => 'auto',
-//                'fgcolor' => array(0,0,128),
-//                'bgcolor' => array(255,255,128),
-//                'text' => true,
-//                'label' => $codigo,
-//                'font' => 'helvetica',
-//                'fontsize' => 8,
-//                'stretchtext' => 4
-//            );        
-//            // CODE 39 EXTENDED + CHECKSUM
-//            $pdf->Cell(0, 0, 'ABC', 0, 1);
-//            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
-//            $pdf->write1DBarcode($codigo, 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
-//            
-//            
+            // BAR CODE 2
+            // define barcode style
+            $style2 = array(
+                'position' => '',
+                'align' => '',
+                'stretch' => true,
+                'fitwidth' => false,
+                'cellfitalign' => '',
+                'border' => true,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,128),
+                'bgcolor' => array(255,255,128),
+                'text' => true,
+                'label' => 'ABC.ON.1.1.II.1.0.1.1.999',
+                'font' => 'helvetica',
+                'fontsize' => 8,
+                'stretchtext' => 4
+            );        
+            // CODE 39 EXTENDED + CHECKSUM
+            $pdf->Cell(0, 0, 'ABC', 0, 1);
+            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
+            $pdf->write1DBarcode('ABC.ON.1.1.II.1.0.1.1.999', 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
+            
+            
             // New
             $pdf->Ln();
 
