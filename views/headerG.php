@@ -157,13 +157,7 @@
                         </div>
                         <div class="clear"></div>
                         <br />
-                        <br />
-                        <div class="clear"></div>
-                        <div class="boxPub"></div>
-                        <br />
-                        <div class="clear"></div>
-                        <div class="clear"></div>
-                        <div class="clear"></div>
+                       
                     </div>
 
                     <div id="contentIn0">

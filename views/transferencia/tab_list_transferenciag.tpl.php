@@ -14,17 +14,100 @@
     <input type="hidden" id="sesi" value="<?php echo $dtt?>">
 </div>
 <div class="clear"></div>
-<div class="titulo">Transferencias</div>
-
 <div class="clear"></div>
 <p><table id="flex1" style="display:none"></table></p>
 <div class="clear"></div>
-
+<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/transferencia/" border="0"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
+</div>
 
 <form id="formA" name="formA" method="post" class="validable" action="<?php echo $PATH_DOMAIN ?>/transferencia/<?php echo $PATH_EVENT ?>/">
     <input name="str_id" id="str_id" type="hidden" value="<?php echo $str_id; ?>" />
     <input name="serie" id="idcom" type="hidden" value="" />
     <input name="ids" id="ids" type="hidden" value="" />
+</form>
+
+<form id="formA" name="formA" method="post" class="validable" 
+      action="<?php echo $PATH_DOMAIN ?>/prestamos/guardarPrestamo/">
+    <input name="sql" id="sql" type="hidden" value="" />
+    <input type="hidden" name="archivos" id="archivos" value="">
+    <table width="100%" border="0">
+        <caption class="titulo">DATOS DEL PRESTAMO</caption>        
+        <tr>
+            <th width="180" height="30">Seccion Origen:</th>
+            <td>
+                <?php 
+                $usu=$_SESSION ['USU_ID'];
+                $id_exps=$_SESSION ['id_transferencia'];
+                $usu_origen=new tab_usuario();
+                $result_uni=new tab_unidad();
+              $result=$usu_origen->dbselectByField("usu_id",$usu);
+          $result=$result[0];
+               $uni_id=$result->uni_id;
+                $res_uni=$result_uni->dbselectByField("uni_id",$uni_id);
+                $res_uni=$res_uni[0];
+                echo $res_uni->uni_descripcion;
+                
+                        ?>
+        <input name="uni_id" id="uni_id" type="text" value="<?php echo $uni_id ?>" />       
+        <input name="idsExp" id="idsExp" type="text" value="<?php echo $id_exps ?>" /> 
+        <input name="ser_id" id="ser_id" type="hidden" value="" />
+        <input name="exp_id" id="exp_id" type="hidden" value="" />
+         <input type="text" id="usu_id" value="<?php echo $usu ?>">
+            </td>
+        </tr>
+             <tr>
+            <th height="30">Usuario Origen:</th>
+            <td><?php 
+            
+                $usu_origen=new tab_usuario();
+              $result=$usu_origen->dbSelectBySQL("select* from tab_usuario where usu_id=$usu");
+               foreach($result as $row){
+                    $nombre=$row->usu_nombres;
+                    $apellido=$row->usu_apellidos;
+               }
+               echo $nombre." ".$apellido;
+                        ?>
+               
+            </td>
+        </tr>
+        <tr>
+            <th>Sección/Archivo destino:</th>
+                <td>
+                    <select name="trn_uni_destino" id="trn_uni_destino" class="text ui-widget-content ui-corner-all" >
+                        <option value="">(seleccionar)</option>
+                        <?php echo $trn_uni_destino ?>
+                    </select>
+                </td>
+        </tr>
+         
+              <tr>
+                 <th>Usuario destino:</th>
+                <td>
+                    <select name="trn_usuario_des" id="trn_usuario_des" class="text ui-widget-content ui-corner-all" size="2" style="height: 100px">
+                        <option value="">(seleccionar)</option>
+                        <?php echo $trn_usuario_des ?>
+                    </select>
+                </td>
+        </tr>
+         
+       
+          
+     </table>
+       
+<div id="error_dominio" style="display:none">
+<img src="<?php echo $PATH_WEB ?>/img/alert.png" width="30" border="0"/>&nbsp;<b>Error:</b>&nbsp;<span id="error_sp"></span>
+</div>
+      
+       
+    
+    <table width="100%" border="0">
+        <tr>
+            <td class="botones" colspan="4" style="padding: 20px;border-top:1px dotted #3F5A7C">
+                 <input id="btnSubB" type="submit" value="Guardar" class="button"/>
+                <input id="btnClear" type="submit" value="Limpiar" class="button"/>
+               </td>
+        </tr>
+    </table>
 </form>
 <input type="hidden" name="archivos" id="archivos">
 <input type="hidden" name="archivos2" id="archivos2">
@@ -33,7 +116,7 @@
 
     $("#flex1").flexigrid
     ({
-        url: '<?php echo $PATH_DOMAIN ?>/transferencia/loadExp/',
+        url: '<?php echo $PATH_DOMAIN ?>/transferencia/gridtransferencia/',
         dataType: 'json',
         colModel : [
             {display: 'ID' , name : 'exp_id', width : 40, sortable : true, align: 'center'},            
@@ -47,9 +130,9 @@
         ],
         buttons : [
             {name: 'Guardar', bclass: 'folder_table', onpress : test},
-            {name: 'Listar', bclass: 'fields', onpress : test},
-            {name: 'Cancelar', bclass: 'cancel', onpress : test}
-                <?php echo ($PATH_A != '' ? ',' . $PATH_A : '') ?>
+          
+            {name: 'Cancelar', bclass: 'cancel', onpress : test},
+         
         ],
         searchitems : [
             {display: 'Id', name : 'exp_id'},
@@ -70,46 +153,11 @@
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 250,
-        autoload: false
+        height: 200, 
     });
 
 
-    function dobleClik(grid){
-        if($('.trSelected div',grid).html()){
-            $("#exp_id").val($('.trSelected div',grid).html());
-            if($("table",grid).attr('id')=="flex1"){
-                $("#exp_id").val($('.trSelected div',grid).html());
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo $PATH_DOMAIN ?>/expediente/find/",
-                    data: "exp_id="+$('.trSelected div',grid).html(),
-                    dataType: 'json',
-                    success: function(msg){
-                        $.each(msg, function(i,item){
-                            $("#trn_uni_origen").val(item.uni_id);
-                            $(".exp_id").html(item.exp_nombre);
-                            $(".exp_codigo").html(item.exp_codigo);
-                            $(".uni_origen").html(item.uni_descripcion);
-                            $("#usu_id").val(item.usu_id);
-                            $(".usu_nombres").html(item.usu_nombres+" "+item.usu_apellidos);
-                        });
-                    },
-                    error: function(msg){
-                        //alert(msg);
-                    }
-                });
-                $('#dialog-form').dialog('open');
-            }
-            if($("table",grid).attr('id')=="flex2"){
-                if($('.trSelected div',grid).html()){
 
-                }else{
-
-                }
-            }
-        }
-    }
     
     function test(com,grid)
     {   cantidad=document.getElementById("d_cantidad").value;    
@@ -120,11 +168,12 @@ var urlhack="<?php echo $PATH_DOMAIN ?>/transferencia/eliminarsession/";
 $("#recarga").load(urlhack);
 $(".pReload",".flexigrid").click();
 $("#sesi").val(0);
-            
+        window.location.href="<?php echo $PATH_DOMAIN."/transferencia/";?>";
+      
 }
 if (com=='Listar'){
        if($("#sesi").val()==0||$("#sesi").val()==""){
-          $.msgbox("Adicione un expediente a la lista");
+          $.msgbox("Adicione un registro a la lista");
        } else{
     window.location.href="<?php echo $PATH_DOMAIN."/transferencia/listado/";?>";
    }
@@ -191,9 +240,6 @@ if(cadena==""){
 
 
 
-
-
-
 <script>
     
     $(function() {
@@ -216,18 +262,30 @@ if(cadena==""){
          });
 
          $("#trn_usuario_des").change(function(){
+if($(this).val()!=""){
+    $("#error_dominio").fadeOut("fast");
 
              $.ajax({
                  type: "POST",
                  url: "<?php echo $PATH_DOMAIN ?>/transferencia/verifSerie/",
-                 data: "usu_id="+$(this).val()+"&Ids="+$('#ids').val(),
+                 data: "usu_id="+$(this).val()+"&Ids="+$('#idsExp').val(),
                  dataType: 'text',
                  success: function(msg){
-                     if(msg!='Ok'){
-                         alert("El usuario destino no maneja la serie de este expediente: " + msg + "\nConsulte con el Administrador del Sistema");
-                     }
+                     if(msg==''){
+                         //alert("Es correcto tiene autorizado para el expediente");
+                     }    
+                     
+                     else{
+                         
+            $("#error_dominio").fadeIn("fast");
+            $("#error_sp").html("El usuario destino no maneja la serie de este expediente: " + msg + "\nConsulte con el Administrador del Sistema");         
+            //alert("El usuario destino no maneja la serie de este expediente: " + msg + "\nConsulte con el Administrador del Sistema");
+                     
+                   
+                        }
                  }
              });
+             }
          });
 
          var allFields = $([]).add(name),

@@ -413,7 +413,7 @@
                     p.total = +$('rows total',data).text();
                 else
                     p.total = data.total;
-                //$("#d_cantidad").val(p.total)
+                $("#d_cantidad").val(p.total)
 				//document.getElementById("d_cantidad").innerHTML=p.total;	
                 if (p.total==0)
                 {

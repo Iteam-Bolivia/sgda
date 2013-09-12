@@ -45,8 +45,147 @@ class transferenciaController extends baseController {
         $this->registry->template->show('footer');
 
     }
+    //freddy
+    function recarga(){
+ $valor=$_REQUEST['valor'];
+ $valor2=$_REQUEST['valor2'];
+$result_menor=0;$result_mayor=0;$cad="";$sd="";
+   if(isset($_SESSION['id_transferencia']))
+       {$cadena="";
+     $nuevo=$_SESSION['id_transferencia']; 
+     $cadena=$nuevo.",".$valor;
+    // $cadena2=  array_unique($cadena);
+     $explode1=explode(",",$cadena);
+     $cantidad=  count($explode1);
+     $explode2=explode(",",$valor2);
+     $cantidad2=  count($explode2);
+	 
+     if($cantidad>$cantidad2){
+         $result_menor=$cantidad2;
+         $result_mayor=$cantidad;
+     }else{
+         $result_menor=$cantidad;
+         $result_mayor=$cantidad2;
+     }
+	 
+     for($j=0;$j<$result_mayor;$j++){
 
+         $k=0;
+         for($t=0;$t<$result_menor;$t++){
+			 
+			if($explode1[$j]<>$explode2[$t]){
+				$k++;
+				}
+         }
+                            if($k==$result_menor){
+                                    $sd.=$explode1[$j];
+					 if($cantidad>$cantidad2){
+					if($j<$result_mayor-1){
+					$sd.=",";
+					}
+					 }else{
+					if($j<$result_menor-1){
+					$sd.=",";
+					}}
+	}
+         
+     }
+     	 $tr="";
+	 $explodecito=explode(",",$sd);
+	 $cant=count($explodecito);
+	 for($y=0;$y<$cant;$y++){
+		 if($explodecito[$y]==""){
+			 $explodecito[$y]=0;
+			 }
+			
+		$tr.=$explodecito[$y];
+		  if($y<$cant-1){
+			 $tr.=",";
+			 }
+		 }
+          $tt="";
+   $dtt=explode(",",$tr);
+   $dtcant=count($dtt);
+   for($u=0;$u<$dtcant;$u++){
+       if($dtt[$u]<>0){
+           $tt.=$dtt[$u];
+            if($u<$dtcant-1){
+			 $tt.=",";
+			 }
+       }
+   }
+   
+     $_SESSION['id_transferencia']=$tt;
+ 
+   }else{
+       $_SESSION['id_transferencia']=$valor;
+   }
+    }
+       function eliminarsession(){
+        unset($_SESSION['id_transferencia']);
+    }
+      function listado(){
+
+        $this->uni = new unidad ();
+        $this->usu = new usuario ();
+        $this->registry->template->str_id = "";
+        $this->registry->template->trn_uni_destino = $this->uni->obtenerSelectUnidades();
+        $this->registry->template->trn_usuario_des = ""; 
+        //$this->usu->listUsuariosOper($_SESSION ['USU_ID'],$ins_id);
+          if(isset($_SESSION['id_transferencia'])){
+    $id_transferencia=$_SESSION['id_transferencia'];
+    //elimina la copia que en una cadena
+    $nuevo_session="";
+    $explode=explode(",",$id_transferencia);
+    $nuevo=array_unique($explode);
+    $cantidad=count($nuevo);$r=0;
+    foreach($nuevo as $lis){
+        
+        if($r>0){
+            $nuevo_session.=",";
+        }
+        $nuevo_session.=$lis;
+        $r++;
+    }
+    $_SESSION['id_transferencia']=$nuevo_session;
+ 
+  }
+        
+        $this->series = new series ();
+        $this->usuario = new usuario ();
+        $adm = $this->usuario->esAdm();
+        $this->registry->template->PATH_A = $this->series->loadMenu($adm, "test");
+        $this->registry->template->PATH_B = $this->series->loadMenu($adm, "test2");
+
+        $this->registry->template->titulo = "Expedientes";
+        $this->registry->template->titulo2 = "Expedientes transferidos";          
+        $this->menu = new menu ();
+        $liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION ['USU_ID']);
+        $this->registry->template->men_titulo = $liMenu;        
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+        $this->registry->template->PATH_EVENT = "add";
+        $this->registry->template->GRID_SW = "false";
+        $this->registry->template->PATH_J = "jquery";
+        $this->menu = new menu ();
+        $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION ['USU_ID']);
+        $this->registry->template->men_titulo = $this->liMenu;
+        $this->registry->template->show('headerG');
+        $this->registry->template->show('transferencia/tab_list_transferenciag.tpl');
+        $this->registry->template->show('footer');
+    }
+    function ajaxsession(){
+        $id_transferencia=$_SESSION['id_transferencia'];
+        echo '<input type="hidden" id="sesi" value="'.$id_transferencia.'">';
+        
+    }
+    
     function loadExp() {
+                 $id_transferencia="";
+  if(isset($_SESSION['id_transferencia'])){
+    $id_transferencia=$_SESSION['id_transferencia'];
+    //$id_listar=$_SESSION['id_lista'];
+  }
         $this->series = new series ();
         $this->expediente = new tab_expediente ();
         $this->expediente->setRequest2Object($_REQUEST);
@@ -135,7 +274,10 @@ class transferenciaController extends baseController {
         $expediente = new expediente ();
         $result = $this->expediente->dbselectBySQL($sql);
         $total = $expediente->countExp2($where);
-
+              if($id_transferencia<>""){
+                  $explode=explode(",",$id_transferencia);
+                $cantidad=  count($explode);	
+        }else{$cantidad=0;}
         /* header ( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
           header ( "Cache-Control: no-cache, must-revalidate" );
           header ( "Pragma: no-cache" ); */
@@ -146,10 +288,23 @@ class transferenciaController extends baseController {
         $json .= "total: $total,\n";
         $json .= "rows: [";
         $rc = false;
-        $i = 0;
+        $i = 0;$j=1;
+        $si=0;
         foreach ($result as $un) {
+           
+            for($t=0;$t<$cantidad;$t++){
+                 if($explode[$t]==$un->exp_id){
+                $si=1;
+                    }
+            }
+            if($si==1){
+                 $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   checked=\"checked\"/>";
+            $si=0;
+                 
+            }else{
+                $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
+            }
             
-            $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"exp_chk\" type=\"checkbox\" value=\"" . $un->exp_id . "\" />";
             
             if ($rc)
                 $json .= ",";
@@ -167,13 +322,158 @@ class transferenciaController extends baseController {
             $json .= ",'" . addslashes($expediente->obtenerCustodios($un->exp_id)) . "'";
             $json .= "]}";
             $rc = true;
-            $i++;
+            $i++;$j++;
         }
         $json .= "]\n";
         $json .= "}";
         echo $json;
 
     }
+    
+ function gridtransferencia(){
+     
+                        $id_transferencia="";
+  if(isset($_SESSION['id_transferencia'])){
+    $id_transferencia=$_SESSION['id_transferencia'];
+    //$id_listar=$_SESSION['id_lista'];
+  }
+        $this->series = new series ();
+        $this->expediente = new tab_expediente ();
+        $this->expediente->setRequest2Object($_REQUEST);
+        $this->usuario = new usuario ();
+        $page = $_REQUEST ['page'];
+        $rp = $_REQUEST ['rp'];
+        $sortname = $_REQUEST ['sortname'];
+        $sortorder = $_REQUEST ['sortorder'];
+        if (!$sortname)
+            $sortname = 'tab_expediente.exp_fecha_exf';
+        if (!$sortorder)
+            $sortorder = 'desc';
+        $sort = "ORDER BY $sortname $sortorder ";
+        if (!$page)
+            $page = 1;
+        if (!$rp)
+            $rp = 15;
+        $start = (($page - 1) * $rp);
+        $limit = "LIMIT $rp OFFSET $start ";
+        $query = utf8_encode($_REQUEST ['query']);
+        $qtype = $_REQUEST ['qtype'];
+        $where = "";
+        if ($query != "") {
+            if ($qtype == 'exp_id')
+                $where .= " and tab_expediente.exp_id LIKE '$query' ";
+            elseif ($qtype == 'ser_categoria')
+                if ($query=='TODOS'){
+                    $where .= "";
+                }
+                else{
+                    $where .= " and tab_series.ser_categoria LIKE '%$query%' ";
+                }
+            elseif ($qtype == 'custodio') {
+                $nomArray = explode(" ", $query);
+                foreach ($nomArray as $nom) {
+                    $where .= " and (tab_usuario.usu_nombres LIKE '%$nom%' OR tab_usuario.usu_apellidos LIKE '%$nom%') ";
+                }
+            }else{
+                if ($query=='TODOS'){
+                    $where .= "";
+                }else{
+                    $where .= " and $qtype LIKE '%$query%' ";
+                }
+            }
+                
+        }
+        //$where2="";
+       $valor3="";
+      // $where="AND tab_expediente.exp_id=23 or tab_expediente.exp_id=24";
+ if($id_transferencia<>""){
+                 $explode3=explode(",",$id_transferencia);
+                $cantidad3=  count($explode3);	
+                for($i=0;$i<$cantidad3;$i++){
+					$valor3.="tab_expediente.exp_id='".$explode3[$i]."'";
+					if($i<$cantidad3-1){
+					$valor3.=" or ";
+					}
+                }
+       $where .= " AND $valor3 ";              
+        
+        }
+        $sql = "SELECT
+                tab_fondo.fon_cod,
+                tab_unidad.uni_cod,
+                tab_tipocorr.tco_codigo,
+                tab_series.ser_codigo,
+                tab_expediente.exp_codigo,
+                tab_unidad.uni_id,
+                tab_series.ser_id,
+                tab_expediente.exp_id,
+                tab_series.ser_categoria,
+                tab_expisadg.exp_titulo,
+                tab_expisadg.exp_fecha_exi,
+                (tab_expisadg.exp_fecha_exi + 
+                    (SELECT tab_retensiondoc.red_prearc * INTERVAL '1 year' 
+                    FROM tab_retensiondoc 
+                    WHERE tab_retensiondoc.red_id = tab_series.red_id)) ::DATE AS exp_fecha_exf,
+                    tab_usuario.usu_nombres,
+                tab_usuario.usu_apellidos,
+                tab_expfondo.exf_estado
+                FROM
+                tab_unidad
+                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
+                INNER JOIN tab_expfondo ON tab_expediente.exp_id = tab_expfondo.exp_id
+                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
+                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+                INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                INNER JOIN tab_usuario ON tab_usuario.usu_id = tab_expusuario.usu_id
+                WHERE
+                tab_expusuario.usu_id = " . $_SESSION['USU_ID'] . "
+                AND tab_series.ser_estado = 1
+                AND tab_expediente.exp_estado = 1
+                AND tab_usuario.usu_estado = 1
+                AND tab_expfondo.exf_estado = 1                
+                AND tab_expusuario.eus_estado = 1 
+                 $where $sort $limit";
+
+        $expediente = new expediente ();
+        $result = $this->expediente->dbselectBySQL($sql);
+        $total = $expediente->countExp2($where);
+        header("Content-type: text/x-json");
+        $json = "";
+        $json .= "{\n";
+        $json .= "page: $page,\n";
+        $json .= "total: $total,\n";
+        $json .= "rows: [";
+        $rc = false;
+        $i = 0;$j=1;
+        $si=0;
+        foreach ($result as $un) {
+               $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  disabled=\"disabled\" checked=\"checked\" type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
+            if ($rc)
+                $json .= ",";
+            $json .= "\n{";
+            $json .= "id:'" . $un->exp_id . "',";            
+            $json .= "cell:['" . $un->exp_id . "'";            
+            $json .= ",'" . $chk . "'";
+            
+            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo .  DELIMITER . $un->exp_codigo) . "'";
+            $json .= ",'" . addslashes($un->ser_categoria) . "'";
+            $json .= ",'" . addslashes($un->exp_titulo) . "'";
+            //$json .= ",'" . addslashes($un->exp_descripcion) . "'";
+            $json .= ",'" . addslashes($un->exp_fecha_exi) . "'";
+            $json .= ",'" . addslashes($un->exp_fecha_exf) . "'";
+            $json .= ",'" . addslashes($expediente->obtenerCustodios($un->exp_id)) . "'";
+            $json .= "]}";
+            $rc = true;
+            $i++;$j++;
+        }
+        $json .= "]\n";
+        $json .= "}";
+        echo $json;
+
+
+ }
 
     function loadTransf() {
         //trn_confirmado indica lugar: Fondo-Institucion,
@@ -378,9 +678,9 @@ class transferenciaController extends baseController {
     }
 
     function verifSerie() {
-        $ids = substr($_REQUEST['Ids'], 0, -1);
-        $array = explode(",",$ids);
-        $tususer = new tab_usu_serie();        
+        $ids = $_REQUEST['Ids'];
+        $array = explode(",",$ids);$res = "";$t=0;
+        $tususer = new tab_usu_serie();  $num=0;      
         foreach ($array as $valor) {
             $sql = "";
             $sql = "SELECT
@@ -398,13 +698,18 @@ class transferenciaController extends baseController {
                 AND tab_expediente.exp_estado = 1
                 AND tab_usuario.usu_id = '" . $_REQUEST['usu_id'] . "' 
                 AND tab_expediente.exp_id = '" . $valor . "'" ;
+           
+            
             $num = $tususer->countBySQL($sql);
-            $res = "";
-            if ($num > 0) {
-                $res = "Ok";
-            }else{
-                $res = $valor;
-            }          
+            
+            if ($num == 0) {
+              
+             if($t>0){
+                 $res.=",";
+             } 
+             $t++;
+             $res .= $valor;
+            }         
 
         }
         

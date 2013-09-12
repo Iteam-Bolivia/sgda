@@ -10,7 +10,14 @@ body {
 	padding: 0;
 	background-image: url("images/page_bg.gif");
 	background-repeat: repeat-x;
-}
+}  #error_dominio{
+    margin: 10px;
+         font-size: 15px;
+	  background-color:#FFDBDB;
+	  border:2px solid #FFBABA;
+	  width:850px; height:40px;
+          text-align: left;margin-top: 20px
+	  }
 
 a {
 	text-decoration: none;
@@ -125,7 +132,7 @@ td {
 
 #header {
 	width: 95%;
-	height: 89px;
+	height: 70px;
 	margin: auto;
 }
 
@@ -155,8 +162,8 @@ td {
 	outline: none;
 	text-decoration: none;
 	width: 350px;
-	height: 50px;
-	margin-top: 25px;
+	height: 40px;
+	margin-top: 35px;
 }
 
 #header .user {
@@ -166,7 +173,7 @@ td {
 	font-weight: bold;
 	width: auto;
 	height: 42px;
-	margin-top: 15px;
+	margin-top: 35px;
 	padding-left: 20px;
 }
 
@@ -285,6 +292,7 @@ pading-bottom: 0;*/
 	overflow: hidden;
 	float: left;
 	width: 12%; /*232px;*/  /*25%*/
+        
 }
 
 #menuOther0 {
@@ -380,7 +388,7 @@ pading-bottom: 0;*/
 }
 
 #menu4 dl a {
-	display: block;
+	display: none;
 	text-decoration: none;
 	height: 20px;
 	padding-bottom: 0;
@@ -411,7 +419,7 @@ pading-bottom: 0;*/
 	padding-top: 8px;
 	font-weight: bold;
 }
-
+/* mod freddy
 #menu4 li dl.Act dt a,#menu4 li a td dl.Act dt a {
 	-moz-background-clip: border;
 	-moz-background-origin: padding;
@@ -422,12 +430,13 @@ pading-bottom: 0;*/
 	background-position: 0 -32px;
 	background-repeat: no-repeat;
 	color: #00004A;
+      
 	padding-bottom: 0;
 	padding-left: 0px;
 	padding-right: 0;
 	padding-top: 8px;
 	font-weight: bold;
-}
+}*/
 
 #menu4 li dt a,#menu4 li a td dt a {
 	-moz-background-clip: border;
@@ -446,7 +455,7 @@ pading-bottom: 0;*/
 /*#menu4 li:hover dd, #menu4 li a:hover td dd, #menu4 li dl.Act dd {
 display:block;
 }*/
-#menu4 li dl.Act dd {
+#menu4 li dl dd {
 	display: block;
 }
 
@@ -468,6 +477,7 @@ display:block;
 	padding-top: 4px;
 	text-decoration: none;
 	height: 20px; /*1.03em;*/
+        
 }
 
 #menu4 li dl.Act dd a {
@@ -479,7 +489,7 @@ display:block;
 	background-position:0 0;
 	background-repeat:repeat;*/
 	color: #334964;
-	display: block;
+	display: none;/*modificado menu atomatico*/
 	min-height: 1em;
 	padding-bottom: 4px;
 	padding-left: 20px;
@@ -529,9 +539,9 @@ margin-top:-4px;*/
 
 #menu4 dt {
 	border-top-color: #CCCCEE;
-	border-top-style: solid;
+	
 	border-top-width: 1px;
-	font-size: 1.1em;
+	font-size: 1em;
 	margin-bottom: 0;
 	margin-left: 0;
 	margin-right: 0;
@@ -543,7 +553,7 @@ margin-top:-4px;*/
 }
 
 #menu4 dd {
-	font-size: 1em;
+	font-size: 10px;/*1em*/
 	margin-bottom: 0;
 	margin-left: 0;
 	margin-right: 0;
@@ -567,6 +577,7 @@ margin-top:-4px;*/
 	background-repeat: repeat;
 	color: #FFFFFF;
 	margin: 0;
+       
 }
 
 #menu4 li dl.Act dd a.subAct,#menu4 li td dl.Act dd a.subAct {
@@ -1523,6 +1534,14 @@ a.linkCinco:hover {
 .flexigrid div.fbutton .folder_table {
 	background: url(flexigrid/images/folder_table.png) no-repeat center left;
 }
+.flexigrid div.fbutton .disk {
+	background: url(flexigrid/images/folder_table.png) no-repeat center left;
+}
+.flexigrid div.fbutton .application_view_columns {
+	background: url(flexigrid/images/folder_table.png) no-repeat center left;
+}
+
+
 /*  */
 /* fin FLEXIGRID */
 
