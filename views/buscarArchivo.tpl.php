@@ -10,11 +10,11 @@
 
         
         <tr>
-            <td>T&iacute;tulo del Expediente:</td>
+            <td>Palabra de búsqueda:</td>
             <td colspan="3">
-                <input name="exp_titulo" type="text" id="exp_titulo"
+                <input name="palabra" type="text" id="palabra"
                     value="" size="100" autocomplete="off" maxlength="255"
-                    class="alphanum" title="Título del Expediente" />
+                    class="alphanum" title="Palabra de Búsqueda" />
             </td>
         </tr>
         
@@ -138,34 +138,18 @@
                            value="" size="150" autocomplete="off" maxlength="20"
                            class="alphanum" title="Cargo de la persona que elabora el documento" /></td>
             </tr>   
-            
-            
-<!--        <tr>
-            <td>Fecha Extrema Inicial:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exi" type="text" id="exf_fecha_exi"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exi" />
-            </td>
-        </tr>
-
-        <tr>
-            <td>Fecha Extrema Final:</td>
-            <td colspan="3">
-                <input name="exf_fecha_exf" type="text" id="exf_fecha_exf"
-                       value="" size="20" autocomplete="off" maxlength="10" title="exf_fecha_exf" />
-            </td>
-        </tr>-->            
+                     
             
         <tr>
             <td width="166">Tipo de Documento:</td>
             <td colspan="3">
-                <input type="radio" name="fil_tipoarch" value="ADM" 
+                <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="ADM" 
                     title="Solo los documentos que han pasado por el proceso administrativo institucional"/>Administrativo
-                <input type="radio" name="fil_tipoarch" value="CON" 
+                <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="CON" 
                     title="Sólo los documentos que pasan por el proceso administrativo contable y /o comercial tienen valor fiscal o contable. Documentos relacionados con mecanismos de control presupuestario, operaciones de gasto y ejecución presupuestaria"/>Financiero
-                <input type="radio" name="fil_tipoarch" value="LEG" 
+                <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="LEG" 
                     title="Sólo los documentos originales propios del proceso administrativo institucional, comercial y/o notarial tiene valor legal intrínseco"/>Legal
-                <input type="radio" name="fil_tipoarch" value="TEC" 
+                <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="TEC" 
                     title="Sólo los documentos originales propios del proceso administrativo institucional, tecnico tiene valor legal intrínseco"/>T&eacute;cnico
             </td>
         </tr>         
@@ -241,7 +225,6 @@
         ],
         buttons : [
             {name: 'Imprimir', bclass: 'print', onpress : test},{separator: true},
-            {name: 'Exportar', bclass: 'export', onpress : test},{separator: true},
         ],
         searchitems : [
             {display: 'Id', name : 'fil_id', isdefault: true},
@@ -258,7 +241,8 @@
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 680,
+        height: 180,
+        palabra: "",
         fon_id: "",
         uni_id: "",
         ser_id: "",
@@ -272,6 +256,7 @@
         fil_proc: "",
         fil_firma: "",
         fil_cargo: "",
+        fil_tipoarch: "",
         onSuccess: function(){
             $('.viewFile').click(function(){
                 url="<?php echo $PATH_DOMAIN ?>/archivo/download/"+$(this).attr('file')+"/";

@@ -77,6 +77,14 @@ class buscarArchivoController extends baseController {
 //            $result['fon_id'] = html_entity_decode(trim($_REQUEST["fon_id"]), ENT_QUOTES);
 //        }    
         
+        if (isset($_REQUEST["palabra"])) {
+            $result['palabra'] = html_entity_decode(trim(strtoupper($_REQUEST["palabra"])), ENT_QUOTES);
+        }  
+
+        if (isset($_REQUEST["fil_nur"])) {
+            $result['fil_nur'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_nur"])), ENT_QUOTES);
+        } 
+        
         if (isset($_REQUEST["uni_id"])) {
             $result['uni_id'] = html_entity_decode(trim($_REQUEST["uni_id"]), ENT_QUOTES);
         }  
@@ -121,9 +129,9 @@ class buscarArchivoController extends baseController {
             $result['fil_cargo'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_cargo"])), ENT_QUOTES);
         }         
       
-        if (isset($_REQUEST["fil_nur"])) {
-            $result['fil_nur'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_nur"])), ENT_QUOTES);
-        } 
+        if (isset($_REQUEST["fil_tipoarch"])) {
+            $result['fil_tipoarch'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_tipoarch"])), ENT_QUOTES);
+        }         
 
         
         return $result;
