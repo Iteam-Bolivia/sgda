@@ -414,7 +414,9 @@ class seriesController Extends baseController {
         $this->registry->template->show('headerF');
         $this->registry->template->show('tab_series.tpl');
         $this->registry->template->show('footer');
-    }    
+    }  
+    
+    
     function update() {
         $tseries = new tab_series();
         $tseries->setRequest2Object($_REQUEST);

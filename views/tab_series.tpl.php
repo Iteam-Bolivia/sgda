@@ -69,17 +69,6 @@
             </td>
         </tr>  
         
-
-
-        <tr>
-            <td>Nombre de la Serie o Subserie:</td>
-            <td colspan="3"><input name="ser_categoria" type="text"
-                                   id="ser_categoria" value="<?php echo $ser_categoria; ?>" size="100"
-                                   autocomplete="off" class="required alphanum" maxlength="256"
-                                   onkeyup="this.value=this.value.toUpperCase()"
-                                   title="Categor&iacute;a" /></td>
-        </tr>
-
         <tr>
             <td>Subserie de:</td>
             <td colspan="3">
@@ -88,6 +77,15 @@
                     <?php echo $ser_par ?>
                 </select>
             </td>
+        </tr>
+
+        <tr>
+            <td>Nombre de la Serie o Subserie:</td>
+            <td colspan="3"><input name="ser_categoria" type="text"
+                                   id="ser_categoria" value="<?php echo $ser_categoria; ?>" size="100"
+                                   autocomplete="off" class="required alphanum" maxlength="256"
+                                   onkeyup="this.value=this.value.toUpperCase()"
+                                   title="Categor&iacute;a" /></td>
         </tr>
         
         <tr>

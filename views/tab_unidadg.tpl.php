@@ -30,7 +30,7 @@
             {display: 'Fondo o Subfondo', name : 'fon_descripcion'},
             {display: 'Seccion o Subsección', name : 'uni_descripcion'},
         ],
-        sortname: "uni_cod",
+        sortname: "uni_id",
         sortorder: "asc",
         usepager: true,
         title: 'LISTA DE SECCIONES O SUBSECCIONES',

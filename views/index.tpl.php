@@ -17,9 +17,6 @@
     <body>
         <div class="wrap">
 	<div id="content">
-            
-                      
-
             <div id="main">
                 <div align="center"> <img src="<?php echo $PATH_WEB; ?>/css/logo.png">
                 </div>	
