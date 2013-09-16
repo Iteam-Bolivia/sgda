@@ -47,6 +47,7 @@ class transferenciaController extends baseController {
     }
     //freddy
     function recarga(){
+        error_reporting(0);
  $valor=$_REQUEST['valor'];
  $valor2=$_REQUEST['valor2'];
 $result_menor=0;$result_mayor=0;$cad="";$sd="";
@@ -121,6 +122,13 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
        $_SESSION['id_transferencia']=$valor;
    }
     }
+    
+        function recarga2(){
+     
+ $valor=$_REQUEST['valor'];
+ $_SESSION['id_transferencia']=$valor;
+   }
+    
        function eliminarsession(){
         unset($_SESSION['id_transferencia']);
     }
@@ -179,6 +187,92 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         echo '<input type="hidden" id="sesi" value="'.$id_transferencia.'">';
         
     }
+      function ajaxsession2(){
+        $id_transferencia=$_SESSION['id_transferencia'];
+         echo '<input name="idsExp" id="idsExp" type="text" value="'.$id_transferencia.'" />';
+    }
+    function guardarTransferencia(){
+        
+          unset($_SESSION["id_transferencia"]); 
+         $expusuario = new expusuario();
+         $soltransferencia=new soltransferencia();
+         $exptransferencia=new exp_transferencia();
+         
+         $this->tab_expusuario = new tab_expusuario();
+         $this->tab_soltransferencia=new tab_soltransferencia();
+         $this->tab_exptransferencia=new tab_exptransferencia();
+
+         $uni_id=$_REQUEST['uni_id'];
+         $idsExp=$_REQUEST['idsExp'];
+         $usu_id=$_REQUEST['usu_id'];
+         $uni_destino=$_REQUEST['trn_uni_destino'];
+         $usu_destino=$_REQUEST['trn_usuario_des'];
+         $direccion=$_REQUEST['direccion'];
+         $telefono=$_REQUEST['telefono'];
+
+        $explode=explode(",",$idsExp);
+
+        foreach ($explode as $list){
+         $rowlist=$this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_id AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 1");
+         $rowlist=$rowlist[0];
+         $rowlist2=$this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_destino AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 0");
+         $tt=0;
+         foreach ($rowlist2 as $catt){
+             $tt++;
+         }     
+         if($tt>0)
+         {
+         $this->tab_expusuario->updateMult("eus_estado",0,$rowlist->eus_id);
+         $this->tab_expusuario->setUsu_id($usu_destino);
+         $this->tab_expusuario->setExp_id($list);
+         $this->tab_expusuario->setEus_estado(2);
+         $this->tab_expusuario->insert(); 
+         }
+         else
+         {
+         $this->tab_expusuario->updateMult("eus_estado",0,$rowlist->eus_id);
+         $this->tab_expusuario->setUsu_id($usu_destino);
+         $this->tab_expusuario->setExp_id($list);
+         $this->tab_expusuario->setEus_estado(2);
+         $this->tab_expusuario->insert();
+         }
+         
+         }
+        $this->tab_soltransferencia->setRequest2Object($_REQUEST);
+        $this->tab_soltransferencia->setStr_fecha(date("Y-m-d"));
+        $this->tab_soltransferencia->setUni_id($uni_id);
+        $this->tab_soltransferencia->setUnid_id($uni_destino);
+        $this->tab_soltransferencia->setStr_nrocajas(1);
+        $this->tab_soltransferencia->setStr_totpzas(1);
+        $this->tab_soltransferencia->setStr_totml(1);
+        $this->tab_soltransferencia->setStr_nroreg(1);        
+        $this->tab_soltransferencia->setStr_fecini(date('Y-m-d'));
+        $this->tab_soltransferencia->setStr_fecfin(date('Y-m-d'));
+        $this->tab_soltransferencia->setStr_estado(1);
+        $this->tab_soltransferencia->setUsu_id($usu_id);
+        $this->tab_soltransferencia->setUsud_id($usu_destino);
+        $this->tab_soltransferencia->setStr_direccion($direccion);  
+        $this->tab_soltransferencia->setStr_telefono($telefono);  
+        $this->tab_soltransferencia->insert();
+        $id=$soltransferencia->obtenerMaximo("str_id");
+        $id2=$exptransferencia->obtenerMaximo("etr_orden");
+      
+        $cant=$id2;
+          foreach ($explode as $list){
+        $this->tab_exptransferencia->setStr_id($id);
+        $this->tab_exptransferencia->setEtr_orden($cant);
+        $this->tab_exptransferencia->setExp_id($list);
+        $this->tab_exptransferencia->setEtr_obs("obs");
+        $this->tab_exptransferencia->setEtr_estado(1);
+        $this->tab_exptransferencia->insert();
+        $cant++;
+          }
+          
+   
+      Header("Location: " . PATH_DOMAIN . "/transferencia/");
+    
+    }
+    
     
     function loadExp() {
                  $id_transferencia="";
@@ -449,7 +543,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $i = 0;$j=1;
         $si=0;
         foreach ($result as $un) {
-               $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  disabled=\"disabled\" checked=\"checked\" type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
+               $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"   checked=\"checked\" type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
             if ($rc)
                 $json .= ",";
             $json .= "\n{";
@@ -878,7 +972,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         //Close and output PDF document
         $pdf->Output('reporte_transferencia.pdf', 'I');
     }    
-    
+   
 
 }
 

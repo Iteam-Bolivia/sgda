@@ -322,7 +322,7 @@ class usuario extends tab_usuario {
         if ($default) {
             $where .= " AND tu.uni_id = '" . $default . "' ";
         }
-
+$usuario=$_SESSION ['USU_ID'];
         $sql = "SELECT 
                 tu.usu_id, 
                 tu.uni_id, 
@@ -330,7 +330,7 @@ class usuario extends tab_usuario {
                 tu.usu_apellidos
                 FROM tab_usuario AS tu 
                 Inner Join tab_rol AS tr ON tr.rol_id = tu.rol_id
-                WHERE tu.usu_estado =  1  " . $where . " 
+                WHERE tu.usu_estado =  1  " . $where . " AND tu.usu_id<>$usuario
                 ORDER BY tu.usu_apellidos ASC, tu.usu_nombres ASC"; 
         $row = $this->usuario->dbselectBySQL2($sql);
         return json_encode($row);

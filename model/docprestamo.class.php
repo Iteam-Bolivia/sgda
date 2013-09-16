@@ -42,11 +42,21 @@ class docprestamo extends tab_docprestamo {
     }
     function obtenerMaximo($field){
       $maximo=new Tab_docprestamo();
+      $verificar=$maximo->dbselectAll();
+      $t=0;
+      foreach($verificar as $count){
+       $t++;   
+      }
+      if($t>0){
     $max=$maximo->dbSelectBySQL("SELECT* from tab_docprestamo
    where $field = (select max($field) from tab_docprestamo)");
-   $mx=$max[0];
+    $mx=$max[0];
     $incre=$mx->dpr_orden+1;
     return $incre;
+      }else{
+         return 1;
+      }
+      
     }
 
 }

@@ -9,11 +9,11 @@
  * @version $Id$ 2010
  * @access public
  */
-class exp_transferencia extends tab_exp_transferencia {
+class exp_transferencia extends tab_exptransferencia {
 
     function __conetruct() {
         //parent::__conetruct();
-        $this->exp_transferencia = new tab_exp_transferencia();
+        $this->exp_transferencia = new tab_exptransferencia();
     }
 
     function obtenerSelect($default = null) {
@@ -44,6 +44,24 @@ class exp_transferencia extends tab_exp_transferencia {
         $num = $exp_transferencia->countBySQL($sql);
         return $num;
     }
+        function obtenerMaximo($field){
+      $maximo=new tab_exptransferencia();
+    $max=$maximo->dbSelectBySQL("SELECT* from tab_exptransferencia
+   where $field = (select max($field) from tab_exptransferencia)");
+   $u=0;
+   foreach ($max as $uuu){
+       $u++;
+   }
+
+    if($u>0){
+        $mx=$max[0];
+        $id=$mx->etr_orden;
+    }else{
+        $id=1;  
+    }
+    return $id;
+    }
+
 
 }
 

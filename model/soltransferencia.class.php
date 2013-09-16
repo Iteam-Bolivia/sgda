@@ -71,7 +71,17 @@ class soltransferencia extends tab_soltransferencia {
                     $where ";
             $num = $this->expediente->countBySQL($sql);
             return $num;        
-    }    
+    }   
+    
+    function obtenerMaximo($field){
+      $maximo=new tab_soltransferencia();
+    $max=$maximo->dbSelectBySQL("SELECT* from tab_soltransferencia
+   where $field = (select max($field) from tab_soltransferencia)");
+   $mx=$max[0];
+    $id=$mx->str_id;
+    return $id;
+    }
+
 }
 
 ?>

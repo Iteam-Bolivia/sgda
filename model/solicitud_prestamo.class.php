@@ -87,7 +87,14 @@ class solicitud_prestamo extends tab_solprestamo {
        $nombrecompleto=$nombre." ".$apellido;
        return $nombrecompleto;
     }
-
+    function obtenerMaximo($field){
+      $maximo=new tab_solprestamo();
+    $max=$maximo->dbSelectBySQL("SELECT* from tab_solprestamo
+   where $field = (select max($field) from tab_solprestamo)");
+   $mx=$max[0];
+    $id=$mx->spr_id;
+    return $id;
+    }
 }
 
 ?>

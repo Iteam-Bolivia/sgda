@@ -25,9 +25,9 @@
     <input name="serie" id="idcom" type="hidden" value="" />
     <input name="ids" id="ids" type="hidden" value="" />
 </form>
-
-<form id="formA" name="formA" method="post" class="validable" 
-      action="<?php echo $PATH_DOMAIN ?>/prestamos/guardarPrestamo/">
+<input type="hidden" id="exp_reprobado">
+<form id="form" name="form" method="post" class="validable" 
+      action="<?php echo $PATH_DOMAIN ?>/transferencia/guardarTransferencia/">
     <input name="sql" id="sql" type="hidden" value="" />
     <input type="hidden" name="archivos" id="archivos" value="">
     <table width="100%" border="0">
@@ -48,11 +48,11 @@
                 echo $res_uni->uni_descripcion;
                 
                         ?>
-        <input name="uni_id" id="uni_id" type="text" value="<?php echo $uni_id ?>" />       
-        <input name="idsExp" id="idsExp" type="text" value="<?php echo $id_exps ?>" /> 
+        <input name="uni_id" id="uni_id" type="hidden" value="<?php echo $uni_id ?>" />       
+        <div id="recarga3"><input name="idsExp" id="idsExp" type="hidden" value="<?php echo $id_exps ?>" /> </div>
         <input name="ser_id" id="ser_id" type="hidden" value="" />
         <input name="exp_id" id="exp_id" type="hidden" value="" />
-         <input type="text" id="usu_id" value="<?php echo $usu ?>">
+         <input type="hidden" id="usu_id" name="usu_id" value="<?php echo $usu ?>">
             </td>
         </tr>
              <tr>
@@ -80,8 +80,8 @@
                 </td>
         </tr>
          
-              <tr>
-                 <th>Usuario destino:</th>
+        <tr>
+                <th>Usuario destino:</th>
                 <td>
                     <select name="trn_usuario_des" id="trn_usuario_des" class="text ui-widget-content ui-corner-all" size="2" style="height: 100px">
                         <option value="">(seleccionar)</option>
@@ -90,8 +90,18 @@
                 </td>
         </tr>
          
-       
-          
+        <tr>
+            <th>Direcci&oacute;n:</th>
+                <td>
+                <input type="text" name="direccion" id="direccion" size="40">
+                </td>
+        </tr>
+            <tr>
+                <th>T&eacute;lefono:</th>
+                <td>
+                <input type="text" name="telefono" id="telefono" size="16">
+                </td>
+        </tr>
      </table>
        
 <div id="error_dominio" style="display:none">
@@ -129,7 +139,7 @@
 //            {display: 'Custodio', name : 'custodios', width : 100, sortable : true, align: 'center'}
         ],
         buttons : [
-            {name: 'Guardar', bclass: 'folder_table', onpress : test},
+            {name: 'Actualizar', bclass: 'folder_table', onpress : test},
           
             {name: 'Cancelar', bclass: 'cancel', onpress : test},
          
@@ -171,15 +181,8 @@ $("#sesi").val(0);
         window.location.href="<?php echo $PATH_DOMAIN."/transferencia/";?>";
       
 }
-if (com=='Listar'){
-       if($("#sesi").val()==0||$("#sesi").val()==""){
-          $.msgbox("Adicione un registro a la lista");
-       } else{
-    window.location.href="<?php echo $PATH_DOMAIN."/transferencia/listado/";?>";
-   }
 
-}
-        if (com=='Guardar'){  
+        if (com=='Actualizar'){  
         
                  document.getElementById("archivos").value="";
                       
@@ -200,31 +203,26 @@ if(cadena==""){
                   dt2=$(".fil_chk"+t).val();
          //var cadena=new array();
          
-cadena=document.getElementById("archivos2").value;
+
 
 if(cadena==""){
     comi="";
-}else{
-   document.getElementById("archivos2").value+=",";  
 }
-            document.getElementById("archivos2").value+=dt2;  
     
         }
     t++;    
     }
 
       var id_archivos=document.getElementById("archivos").value;
-      var id_archivos2=document.getElementById("archivos2").value;
   
-      var url="<?php echo $PATH_DOMAIN."/transferencia/recarga/";?>";
-          $("#recarga").load(url,{valor:id_archivos,valor2:id_archivos2});
+      var url="<?php echo $PATH_DOMAIN."/transferencia/recarga2/";?>";
+          $("#recarga").load(url,{valor:id_archivos});
             $("#archivos").val("");
-              $("#archivos2").val("");
                $(".pReload",".flexigrid").click();
                
-   var urlsesi="<?php echo $PATH_DOMAIN ?>/transferencia/ajaxsession/";
-       $("#recarga2").load(urlsesi);             
-             
+   var urlsesi="<?php echo $PATH_DOMAIN ?>/transferencia/ajaxsession2/";
+       $("#recarga3").load(urlsesi);             
+           $("#exp_reprobado").val(""); 
               // $("#sesi").val(id_archivos);
 }else{
             $('#idcom').val(com);
@@ -244,6 +242,7 @@ if(cadena==""){
     
     $(function() {
          $("#trn_uni_destino").change(function(){
+          
              $.ajax({
                  type: "POST",
                  url: "<?php echo $PATH_DOMAIN ?>/transferencia/listUsuarioJson/",
@@ -264,7 +263,7 @@ if(cadena==""){
          $("#trn_usuario_des").change(function(){
 if($(this).val()!=""){
     $("#error_dominio").fadeOut("fast");
-
+ $("#exp_reprobado").val(""); 
              $.ajax({
                  type: "POST",
                  url: "<?php echo $PATH_DOMAIN ?>/transferencia/verifSerie/",
@@ -273,10 +272,9 @@ if($(this).val()!=""){
                  success: function(msg){
                      if(msg==''){
                          //alert("Es correcto tiene autorizado para el expediente");
-                     }    
                      
-                     else{
-                         
+        } else{
+                        $("#exp_reprobado").val(msg); 
             $("#error_dominio").fadeIn("fast");
             $("#error_sp").html("El usuario destino no maneja la serie de este expediente: " + msg + "\nConsulte con el Administrador del Sistema");         
             //alert("El usuario destino no maneja la serie de este expediente: " + msg + "\nConsulte con el Administrador del Sistema");
@@ -338,7 +336,20 @@ if($(this).val()!=""){
                  $('#trn_descripcion').removeClass('ui-state-error');
              }
          });
-
+$("#btnSubB").click(function(){
+    var dato=$("#exp_reprobado").val();
+    if(dato!=""){
+        
+        return false;
+    }
+    var usu=document.getElementById("trn_usuario_des").value;
+    if($("#trn_uni_destino").val()==""||usu==""){
+     $("#error_dominio").fadeIn("fast");
+     $("#error_sp").html("Los siguientes campos son requeridos:\n ->Archivo Destino y Usuario Destino");         
+     return false;
+        }
+ 
+})
      });    
      
 </script>

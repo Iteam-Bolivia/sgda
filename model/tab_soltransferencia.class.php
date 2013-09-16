@@ -24,6 +24,8 @@ class tab_soltransferencia extends db {
     var $str_fecini;
     var $str_fecfin;
     var $str_estado;
+    var $str_direccion;
+    var $str_telefono;
 
     function __construct() {
         parent::__construct();
@@ -131,6 +133,22 @@ class tab_soltransferencia extends db {
 
     function setStr_estado($str_estado) {
         $this->str_estado = $str_estado;
+    }
+    function getStr_direccion(){
+        return $this->str_direccion;
+    }
+
+    function setStr_direccion($str_direccion) {
+        $this->str_direccion = $str_direccion;
+    }
+  function getStr_telefono() 
+    {
+        return $this->str_telefono;
+    }
+
+  function setStr_telefono($str_telefono) 
+    {
+        $this->str_telefono = $str_telefono;
     }
 
 }

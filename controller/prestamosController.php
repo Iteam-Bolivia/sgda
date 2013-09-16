@@ -720,6 +720,7 @@ class prestamosController extends baseController {
          $this->solicitud_prestamo = new tab_solprestamo();
          $this->docprestamo=new tab_docprestamo();
          $documento=new docprestamo();
+         $solprestamo=new solicitud_prestamo();
      //   $userLogin = new solicitud_prestamo();
          //fecha
          $dia=$_REQUEST['dia'];
@@ -758,15 +759,16 @@ class prestamosController extends baseController {
         $this->solicitud_prestamo->setSpr_obs($_REQUEST['usu_observ']);
         //$this->solicitud_prestamo->setUsu_fech_fin(date("Y-m-d"));
          $this->solicitud_prestamo->insert();
-           $row2 = $this->solicitud_prestamo->last_Insert_id();
-           $row2=$row2[0];          
+         
+       $id=$solprestamo->obtenerMaximo("spr_id");
+       
        $archivos=$_REQUEST['archivos'];
        $explode=explode(",",$archivos);
        $cantidad=  count($explode);
 for($i=0;$i<$cantidad;$i++){
         $this->docprestamo->setDpr_estado(1);
         $this->docprestamo->setFil_id($explode[$i]);
-        $this->docprestamo->setSpr_id($row2);
+        $this->docprestamo->setSpr_id($id);
         $this->docprestamo->setDpr_obs("obs");
         $inc=$documento->obtenerMaximo("dpr_orden");
         $this->docprestamo->setDpr_orden($inc);
@@ -864,7 +866,7 @@ for($i=0;$i<$cantidad;$i++){
          $fefinal=$this->mostrarfecha1($fecha1);
          $fecharegistro=$this->mostrarfecha2($fechar);
          if($un->spr_solicitante==""){
-            $solicitante=$solprestamos->ObtenerUsuario($un->spr_id);
+            $solicitante=$solprestamos->ObtenerUsuario($un->usu_id);
          }else{
              $solicitante=$un->spr_solicitante;
          }
