@@ -20,7 +20,7 @@
 
     $("#flex1").flexigrid
     ({
-        url: '<?php echo $PATH_DOMAIN ?>/cotransferencia/gridtransferencia/',
+        url: '<?php echo $PATH_DOMAIN ?>/cotransferencia/gridtransferencia/<?php echo VAR3; ?>/',
         dataType: 'json',
         colModel : [
             {display: 'ID' , name : 'exp_id', width : 40, sortable : true, align: 'center'},            

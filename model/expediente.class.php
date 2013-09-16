@@ -229,8 +229,7 @@ class expediente extends tab_expediente {
                 AND tab_series.ser_estado = 1
                 AND tab_expediente.exp_estado = 1
                 AND tab_usuario.usu_estado = 1
-                AND tab_expfondo.exf_estado = 1                
-                AND tab_expusuario.eus_estado = 1  
+                AND tab_expfondo.exf_estado = 1    
                 $where ";
         $num = $this->expediente->countBySQL($sql);
         return $num;        
@@ -244,7 +243,7 @@ class expediente extends tab_expediente {
                 FROM
                 tab_soltransferencia
                 WHERE 
-                tab_soltransferencia.str_estado = 0 AND
+                tab_soltransferencia.str_estado = 2 AND
                 tab_soltransferencia.usud_id = " . $_SESSION['USU_ID'] . "  
                 $where ";
         $num = $this->expediente->countBySQL($sql);

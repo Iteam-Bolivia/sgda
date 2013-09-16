@@ -248,7 +248,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $this->tab_soltransferencia->setStr_nroreg(1);        
         $this->tab_soltransferencia->setStr_fecini(date('Y-m-d'));
         $this->tab_soltransferencia->setStr_fecfin(date('Y-m-d'));
-        $this->tab_soltransferencia->setStr_estado(0);
+        $this->tab_soltransferencia->setStr_estado(2);
         $this->tab_soltransferencia->setUsu_id($usu_id);
         $this->tab_soltransferencia->setUsud_id($usu_destino);
         $this->tab_soltransferencia->setStr_direccion($direccion);  
@@ -269,8 +269,181 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
           }
           
    
-      Header("Location: " . PATH_DOMAIN . "/transferencia/");
+      //Header("Location: " . PATH_DOMAIN . "/transferencia/");
     
+        
+       Header("Location: " . PATH_DOMAIN . "/transferencia/VerRTransferencia/"); 
+    }
+    function VerRTransferencia(){
+            /* $id_prestamo=VAR3;
+   
+       
+        $sql="SELECT
+tab_solprestamo.spr_id,
+tab_fondo.fon_cod,
+tab_unidad.uni_codigo,
+tab_series.ser_codigo,
+tab_expediente.exp_codigo,
+tab_archivo.fil_codigo,
+tab_solprestamo.spr_fecha,
+tab_solprestamo.uni_id,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usu_id AND usu_estado = '1') AS usu_solicitante,
+tab_solprestamo.spr_solicitante,
+tab_solprestamo.spr_email,
+tab_solprestamo.spr_tel,
+tab_solprestamo.spr_fecent,
+tab_solprestamo.spr_fecren,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usua_id AND usu_estado = '1') AS usu_autoriza,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usur_id AND usu_estado = '1') AS usu_registrado,
+tab_solprestamo.spr_fecdev,
+tab_solprestamo.spr_obs,
+tab_solprestamo.spr_estado,
+tab_docprestamo.fil_id,
+tab_docprestamo.dpr_orden,
+tab_docprestamo.dpr_obs,
+tab_archivo.fil_titulo,
+tab_archivo.fil_proc,
+tab_archivo.fil_tomovol,
+tab_archivo.fil_ori,
+tab_archivo.fil_cop,
+tab_archivo.fil_fot,
+tab_archivo.fil_sala,
+tab_archivo.fil_estante,
+tab_archivo.fil_cuerpo,
+tab_archivo.fil_balda,
+tab_archivo.fil_nrocaj,
+tab_archivo.fil_obs,
+tab_expisadg.exp_fecha_exi,
+tab_expisadg.exp_fecha_exf,
+tab_sopfisico.sof_codigo,
+tab_unidad.uni_descripcion
+FROM
+tab_solprestamo
+INNER JOIN tab_docprestamo ON tab_solprestamo.spr_id = tab_docprestamo.spr_id
+INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_docprestamo.fil_id
+INNER JOIN tab_exparchivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+INNER JOIN tab_expediente ON tab_expediente.exp_id = tab_exparchivo.exp_id
+INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+INNER JOIN tab_series ON tab_series.ser_id = tab_expediente.ser_id
+INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
+INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
+WHERE
+tab_docprestamo.spr_id =".$id_prestamo."";*/
+        
+   $cadena="";  
+   $cadena="<br/><br/><br/><br/><br/><br/><br/>";
+  
+$cadena.='<b>Cuadro 8. Formulario Normalizado de Transferencias</b>';
+$cadena.='<br/><br/>';
+$cadena.='<table width="740" border="1">';
+  $cadena.='<tr>';
+    $cadena.='<td colspan="10" align="center">ADMINISTRADORA BOLIVIANA DE CARRETERAS<br />';
+    $cadena.='Formulario de Relacion de Transfencias<br /></td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td colspan="5">Subfondo:................................................................</td>';
+    $cadena.='<td colspan="5" align="right">Nº de transferencia:...........</td>';
+  $cadena.='</tr>  <tr>';
+    $cadena.='<td height="23" colspan="5">Sección:...................................................................</td>';
+    $cadena.='<td colspan="5"><blockquote>Unidad Remitente:.............................................</blockquote></td>';
+    $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td colspan="5">Subsección:.............................................................</td>';
+    $cadena.='<td colspan="5"><blockquote>Dirección y teléfono:..........................................</blockquote></td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td width="18" rowspan="2"><strong>Nº</strong></td>';
+    $cadena.='<td width="36" rowspan="2"><strong>Serie</strong></td>';
+    $cadena.='<td width="58" rowspan="2"><strong>Subserie</strong></td>';
+    $cadena.='<td width="133" rowspan="2"><strong>Codigo de Referencia</strong></td>';
+    $cadena.='<td colspan="2"><strong>Fechas extremas</strong></td>';
+    $cadena.='<td width="130" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
+    $cadena.='<td width="52" rowspan="2"><strong>Cajas</strong></td>';
+    $cadena.='<td width="46" rowspan="2"><strong>M.L.</strong></td>';
+    $cadena.='<td width="82" rowspan="2"><p><strong>Observ.</strong></p></td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td width="64"><strong>Inicio</strong></td>';
+    $cadena.='<td width="57"><strong>Final</strong></td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+  $cadena.='</tr>';
+  $cadena.='<tr>';
+    $cadena.='<td colspan="6" align="right" style="border-bottom:none;border-left:none;">TOTAL</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td>&nbsp;</td>';
+    $cadena.='<td style="border-bottom:none;border-right:none;">&nbsp;</td>';
+  $cadena.='</tr>';
+$cadena.='</table>';
+$cadena.='Lugar y fecha de la transferencia:................................................................................................................';
+$cadena.='<br />';
+
+
+        require_once ('tcpdf/config/lang/eng.php');
+        require_once ('tcpdf/tcpdf.php');
+        $pdf = new TCPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->setFontSubsetting(FALSE);
+         $pdf->SetAuthor("ITEAM");
+        $pdf->SetTitle('Reporte de Transferencia');
+        $pdf->SetSubject('Reporte de Transferencia');
+//        aumentado
+        $pdf->SetKeywords('Iteam, TEAM DIGITAL');
+        // set default header data
+        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'ABC', 'ADMINISTRADORA BOLIVIANA DE CARRETERAS (ABC)');
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+//        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+//
+
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(5, 30, 10);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+//        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 14);
+//        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+        $pdf->SetFont('helvetica', '', 10);
+        // add a page
+        $pdf->AddPage();
+
+//        $pdf->SetXY(110, 200);
+        $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
+$cadena2="";
+       $cadena2.='<table width="740" border="0">';
+
+  $cadena2.='<tr>';
+    $cadena2.='<td width="376" align="center" height="100" >Firma<br />';
+    $cadena2.='<b>Archivista Remitente</b>';
+    $cadena2.='</td>';
+    $cadena2.='<td width="348" align="center">Firma<br />';
+$cadena2.='<b>Archivista del Archivo Central</b></td>';
+$cadena2.='</tr>';
+$cadena2.='</table>';
+        
+        
+        
+        $cadena = $cadena.$cadena2;
+        $pdf->writeHTML($cadena, true, false, false, false, '');
+
+        // -----------------------------------------------------------------------------
+        //Close and output PDF document
+        $pdf->Output('reporte_transferencia.pdf', 'I');
     }
     
     

@@ -80,7 +80,7 @@ class coTransferenciaController extends baseController {
                 FROM
                 tab_soltransferencia
                 WHERE 
-                tab_soltransferencia.str_estado = 0 AND
+                tab_soltransferencia.str_estado = 2 AND
                 tab_soltransferencia.usud_id =" . $_SESSION['USU_ID'] . " $where $sort $limit";
 
         $expediente = new expediente ();
@@ -600,20 +600,20 @@ class coTransferenciaController extends baseController {
             }
                 
         }
-    
+    $where2="";
     $tab_extransferencia=new tab_exptransferencia();
     $result=$tab_extransferencia->dbSelectBySQL("select* from tab_exptransferencia where str_id=$id_trans");
     $cantidad=count($result);
     $valor3="";
     $t=1;
     foreach($result as $row){
-            $valor3.="tab_expediente.exp_id='".$row->exp_id."'";
+            $valor3.=" tab_expusuario.exp_id='".$row->exp_id."'";
 					if($t<$cantidad){
                                         $valor3.=" or ";}
 				$t++;	
     }      
         
-       $where.= " AND $valor3 ";            
+       $where2.= " AND $valor3 ";            
        
         $sql = "SELECT
                 tab_fondo.fon_cod,
@@ -650,8 +650,8 @@ class coTransferenciaController extends baseController {
                 AND tab_expediente.exp_estado = 1
                 AND tab_usuario.usu_estado = 1
                 AND tab_expfondo.exf_estado = 1                
-                AND tab_expusuario.eus_estado = 1 
-                 $where $sort $limit";
+                 AND tab_expusuario.eus_estado =2
+                $where $sort $limit";
 
         $expediente = new expediente ();
         $result = $this->expediente->dbselectBySQL($sql);
