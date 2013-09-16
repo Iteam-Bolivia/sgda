@@ -1,3 +1,5 @@
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
 <div class="clear"></div>
 <p>
 <table id="flex1" style="display: none"></table>
@@ -27,7 +29,8 @@
             {display: 'Fecha Final', name : 'str_fecfin', width : 80, sortable : true, align: 'left'}
         ],
         buttons : [
-            {name: 'Ver expedientes', bclass: 'view', onpress : test}<?php //echo ($PATH_A != '' ? ',' . $PATH_A : '') ?>
+            {name: 'Confirmar', bclass: 'accept', onpress : test},
+            {name: 'Ver expedientes', bclass: 'view', onpress : test},
         ],
         searchitems : [
             {display: 'Id', name : 'str_id', isdefault: true},
@@ -50,7 +53,7 @@
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 380
+        height: 200
     });
     
     
@@ -66,20 +69,34 @@
     }
     
     function test(com,grid)
-    {
+    { var id=0;
         if(com=="Ver expedientes"){                        
             if($('.trSelected',grid).html())
             {	 
                 $("#str_id").val($('.trSelected div',grid).html());
-                id = $("#str_id").val();                
-                if($("table",grid).attr('id')=="flex1"){
-                    window.location ="<?php echo $PATH_DOMAIN ?>/cotransferencia2/index/"+id+"/";
-                }
+                id = $('.trSelected div',grid).html();
+           
+          window.location.href ="<?php echo $PATH_DOMAIN ?>/cotransferencia/listado/"+id+"/";
+                
             }
-            else alert("Seleccione un registro");            
+            else $.msgbox("Por favor, seleccione una lista");           
             
             
             
         }
+        if(com=="Confirmar"){
+              if($('.trSelected',grid).html())
+              {
+              id = $('.trSelected div',grid).html();   
+            var url="<?php echo $PATH_DOMAIN."/cotransferencia/recarga/";?>";  
+            $("#recarga").load(url,{valor:id});
+                $(".pReload",".flexigrid").click();    
+            }else{
+            $.msgbox("Por favor, seleccione una lista"); 
+            }
+        
+        }
+        
     }
 </script>
+<div id="recarga"></div>

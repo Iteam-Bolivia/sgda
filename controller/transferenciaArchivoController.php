@@ -56,7 +56,7 @@ class transferenciaArchivoController extends baseController {
         $this->registry->template->show('footer');
     }
 
-    function loadExp() {
+    function loadExp(){
         $texpediente = new tab_expediente ();
         $texpediente->setRequest2Object($_REQUEST);
         $tipo = $_SESSION['ROL_COD'];

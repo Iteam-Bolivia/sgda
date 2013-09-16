@@ -1470,6 +1470,9 @@ a.linkCinco:hover {
 }
 
 /*codigo de freddy*/
+.flexigrid div.fbutton .accept {
+	background: url(flexigrid/images/accept.png) no-repeat center left;
+}
 .flexigrid div.fbutton .cancel {
 	background: url(flexigrid/images/cancel.png) no-repeat center left;
 }

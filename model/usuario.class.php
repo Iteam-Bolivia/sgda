@@ -671,6 +671,14 @@ $usuario=$_SESSION ['USU_ID'];
 
         return $liMenu;
     }
+    function ObtenerUsuarioTranferencia($id){
+      
+        $sql="select* from tab_usuario where usu_id=$id";
+        $usuario=$this->usuario->dbSelectBySQL($sql);
+        $usuario=$usuario[0];
+        $NombreCompleto=$usuario->usu_nombres." ".$usuario->usu_apellidos;
+        return $NombreCompleto;
+    }
 
 }
 

@@ -189,7 +189,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
     }
       function ajaxsession2(){
         $id_transferencia=$_SESSION['id_transferencia'];
-         echo '<input name="idsExp" id="idsExp" type="text" value="'.$id_transferencia.'" />';
+         echo '<input name="idsExp" id="idsExp" type="hidden" value="'.$id_transferencia.'" />';
     }
     function guardarTransferencia(){
         
@@ -248,7 +248,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $this->tab_soltransferencia->setStr_nroreg(1);        
         $this->tab_soltransferencia->setStr_fecini(date('Y-m-d'));
         $this->tab_soltransferencia->setStr_fecfin(date('Y-m-d'));
-        $this->tab_soltransferencia->setStr_estado(1);
+        $this->tab_soltransferencia->setStr_estado(0);
         $this->tab_soltransferencia->setUsu_id($usu_id);
         $this->tab_soltransferencia->setUsud_id($usu_destino);
         $this->tab_soltransferencia->setStr_direccion($direccion);  
