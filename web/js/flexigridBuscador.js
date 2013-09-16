@@ -50,6 +50,7 @@
             onChangeSort: false,
             onSuccess: false,
             onSubmit: false, // using a custom populate function
+            palabra: "",
 //            fon_id: "",
             uni_id: "",
             ser_id: "",
@@ -62,7 +63,8 @@
             fil_subtitulo: "",
             fil_proc: "",
             fil_firma: "",
-            fil_cargo: ""
+            fil_cargo: "",
+            fil_tipoarch: ""
         }, p);
 
 
@@ -645,7 +647,7 @@
 
                 if (p.page>p.pages) p.page = p.pages;
                 //var param = {page:p.newp, rp: p.rp, sortname: p.sortname, sortorder: p.sortorder, query: p.query, qtype: p.qtype};
-                
+                p.palabra = $('#palabra').val();
 //                p.fon_id = $('#fon_id').val();                
                 p.uni_id = $('#uni_id').val();
                 p.ser_id = $('#ser_id').val();
@@ -659,6 +661,7 @@
                 p.fil_proc = $('#fil_proc').val();
                 p.fil_firma = $('#fil_firma').val();
                 p.fil_cargo = $('#fil_cargo').val();
+                p.fil_tipoarch = $('#fil_tipoarch').val();
                 
                 var param = [
                 {
@@ -685,6 +688,10 @@
                     name : 'qtype',
                     value : p.qtype
                     } 
+                ,{
+                    name : 'palabra',
+                    value : p.palabra
+                    }                                         
 //                ,{
 //                    name : 'fon_id',
 //                    value : p.fon_id
@@ -733,6 +740,10 @@
                     name : 'fil_firma',
                     value : p.fil_firma
                     }  
+                ,{
+                    name : 'fil_tipoarch',
+                    value : p.fil_tipoarch
+                    }                     
                 ,{
                     name : 'fil_cargo',
                     value : p.fil_cargo
