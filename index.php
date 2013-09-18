@@ -13,7 +13,7 @@ define("PATH_LANG", "es");
 //define("PATH_ROOT", $_SERVER ['DOCUMENT_ROOT']);
 //define("PATH_WEB", "http://archivo-prueba.abc.gob.bo/web");
 
-/* * * Defintere Variables Globales server applications . * * */
+/* * * Define Variables Globales server applications . * * */
 define("PATH_DOMAIN", "http://localhost/archivo-prueba");
 define("PATH_ROOT", $_SERVER ['DOCUMENT_ROOT'] . "/archivo-prueba");
 define("PATH_WEB", "http://localhost/archivo-prueba/web");
@@ -25,7 +25,9 @@ define("ROUNDED", "2");
 
 /* * * Define PostgreSQL database server connect parameters - SGDA ** */
 define('PGHOST', 'localhost');
+
 define('PGPORT', 5432);
+
 define('PGDATABASE', 'bd_abc_archivo');
 define('PGUSER', 'jovando');
 define('PGPASSWORD', 'iteam123');

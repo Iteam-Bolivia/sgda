@@ -9,6 +9,7 @@
  * @version $Id$ 2013
  * @access public
  */
+
 class etiqexpedienteController extends baseController {
 
     function index() {
@@ -368,8 +369,6 @@ class etiqexpedienteController extends baseController {
         //$nro_ini = $_REQUEST['nro_ini'];
         if ($tipo == 'cajas') {
             $this->viewCajas2();
-        } elseif ($tipo == 'MARBETES') {
-            $this->viewMarbetes2();
         } elseif ($tipo == 'folders') {
             $this->viewFolders2();
         } elseif ($tipo == 'caratulas') {
@@ -382,14 +381,29 @@ class etiqexpedienteController extends baseController {
     }
 
     function getNroInicial() {
-        $tipo = $_REQUEST['Tipo'];
         $exp_id = $_REQUEST['Exp_id'];
         $usu_id = $_SESSION['USU_ID'];
         $res = array();
+        // Minimo
+        $sql = "SELECT min(tab_archivo.fil_nrocaj) as minimo
+                FROM
+                tab_expediente
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+		WHERE 
+                tab_expediente.exp_estado = '1' AND
+                tab_expediente.exp_id =  '$exp_id' ";
+        $etiquetas = new tab_etiquetas();
+        $result = $etiquetas->dbSelectBySQL($sql);
 
-        if ($tipo == 'MARBETES') {            
-            // Minimo
-            $sql = "SELECT MIN(tab_archivo.fil_nro) as minimo
+        foreach ($result as $row) {
+            if (strlen($row->minimo) > 0)
+                $res['nro_inicial'] = $row->minimo;
+            else
+                $res['nro_inicial'] = 0;
+        }
+        // Maximo
+        $sql = "SELECT min(tab_archivo.fil_nrocaj) as maximo
                 FROM
                 tab_expediente
                 INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
@@ -397,620 +411,17 @@ class etiqexpedienteController extends baseController {
 		WHERE 
                 tab_expediente.exp_estado = '1' AND
                 tab_expediente.exp_id =  '$exp_id' ";
-            $etiquetas = new tab_etiquetas();
-            $result = $etiquetas->dbSelectBySQL($sql);
-
-            foreach ($result as $row) {
-                if (strlen($row->minimo) > 0)
-                    $res['nro_inicial'] = $row->minimo;
-                else
-                    $res['nro_inicial'] = 0;
-            }
-            // Maximo
-            $sql = "SELECT MAX(tab_archivo.fil_nro) as maximo
-                FROM
-                tab_expediente
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-		WHERE 
-                tab_expediente.exp_estado = '1' AND
-                tab_expediente.exp_id =  '$exp_id' ";
-            //$etiquetas = new etiquetas();
-            $result = $etiquetas->dbSelectBySQL($sql);
-            foreach ($result as $row) {
-                if (strlen($row->maximo) > 0)
-                    $res['nro_final'] = $row->maximo;
-                else
-                    $res['nro_final'] = 0;
-            }
-            
-        } else {
-            // Minimo
-            $sql = "SELECT min(tab_archivo.fil_nrocaj) as minimo
-                FROM
-                tab_expediente
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-		WHERE 
-                tab_expediente.exp_estado = '1' AND
-                tab_expediente.exp_id =  '$exp_id' ";
-            $etiquetas = new tab_etiquetas();
-            $result = $etiquetas->dbSelectBySQL($sql);
-
-            foreach ($result as $row) {
-                if (strlen($row->minimo) > 0)
-                    $res['nro_inicial'] = $row->minimo;
-                else
-                    $res['nro_inicial'] = 0;
-            }
-            // Maximo
-            $sql = "SELECT min(tab_archivo.fil_nrocaj) as maximo
-                FROM
-                tab_expediente
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-		WHERE 
-                tab_expediente.exp_estado = '1' AND
-                tab_expediente.exp_id =  '$exp_id' ";
-            //$etiquetas = new etiquetas();
-            $result = $etiquetas->dbSelectBySQL($sql);
-            foreach ($result as $row) {
-                if (strlen($row->maximo) > 0)
-                    $res['nro_final'] = $row->maximo;
-                else
-                    $res['nro_final'] = 0;
-            }
+        //$etiquetas = new etiquetas();
+        $result = $etiquetas->dbSelectBySQL($sql);
+        foreach ($result as $row) {
+            if (strlen($row->maximo) > 0)
+                $res['nro_maximo'] = $row->maximo;
+            else
+                $res['nro_final'] = 0;
         }
         echo json_encode($res);
     }
 
-    
-    function viewFicha() {
-        $id = VAR3;
-        $fil_id = VAR4;
-        $seccion = VAR5;
-        
-        
-        // Aqui
-        $tarchivo = new tab_archivo ();
-        
-        $select = "SELECT
-                tab_archivo.fil_id,
-                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
-                tab_unidad.uni_descripcion,
-                tab_series.ser_categoria,
-                tab_expisadg.exp_titulo,
-                f.fon_cod,
-                tab_unidad.uni_cod,
-                tab_tipocorr.tco_codigo,
-                tab_series.ser_codigo,
-                tab_expediente.exp_id,
-                tab_expediente.exp_codigo,
-                tab_cuerpos.cue_codigo,
-                tab_archivo.fil_codigo,
-                tab_cuerpos.cue_descripcion,
-                tab_archivo.fil_titulo,
-                tab_archivo.fil_subtitulo,
-                tab_archivo.fil_proc,
-                tab_archivo.fil_firma,
-                tab_archivo.fil_cargo,
-                tab_archivo.fil_nrofoj,
-                tab_archivo.fil_tomovol,
-                tab_archivo.fil_nroejem,
-                tab_archivo.fil_nrocaj,
-                tab_archivo.fil_sala,
-                tab_archivo.fil_estante,
-                tab_archivo.fil_cuerpo,
-                tab_archivo.fil_balda,
-                tab_archivo.fil_tipoarch,
-                tab_archivo.fil_mrb,
-                tab_archivo.fil_ori,
-                tab_archivo.fil_cop,
-                tab_archivo.fil_fot,
-                (CASE tab_exparchivo.exa_condicion 
-                                    WHEN '1' THEN 'DISPONIBLE' 
-                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
-                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
-                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
-                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
-                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
-                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
-                tab_archivo.fil_obs";
-        $from = "FROM
-                tab_fondo as f
-                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
-                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
-                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
-                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
-                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
-                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
-                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
-                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
-                WHERE
-                f.fon_estado = 1 AND
-                tab_unidad.uni_estado = 1 AND
-                tab_tipocorr.tco_estado = 1 AND
-                tab_series.ser_estado = 1 AND
-                tab_expediente.exp_estado = 1 AND
-                tab_archivo.fil_estado = 1 AND
-                tab_exparchivo.exa_estado = 1 AND
-                tab_expusuario.eus_estado = 1 AND
-                tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
-                tab_archivo.fil_id = '$fil_id' ";                
-        $sql = "$select $from ";
-        $result = $tarchivo->dbSelectBySQL($sql); //print $sql;     
-        $codigo = "";
-        foreach ($result as $fila) {
-            $codigo = $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->cue_codigo .  DELIMITER . $fila->fil_codigo;
-        }        
-        // Aqui
-        
-
-        require_once ('tcpdf/config/lang/eng.php');
-        require_once ('tcpdf/tcpdf.php');
-        $this->usuario = new usuario ();
-        // create new PDF document
-        $pdf = new TCPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->setFontSubsetting(FALSE);
-        $pdf->SetAuthor($this->usuario->obtenerNombre($_SESSION['USU_ID']));
-        $pdf->SetTitle('Reporte de Ficha de Documento');
-        $pdf->SetSubject('Reporte de Ficha de Documento');
-//        aumentado
-        $pdf->SetKeywords('Iteam, TEAM DIGITAL');
-        // set default header data
-        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'Administradora Boliviana de Carreteras', $codigo);
-        // set header and footer fonts
-        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        $pdf->SetMargins(5, 30, 10);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);               
-        $pdf->setPrintFooter(false);
-        //set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, 15);
-        //set some language-dependent strings
-        $pdf->setLanguageArray($l);
-        $pdf->SetFont('helvetica', '', 8);
-        // add a page
-        $pdf->AddPage();
-
-//        $pdf->SetXY(110, 200);
-//        $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 100, '', false, false, 1, false, false, false);
-
-        $pdf->writeHTML($cadena, true, false, false, false, '');
-
-        // -----------------------------------------------------------------------------
-        //Close and output PDF document
-        $pdf->Output('ficha_documento.pdf', 'I');        
-        
-    }
-    
-    
-    
-    // New
-    function viewMarbetes2() {
-        $exp_id = $_REQUEST['exp_id'];
-        $ini = $_REQUEST['nro_inicial'];
-        $fin = $_REQUEST['nro_final'];      
-        if ($fin == NULL) {
-            $fin = $ini;
-        }
-
-        $usuario = new usuario();
-        // Aqui
-        $tarchivo = new tab_archivo ();
-        
-        $select = "SELECT
-                tab_archivo.fil_id,
-                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
-                tab_unidad.uni_descripcion,
-                tab_series.ser_categoria,
-                tab_expisadg.exp_titulo,
-                f.fon_cod,
-                tab_unidad.uni_cod,
-                tab_tipocorr.tco_codigo,
-                tab_series.ser_codigo,                
-                tab_expediente.exp_codigo,
-                tab_expediente.exp_id,
-                tab_cuerpos.cue_codigo,
-                tab_archivo.fil_codigo,
-                tab_cuerpos.cue_descripcion,
-                tab_archivo.fil_titulo,
-                tab_archivo.fil_subtitulo,
-                tab_archivo.fil_proc,
-                tab_archivo.fil_firma,
-                tab_archivo.fil_cargo,
-                tab_archivo.fil_nrofoj,
-                tab_archivo.fil_tomovol,
-                tab_archivo.fil_nroejem,
-                tab_archivo.fil_nrocaj,
-                tab_archivo.fil_sala,
-                tab_archivo.fil_estante,
-                tab_archivo.fil_cuerpo,
-                tab_archivo.fil_balda,
-                tab_archivo.fil_tipoarch,
-                tab_archivo.fil_mrb,
-                tab_archivo.fil_ori,
-                tab_archivo.fil_cop,
-                tab_archivo.fil_fot,
-                (CASE tab_exparchivo.exa_condicion 
-                                    WHEN '1' THEN 'DISPONIBLE' 
-                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
-                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
-                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
-                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
-                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
-                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
-                tab_archivo.fil_obs";
-        $from = "FROM
-                tab_fondo as f
-                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
-                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
-                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
-                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
-                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
-                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
-                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
-                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
-                WHERE
-                f.fon_estado = 1 AND
-                tab_unidad.uni_estado = 1 AND
-                tab_tipocorr.tco_estado = 1 AND
-                tab_series.ser_estado = 1 AND
-                tab_expediente.exp_estado = 1 AND
-                tab_archivo.fil_estado = 1 AND
-                tab_exparchivo.exa_estado = 1 AND
-                tab_expusuario.eus_estado = 1 AND
-                tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
-                tab_expediente.exp_id = '$exp_id' ";                
-        $sql = "$select $from ";
-        $result = $tarchivo->dbSelectBySQL($sql); //print $sql;   
-        
-
-        // Include the main TCPDF library (search for installation path).
-        require_once('tcpdf/tcpdf.php');
-
-        // create new PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Iteam S.R.L.');
-        $pdf->SetTitle('Marbetes de documentos');
-        $pdf->SetSubject('Marbetes de documentos');
-        $pdf->SetKeywords('Marbetes, documentos');
-
-        // set default header data
-        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 027', PDF_HEADER_STRING);
-
-        // set header and footer fonts
-        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__).'tcpdf/lang/eng.php')) {
-            require_once(dirname(__FILE__).'tcpdf/lang/eng.php');
-            $pdf->setLanguageArray($l);
-        }
-
-        // ---------------------------------------------------------
-
-        // set a barcode on the page footer
-        //$pdf->setBarcode(date('Y-m-d H:i:s'));
-
-        // set font
-        $pdf->SetFont('helvetica', '', 11);
-
-        // add a page
-        $pdf->AddPage();
-
-
-
-        $pdf->SetFont('helvetica', '', 10);
-
-        // define barcode style
-        $style = array(
-            'position' => '',
-            'align' => 'C',
-            'stretch' => true,
-            'fitwidth' => true,
-            'cellfitalign' => '',
-            'border' => true,
-            'hpadding' => 'auto',
-            'vpadding' => 'auto',
-            'fgcolor' => array(0,0,0),
-            'bgcolor' => false, //array(255,255,255),
-            'text' => true,
-            'font' => 'helvetica',
-            'fontsize' => 8,
-            'stretchtext' => 8
-        );
-
-
-
-
-
-        foreach ($result as $value) {
-            $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;        
-
-            //  BAR CODE
-            // CODE 39 + CHECKSUM
-            $pdf->Cell(0, 0, 'ABC', 0, 1);
-            $pdf->write1DBarcode($codigo, 'C39', '', '', '', 18, 0.4, $style, 'N');
-
-            
-//            // BAR CODE 2
-//            // define barcode style
-//            $style2 = array(
-//                'position' => '',
-//                'align' => '',
-//                'stretch' => true,
-//                'fitwidth' => false,
-//                'cellfitalign' => '',
-//                'border' => true,
-//                'hpadding' => 'auto',
-//                'vpadding' => 'auto',
-//                'fgcolor' => array(0,0,128),
-//                'bgcolor' => array(255,255,128),
-//                'text' => true,
-//                'label' => $codigo,
-//                'font' => 'helvetica',
-//                'fontsize' => 8,
-//                'stretchtext' => 4
-//            );        
-//            // CODE 39 EXTENDED + CHECKSUM
-//            $pdf->Cell(0, 0, 'ABC', 0, 1);
-//            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
-//            $pdf->write1DBarcode('ABC.ON.1.1.II.1.0.1.1.999', 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
-            
-            
-            // New
-            $pdf->Ln();
-
-        }
-
-        //Close and output PDF document
-        $pdf->Output('viewMarbetes2.pdf', 'I');
-
-
-    }    
-    
-    
-    
-    function viewMarbetesBACK() {
-        $exp_id = $_REQUEST['exp_id'];
-        $ini = $_REQUEST['nro_inicial'];
-        $fin = $_REQUEST['nro_final'];      
-        if ($fin == NULL) {
-            $fin = $ini;
-        }
-
-        $usuario = new usuario();
-        // Aqui
-        $tarchivo = new tab_archivo ();
-        
-        $select = "SELECT
-                tab_archivo.fil_id,
-                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
-                tab_unidad.uni_descripcion,
-                tab_series.ser_categoria,
-                tab_expisadg.exp_titulo,
-                f.fon_cod,
-                tab_unidad.uni_cod,
-                tab_tipocorr.tco_codigo,
-                tab_series.ser_codigo,                
-                tab_expediente.exp_codigo,
-                tab_expediente.exp_id,
-                tab_cuerpos.cue_codigo,
-                tab_archivo.fil_codigo,
-                tab_cuerpos.cue_descripcion,
-                tab_archivo.fil_titulo,
-                tab_archivo.fil_subtitulo,
-                tab_archivo.fil_proc,
-                tab_archivo.fil_firma,
-                tab_archivo.fil_cargo,
-                tab_archivo.fil_nrofoj,
-                tab_archivo.fil_tomovol,
-                tab_archivo.fil_nroejem,
-                tab_archivo.fil_nrocaj,
-                tab_archivo.fil_sala,
-                tab_archivo.fil_estante,
-                tab_archivo.fil_cuerpo,
-                tab_archivo.fil_balda,
-                tab_archivo.fil_tipoarch,
-                tab_archivo.fil_mrb,
-                tab_archivo.fil_ori,
-                tab_archivo.fil_cop,
-                tab_archivo.fil_fot,
-                (CASE tab_exparchivo.exa_condicion 
-                                    WHEN '1' THEN 'DISPONIBLE' 
-                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
-                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
-                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
-                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
-                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
-                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
-                tab_archivo.fil_obs";
-        $from = "FROM
-                tab_fondo as f
-                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
-                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
-                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
-                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
-                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
-                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
-                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
-                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
-                WHERE
-                f.fon_estado = 1 AND
-                tab_unidad.uni_estado = 1 AND
-                tab_tipocorr.tco_estado = 1 AND
-                tab_series.ser_estado = 1 AND
-                tab_expediente.exp_estado = 1 AND
-                tab_archivo.fil_estado = 1 AND
-                tab_exparchivo.exa_estado = 1 AND
-                tab_expusuario.eus_estado = 1 AND
-                tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
-                tab_expediente.exp_id = '$exp_id' ";                
-        $sql = "$select $from ";
-        $result = $tarchivo->dbSelectBySQL($sql); //print $sql;   
-        
-        
-
-        
-
-
-        // Include the main TCPDF library (search for installation path).
-        //require_once('tcpdf/tcpdf_include.php');
-        require_once('tcpdf/tcpdf.php');
-
-        // create new PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Iteam S.R.L.');
-        $pdf->SetTitle('Etiquetado de Cajas');
-        $pdf->SetSubject('Etiquetado de Cajas');
-        $pdf->SetKeywords('Etiquetado, Cajas, cajas, caratulas, folders');
-
-        // set default header data
-        //$pdf->SetHeaderData('logo_abc.png', 25, 'ADMINISTRADORA BOLIVIANA DE CARRETERA', 'IMPRESIÓN DE CAJAS');
-        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
-        // set header and footer fonts
-        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
-            require_once(dirname(__FILE__) . '/lang/eng.php');
-            $pdf->setLanguageArray($l);
-        }
-
-
-        // add a page
-        $pdf->AddPage();
-        $pdf->Write(0, '', '', 0, 'L', true, 0, false, false, 0);
-        $pdf->SetFont('helvetica', '', 12);
-
-        
-        
-        //require_once('tcpdf/tcpdf.php');
-        require_once('tcpdf/barcodes.php');
-        
-        
-        
-        $st.='<table border="1" style="width: 100%">';
-        $i = 1;
-        foreach ($result as $value) {
-            $codigo = "";
-                $x = $i%2;
-                // Es par
-                if ($i%2!=0){
-                
-                    $st.='<tr>';
-                
-                    $st.='<td>';                    
-                        $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;
-                        $st.='<TABLE>';
-                            $st.='<TR ROWSPAN="2"><img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                                $st.='<TD>' . $codigo . '</TD>';    
-                                $st.='</TR>';
-                            $st.='<TR>';
-                                $st.='<TD>';
-                                   //$st.= $barcodeobj->getBarcodeHTML(2, 30, 'black'); 
-                                $st.='</TD>'; 
-                                $st.='</TR>'; 
-                        $st.='</TABLE>';
-                    
-                   $st.='</td>';
-                   
-                }else{
-                    
-                
-                   $st.='<td>';
-                        $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;                   
-                        $st.='<TABLE>';
-                            $st.='<TR ROWSPAN="2"><img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                                $st.='<TD>' . $codigo . '</TD>';    
-                                $st.='</TR>';
-                            $st.='<TR>';
-                                $st.='<TD>Codigo Barras2</TD>'; 
-                                $st.='</TR>'; 
-                        $st.='</TABLE>';                                            
-                   $st.='</td>';        
-                   
-                   $st.='</tr>';        
-                }   
-                $i++;
-                   
-                
-                
-        }
-        $st.='</table>';
-        
-        EOD;
-
-
-        $pdf->writeHTML($st, true, false, false, false, '');
-        $st = "";
-
-        // -----------------------------------------------------------------------------
-        //Close and output PDF document
-        $pdf->Output('viewMarbetes2.pdf', 'I');
-
-        //============================================================+
-        // END OF FILE
-        //============================================================+        
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     function viewFolders2() {
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
@@ -1170,7 +581,7 @@ class etiqexpedienteController extends baseController {
 
         $texp = new Tab_etiquetas();
         $usuario = new usuario();
-
+        
         $sql = "SELECT
                 tab_fondo.fon_cod,
                 tab_unidad.uni_cod,
@@ -1215,10 +626,10 @@ class etiqexpedienteController extends baseController {
 
 
         $rows = $texp->dbSelectBySQL($sql);
-
-
-
-
+        
+        
+        
+        
 
         // Include the main TCPDF library (search for installation path).
         //require_once('tcpdf/tcpdf_include.php');
@@ -1237,6 +648,7 @@ class etiqexpedienteController extends baseController {
         // set default header data
         $pdf->SetHeaderData('logo_abc.png', 25, 'ADMINISTRADORA BOLIVIANA DE CARRETERA', 'IMPRESIÓN DE CAJAS');
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
+
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -1256,12 +668,13 @@ class etiqexpedienteController extends baseController {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
-            require_once(dirname(__FILE__) . '/lang/eng.php');
+        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+            require_once(dirname(__FILE__).'/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
 
         // ---------------------------------------------------------
+
         // set font
         $pdf->SetFont('helvetica', 'B', 8);
 
@@ -1277,125 +690,131 @@ class etiqexpedienteController extends baseController {
         for ($i = $ini; $i <= $fin; $i++) {
 
 
-            foreach ($rows as $value) {
+                foreach ($rows as $value) {
 
 
-                $st.='<table border="1" style="width: 100%">';
+                    $st.='<table border="1" style="width: 100%">';
 
-                $st.='<tr>';
-                $st.='<td>';
-                $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
-                $st.='</td>';
-                $st.='</tr>';
-
-                $st.='<tr>';
-                $st.='<td>';
-
-                $st.='<table border="1" style="width: 100%; text-align: center">';
-                $st.='<tr>';
-                $st.='<td colspan="11"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
-                $st.='<td colspan="11">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11"><b>GERENCIA / UNIDAD</b></td>';
-                $st.='</tr>';
-                if ($value->uni_par_cod) {
                     $st.='<tr>';
-                    $st.='<td colspan="11">' . $value->uni_par_cod . '</td>';
+                    $st.='<td>';
+                    $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
+                    //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
+                    $st.='</td>';
                     $st.='</tr>';
-                } else {
+
+                    $st.='<tr>';
+                    $st.='<td>';
+
+                    $st.='<table border="1" style="width: 100%; text-align: center">';
+                    $st.='<tr>';
+                    $st.='<td colspan="11"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
+                    $st.='<td colspan="11">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="11"><b>GERENCIA / UNIDAD</b></td>';
+                    $st.='</tr>';
+                    if ($value->uni_par_cod) {
+                        $st.='<tr>';
+                        $st.='<td colspan="11">' . $value->uni_par_cod . '</td>';
+                        $st.='</tr>';
+                    } else {
+                        $st.='<tr>';
+                        $st.='<td colspan="11">' . $value->uni_descripcion . '</td>';
+                        $st.='</tr>';
+                    }
+                    $st.='<tr>';
+                    $st.='<td colspan="11"><b>SECCIÓN</b></td>';
+                    $st.='</tr>';
                     $st.='<tr>';
                     $st.='<td colspan="11">' . $value->uni_descripcion . '</td>';
                     $st.='</tr>';
-                }
-                $st.='<tr>';
-                $st.='<td colspan="11"><b>SECCIÓN</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11">' . $value->uni_descripcion . '</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11"><b>DESCRIPCIÓN DEL CONTENIDO</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11">' . $value->exp_titulo . '</td>';
-                $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="11"><b>DESCRIPCIÓN DEL CONTENIDO</b></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="11">' . $value->exp_titulo . '</td>';
+                    $st.='</tr>';
 
-                $pdf->SetFont('helvetica', '', 8);
-                $st.='<tr>';
-                $st.='<td colspan="2">FECHAS EXTREMAS</td>';
-                $st.='<td colspan="9">NRO. DE ORDEN</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="2">' . $value->exp_fecha_exf . '</td>';
-                $st.='<td colspan="4">DEL</td>';
-                $st.='<td></td>';
-                $st.='<td colspan="3">AL&nbsp;</td>';
-                $st.='<td></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="4">UBICACIÓN TOPOGRÁFICA</td>';
-                $st.='<td colspan="5"></td>';
-                $st.='<td colspan="2"></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td>SALA:</td>';
-                $st.='<td>ESTANTE:</td>';
-                $st.='<td>CUERPO:</td>';
-                $st.='<td>BALDA:</td>';
-                $st.='<td colspan="5">FECHA DE TRANSFERENCIA</td>';
-                $st.='<td colspan="2">NRO. DE TRANSFERENCIA</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td>' . $value->exp_sala . '</td>';
-                $st.='<td>' . $value->exp_estante . '</td>';
-                $st.='<td>' . $value->exp_cuerpo . '</td>';
-                $st.='<td>' . $value->exp_balda . '</td>';
-                $st.='<td colspan="5"></td>';
-                $st.='<td colspan="2"></td>';
-                $st.='</tr>';
-                $st.='</table>';
+                    $pdf->SetFont('helvetica', '', 8);
+                    $st.='<tr>';
+                    $st.='<td colspan="2">FECHAS EXTREMAS</td>';
+                    $st.='<td colspan="9">NRO. DE ORDEN</td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="2">' . $value->exp_fecha_exf . '</td>';
+                    $st.='<td colspan="4">DEL</td>';
+                    $st.='<td></td>';
+                    $st.='<td colspan="3">AL&nbsp;</td>';
+                    $st.='<td></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="4">UBICACIÓN TOPOGRÁFICA</td>';
+                    $st.='<td colspan="5"></td>';
+                    $st.='<td colspan="2"></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td>SALA:</td>';
+                    $st.='<td>ESTANTE:</td>';
+                    $st.='<td>CUERPO:</td>';
+                    $st.='<td>BALDA:</td>';
+                    $st.='<td colspan="5">FECHA DE TRANSFERENCIA</td>';
+                    $st.='<td colspan="2">NRO. DE TRANSFERENCIA</td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td>' . $value->exp_sala . '</td>';
+                    $st.='<td>' . $value->exp_estante . '</td>';
+                    $st.='<td>' . $value->exp_cuerpo . '</td>';
+                    $st.='<td>' . $value->exp_balda . '</td>';
+                    $st.='<td colspan="5"></td>';
+                    $st.='<td colspan="2"></td>';
+                    $st.='</tr>';
+                    $st.='</table>';
 
-                $st.='<table border="1" style="width: 100%; text-align: center;">';
-                $st.='<tr>';
-                $st.='<td>NRO. DE CAJA:</td>';
-                $st.='<td>ML:</td>';
-                $st.='<td>NRO. DE PIEZAS</td>';
-                $st.='<td>ELABORADO POR:</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                //$st.='<td>' . $value->exp_nrocaj . '</td>';
-                $st.='<td>' . $i . '</td>';
-                $st.='<td>' . $value->exp_nroejem . '</td>';
-                $st.='<td>' . $value->exp_tomovol . '</td>';
-                $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
-                $st.='</tr>';
-                $st.='</table>';
+                    $st.='<table border="1" style="width: 100%; text-align: center;">';
+                    $st.='<tr>';
+                    $st.='<td>NRO. DE CAJA:</td>';
+                    $st.='<td>ML:</td>';
+                    $st.='<td>NRO. DE PIEZAS</td>';
+                    $st.='<td>ELABORADO POR:</td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    //$st.='<td>' . $value->exp_nrocaj . '</td>';
+                    $st.='<td>' . $i . '</td>';
+                    $st.='<td>' . $value->exp_nroejem . '</td>';
+                    $st.='<td>' . $value->exp_tomovol . '</td>';
+                    $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
+                    $st.='</tr>';
+                    $st.='</table>';
 
-                $st.='</td>';
-                $st.='</tr>';
-                $st.='</table>';
-            }
+                    $st.='</td>';
+                    $st.='</tr>';
+                    $st.='</table>';
+                }    
 
             EOD;
 
 
-            $pdf->writeHTML($st, true, false, false, false, '');
-            $st = "";
+        $pdf->writeHTML($st, true, false, false, false, '');
+        $st = "";
         }
 
         // -----------------------------------------------------------------------------
+
         //Close and output PDF document
         $pdf->Output('example_048.pdf', 'I');
 
         //============================================================+
         // END OF FILE
         //============================================================+        
+        
+        
     }
+
+    
+    
 
     function viewCaratulas2() {
         $ini = $_REQUEST['nro_inicial'];
@@ -1406,7 +825,7 @@ class etiqexpedienteController extends baseController {
 
         $texp = new Tab_etiquetas();
         $usuario = new usuario ();
-
+        
         $sql = "SELECT
                 tab_fondo.fon_cod,
                 tab_unidad.uni_cod,
@@ -1451,10 +870,10 @@ class etiqexpedienteController extends baseController {
 
 
         $rows = $texp->dbSelectBySQL($sql);
-
-
-
-
+        
+        
+        
+        
 
         // Include the main TCPDF library (search for installation path).
         //require_once('tcpdf/tcpdf_include.php');
@@ -1473,6 +892,7 @@ class etiqexpedienteController extends baseController {
         // set default header data
         $pdf->SetHeaderData('logo_abc.png', 25, 'ADMINISTRADORA BOLIVIANA DE CARRETERA', 'IMPRESIÓN DE CARATULAS');
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
+
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -1492,12 +912,13 @@ class etiqexpedienteController extends baseController {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
-            require_once(dirname(__FILE__) . '/lang/eng.php');
+        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+            require_once(dirname(__FILE__).'/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
 
         // ---------------------------------------------------------
+
         // set font
         $pdf->SetFont('helvetica', 'B', 8);
 
@@ -1513,103 +934,103 @@ class etiqexpedienteController extends baseController {
         for ($i = $ini; $i <= $fin; $i++) {
 
 
-            foreach ($rows as $value) {
+                foreach ($rows as $value) {
 
 
-                $st.='<table border="1" style="width: 100%">';
+                    $st.='<table border="1" style="width: 100%">';
 
-                $st.='<tr>';
-                $st.='<td>';
-                $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
-                $st.='</td>';
-                $st.='</tr>';
-
-                $st.='<tr>';
-                $st.='<td>';
-
-                $st.='<table border="1" style="width: 100%; text-align: center">';
-                $st.='<tr>';
-                $st.='<td colspan="4"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
-                $st.='<td colspan="4">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="4"><b>GERENCIA / UNIDAD</b></td>';
-                $st.='</tr>';
-                if ($value->uni_par_cod) {
                     $st.='<tr>';
-                    $st.='<td colspan="4">' . $value->uni_par_cod . '</td>';
+                    $st.='<td>';
+                    $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
+                    //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
+                    $st.='</td>';
                     $st.='</tr>';
-                } else {
+
+                    $st.='<tr>';
+                    $st.='<td>';
+
+                    $st.='<table border="1" style="width: 100%; text-align: center">';
+                    $st.='<tr>';
+                    $st.='<td colspan="4"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
+                    $st.='<td colspan="4">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="4"><b>GERENCIA / UNIDAD</b></td>';
+                    $st.='</tr>';
+                    if ($value->uni_par_cod) {
+                        $st.='<tr>';
+                        $st.='<td colspan="4">' . $value->uni_par_cod . '</td>';
+                        $st.='</tr>';
+                    } else {
+                        $st.='<tr>';
+                        $st.='<td colspan="4">' . $value->uni_descripcion . '</td>';
+                        $st.='</tr>';
+                    }
+                    $st.='<tr>';
+                    $st.='<td colspan="4"><b>SECCIÓN</b></td>';
+                    $st.='</tr>';
                     $st.='<tr>';
                     $st.='<td colspan="4">' . $value->uni_descripcion . '</td>';
                     $st.='</tr>';
-                }
-                $st.='<tr>';
-                $st.='<td colspan="4"><b>SECCIÓN</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="4">' . $value->uni_descripcion . '</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="4"><b>DESCRIPCIÓN DEL EXPEDIENTE</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="4">' . $value->exp_titulo . '</td>';
-                $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="4"><b>DESCRIPCIÓN DEL EXPEDIENTE</b></td>';
+                    $st.='</tr>';
+                    $st.='<tr>';
+                    $st.='<td colspan="4">' . $value->exp_titulo . '</td>';
+                    $st.='</tr>';
 
-                $pdf->SetFont('helvetica', '', 8);
+                    $pdf->SetFont('helvetica', '', 8);
+                    
+                    $st.='<tr>';
+                    $st.='<td colspan="2">FECHAS EXTREMAS</td>';
+                    $st.='<td colspan="2"></td>';
+                    $st.='</tr>';
+                    
+                    $st.='<tr>';
+                    $st.='<td colspan="2">UBICACIÓN TOPOGRÁFICA</td>';
+                    $st.='<td colspan="2"></td>';
+                    $st.='</tr>';
+                    
+                    $st.='<tr>';
+                    $st.='<td>SALA:</td>';
+                    $st.='<td>ESTANTE:</td>';
+                    $st.='<td>CUERPO:</td>';
+                    $st.='<td>BALDA:</td>';
+                    $st.='</tr>';
+                    
+                    $st.='<tr>';
+                    $st.='<td>' . $value->exp_sala . '</td>';
+                    $st.='<td>' . $value->exp_estante . '</td>';
+                    $st.='<td>' . $value->exp_cuerpo . '</td>';
+                    $st.='<td>' . $value->exp_balda . '</td>';
+                    $st.='</tr>';
+                    $st.='</table>';
 
-                $st.='<tr>';
-                $st.='<td colspan="2">FECHAS EXTREMAS</td>';
-                $st.='<td colspan="2"></td>';
-                $st.='</tr>';
+                    $st.='<table border="1" style="width: 100%; text-align: center;">';
+                    $st.='<tr>';
+                    $st.='<td>ML:</td>';
+                    $st.='<td>ELABORADO POR:</td>';
+                    $st.='</tr>';
+                    
+                    $st.='<tr>';
+                    $st.='<td>' . $value->exp_tomovol . '</td>';
+                    $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
+                    $st.='</tr>';
+                    $st.='</table>';
 
-                $st.='<tr>';
-                $st.='<td colspan="2">UBICACIÓN TOPOGRÁFICA</td>';
-                $st.='<td colspan="2"></td>';
-                $st.='</tr>';
-
-                $st.='<tr>';
-                $st.='<td>SALA:</td>';
-                $st.='<td>ESTANTE:</td>';
-                $st.='<td>CUERPO:</td>';
-                $st.='<td>BALDA:</td>';
-                $st.='</tr>';
-
-                $st.='<tr>';
-                $st.='<td>' . $value->exp_sala . '</td>';
-                $st.='<td>' . $value->exp_estante . '</td>';
-                $st.='<td>' . $value->exp_cuerpo . '</td>';
-                $st.='<td>' . $value->exp_balda . '</td>';
-                $st.='</tr>';
-                $st.='</table>';
-
-                $st.='<table border="1" style="width: 100%; text-align: center;">';
-                $st.='<tr>';
-                $st.='<td>ML:</td>';
-                $st.='<td>ELABORADO POR:</td>';
-                $st.='</tr>';
-
-                $st.='<tr>';
-                $st.='<td>' . $value->exp_tomovol . '</td>';
-                $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
-                $st.='</tr>';
-                $st.='</table>';
-
-                $st.='</td>';
-                $st.='</tr>';
-                $st.='</table>';
-            }
+                    $st.='</td>';
+                    $st.='</tr>';
+                    $st.='</table>';
+                }    
 
             EOD;
 
 
-            $pdf->writeHTML($st, true, false, false, false, '');
-            $st = "";
+        $pdf->writeHTML($st, true, false, false, false, '');
+        $st = "";
         }
 
 
@@ -1618,13 +1039,21 @@ class etiqexpedienteController extends baseController {
 
 
         // -----------------------------------------------------------------------------
+
         //Close and output PDF document
         $pdf->Output('example_048.pdf', 'I');
 
         //============================================================+
         // END OF FILE
         //============================================================+        
+        
+        
+        
     }
+    
+    
+    
+    
 
     function viewCarpetas() {
         require_once ('tcpdf/config/lang/eng.php');
@@ -1736,6 +1165,8 @@ class etiqexpedienteController extends baseController {
         $pdf->Output('etiquetasCarpetas.pdf', 'I');
     }
 
+
+
     function obtenerContenido($tipo) {
         $usu_id = $_SESSION['USU_ID'];
         $anio = date("Y");
@@ -1844,6 +1275,8 @@ class etiqexpedienteController extends baseController {
         $json_array['rows'] = $rows; //print_r($rows);die(" ");
         return $rows;
     }
+
+
 
 }
 
