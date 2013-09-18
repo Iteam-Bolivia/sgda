@@ -58,7 +58,7 @@
                 </td>                
             </tr>
 
-
+            
         <tr>
             <td>Clase:</td>
             <td colspan="3">
@@ -68,6 +68,17 @@
                 </select>
             </td>
         </tr>  
+        
+        <tr>
+            <td>Tipo:</td>
+            <td colspan="3">
+                <input type="radio" name="ser_tipo" id="ser_tipo" value="R" 
+                    title="Inicial"  />Inicial
+                <input type="radio" name="ser_tipo" id="ser_tipo" value="N" 
+                    title="No inicial" checked />No Inicial
+            </td>
+        </tr>         
+        
         
         <tr>
             <td>Subserie de:</td>

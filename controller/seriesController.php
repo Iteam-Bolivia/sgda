@@ -108,7 +108,11 @@ class seriesController Extends baseController {
             $json .= "\n{";
             $json .= "id:'" . $un->ser_id . "',";
             $json .= "cell:['" . $un->ser_id . "'";
-            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER .$un->ser_codigo) . "'";            
+            if ($un->ser_codigo=='') {
+                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";            
+            }else{
+                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER .$un->ser_codigo) . "'";            
+           }
             $json .= ",'" . addslashes($un->tco_codigo) . "'";              
             if ($un->ser_par=='-1'){
                 $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
@@ -116,10 +120,10 @@ class seriesController Extends baseController {
                 $json .= ",'" . addslashes("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . utf8_decode($un->ser_categoria)) . "'";
                 //$json .= ",'" . addslashes("----- " . utf8_encode($un->ser_categoria)) . "'";
             }             
-            $json .= ",'" . addslashes(utf8_encode($un->ser_parent)) . "'";            
-            $json .= ",'" . addslashes(utf8_encode($un->uni_descripcion)) . "'";
-            $json .= ",'" . addslashes(utf8_encode($un->fon_descripcion)) . "'";
-            $json .= ",'" . addslashes(utf8_encode($un->red_codigo)) . "'";
+            $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";            
+            $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
+            $json .= ",'" . addslashes(utf8_decode($un->fon_descripcion)) . "'";
+            $json .= ",'" . addslashes(utf8_decode($un->red_codigo)) . "'";
             $json .= ",'" . addslashes($un->ser_contador) . "'";
             $json .= "]}";
             $rc = true;
@@ -156,7 +160,7 @@ class seriesController Extends baseController {
         //$this->registry->template->ser_par = $serie->obtenerSelectTodas(); 
         $this->registry->template->ser_par = ""; 
         $this->registry->template->ser_categoria = "";
-        $this->registry->template->ser_tipo = "";
+        $this->registry->template->ser_tipo = "N";
         $this->registry->template->ser_codigop = ""; //$_SESSION['DEP_CODIGO'] . DELIMITER . $_SESSION['UNI_CODIGO'];
         $this->registry->template->ser_codigo = "";        
         $this->registry->template->titulo = "Nueva ";
@@ -217,7 +221,10 @@ class seriesController Extends baseController {
         
         if ($_REQUEST['ser_par']){
             $codigo = $this->generaCodigo($_REQUEST['ser_par']);
+            $ser_nivel = $this->generaNivel($codigo);
+            
             $tseries->setSer_codigo($codigo);
+            $tseries->setSer_nivel($ser_nivel);
             $tseries->setSer_par($_REQUEST['ser_par']);
             $tseries->setSer_contador('0');
             $tseries->setSer_categoria($_REQUEST['ser_categoria']);                   
@@ -233,6 +240,7 @@ class seriesController Extends baseController {
             $this->series->setTco_id($row2->tco_id);
             $this->series->setRed_id($row2->red_id);
             $this->series->setSer_codigo($row2->ser_codigo);
+            
             $this->series->setSer_par($row2->ser_par);            
             $this->series->setSer_categoria($row2->ser_categoria);
             
@@ -243,7 +251,13 @@ class seriesController Extends baseController {
             $this->series->update();             
         }else{            
             $codigo = $this->getCodigoPadre();
-            $tseries->setSer_codigo($codigo . DELIMITER . "0");
+            if ($_REQUEST['ser_tipo']== 'R') {
+                $tseries->setSer_codigo('');
+            }else{
+                $tseries->setSer_codigo($codigo . DELIMITER . "0");
+            }            
+            $ser_nivel = 0;
+            $tseries->setSer_nivel($ser_nivel);
             $tseries->setSer_par(-1);   
             $tseries->setSer_contador('0');
             $tseries->setSer_categoria($_REQUEST['ser_categoria']);                   
@@ -252,6 +266,7 @@ class seriesController Extends baseController {
         }                
 
         
+        // SERIE DEFAULT
         // Nuevo tramite
         $tramite = new tab_tramite ();
         $tramite->setRequest2Object($_REQUEST);
@@ -306,7 +321,6 @@ class seriesController Extends baseController {
         $result = $series->dbSelectBySQL($sql);
         if ($result != null) {
             foreach ($result as $row) {
-                //$res = sprintf("%01d", $row->ofi_contador + 1);
                 $res = $row->contador;
             }
             $contador = $res+1;
@@ -329,15 +343,32 @@ class seriesController Extends baseController {
         $result = $series->dbSelectBySQL($sql);
         if ($result != null) {
             foreach ($result as $row) {
-                //$res1 = explode(".", $row->uni_codigo);
-                $res = $row->ser_codigo. "." . sprintf("%01d", $row->ser_contador + 1);
+                if ($row->ser_codigo==''){
+                    $res = sprintf("%01d", $row->ser_contador + 1);
+                }else{
+                    $res = $row->ser_codigo. DELIMITER . sprintf("%01d", $row->ser_contador + 1);
+                }
             }
             $new_cod = $res;
         }else{
             $new_cod = "1";
         }        
         return $new_cod;
+    }            
+
+    // Nivel
+    function generaNivel($ser_codigo) {
+        $count = 0;
+        $nomArray=explode(DELIMITER, $ser_codigo);
+        foreach ($nomArray as $nom) {
+            $count++;
+        }                
+        return $count;
     }    
+    
+    
+    
+    
     
     
     function edit() {
@@ -595,6 +626,7 @@ ORDER BY ser.ser_categoria ASC";
         $sql = "SELECT 
                 ser_id,
                 ser_par,
+                ser_nivel,
                 ser_categoria
 		FROM
 		tab_series
@@ -602,14 +634,16 @@ ORDER BY ser.ser_categoria ASC";
                 tab_series.ser_estado =  '1' AND
                 tab_series.uni_id =  '$uni_id'
                 ORDER BY ser_codigo ";
-        $series = new tab_series();
-        $result = $series->dbSelectBySQL($sql);
+        $tab_series = new tab_series();
+        $result = $tab_series->dbSelectBySQL($sql);
         $res = array();
+        $series = new series();
         foreach ($result as $row) {
             if ($row->ser_par=='-1'){
                 $res[$row->ser_id] = $row->ser_categoria;
             }else{
-                $res[$row->ser_id] = "-- " . $row->ser_categoria;
+                $spaces = $series->getSpaces($row->ser_nivel);
+                $res[$row->ser_id] = $spaces . " " . $row->ser_categoria;
             }
         }
         echo json_encode($res);

@@ -18,7 +18,7 @@
             {display: 'Id', name : 'ser_id', width : 40, sortable : true, align: 'center'},
             {display: 'Codigo', name : 'ser_codigo', width : 110, sortable : true, align: 'left'},
             {display: 'Clase', name : 'tco_codigo', width : 25, sortable : true, align: 'left'},            
-            {display: 'Nombre de Serie o Subserie', name : 'ser_categoria', width : 300, sortable : true, align: 'left'},
+            {display: 'Nombre de Serie o Subserie', name : 'ser_categoria', width : 400, sortable : true, align: 'left'},
             {display: 'Subserie de', name : 'ser_parent', width : 200, sortable : true, align: 'left'},
             {display: 'Seccion o Subseccion', name : 'uni_descripcion', width : 150, sortable : true, align: 'left'},
             {display: 'Fondo o Subfondo', name : 'fon_descripcion', width : 150, sortable : true, align: 'left'},            
@@ -46,7 +46,7 @@
             {display: 'Valor Doc.', name : 'red_codigo'},
             {display: 'Contador', name : 'ser_parcont', isdefault: true}            
         ],
-        sortname: "ser_codigo",
+        sortname: "ser_id",
         sortorder: "asc",
         usepager: true,
         title: 'LISTA DE SERIES O SUBSERIES',
