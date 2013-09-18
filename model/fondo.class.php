@@ -135,7 +135,20 @@ class fondo extends Tab_fondo {
     }     
     
     // others
-    
+    function obtenerfon($id){
+        
+       $sql="SELECT
+tab_fondo.fon_descripcion
+FROM
+tab_fondo
+INNER JOIN tab_unidad ON tab_unidad.fon_id = tab_fondo.fon_id
+INNER JOIN tab_usuario ON tab_usuario.uni_id = tab_unidad.uni_id
+WHERE
+tab_usuario.usu_id = $id";
+       $fondo=$this->fondo->dbSelectBySQL($sql);
+       $fondo=$fondo[0];
+        return $fondo->fon_descripcion;
+    }
     
     
     
@@ -275,7 +288,7 @@ WHERE fon.fon_estado = 1 AND uni.uni_estado=1  AND fon.fon_orden = '$fon_orden'"
     }
 
     function obtenerSelectFondos($default = null) {
-        $sql = "SELECT            
+        $sql = " SELECT            
             f.fon_id,
             f.fon_par,
             f.fon_descripcion

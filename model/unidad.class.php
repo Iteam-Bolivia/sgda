@@ -40,6 +40,22 @@ class unidad extends Tab_unidad {
         }
         return $option;
     }
+    function obtenerSeccion($valor){
+        
+        $usuario=new tab_usuario();
+       $sql="SELECT
+f.uni_descripcion,
+(SELECT uni_descripcion FROM tab_unidad WHERE uni_id =f.uni_par) AS tab_sec
+FROM
+tab_unidad as f
+INNER JOIN tab_usuario ON tab_usuario.uni_id = f.uni_id
+WHERE
+tab_usuario.usu_id  = $valor";
+        $nombre=$usuario->dbSelectBySQL($sql);
+        $nombre=$nombre[0];
+        
+        return $nombre;
+    }
     
     function obtenerSelectUnidades($default = null) {
         $sql = "SELECT

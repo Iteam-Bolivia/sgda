@@ -87,9 +87,6 @@ class coTransferenciaController extends baseController {
         $result = $this->expediente->dbselectBySQL($sql);
         $total = $expediente->countExp3($where);
 
-        /* header ( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
-          header ( "Cache-Control: no-cache, must-revalidate" );
-          header ( "Pragma: no-cache" ); */
         header("Content-type: text/x-json");
         $json = "";
         $json .= "{\n";
@@ -554,6 +551,7 @@ class coTransferenciaController extends baseController {
  function gridtransferencia(){
      
         $id_trans=VAR3;
+        $usuario=$_SESSION ['USU_ID'];
         $this->series = new series ();
         $this->expediente = new tab_expediente ();
         $this->expediente->setRequest2Object($_REQUEST);
@@ -600,20 +598,25 @@ class coTransferenciaController extends baseController {
             }
                 
         }
-    $where2="";
+ $where2="";
+    $tab_expusuario=new tab_expusuario();
     $tab_extransferencia=new tab_exptransferencia();
     $result=$tab_extransferencia->dbSelectBySQL("select* from tab_exptransferencia where str_id=$id_trans");
     $cantidad=count($result);
     $valor3="";
     $t=1;
     foreach($result as $row){
-            $valor3.=" tab_expusuario.exp_id='".$row->exp_id."'";
+        $nuevo=$tab_expusuario->dbSelectBySQL("select* from tab_expusuario where exp_id=".$row->exp_id." and usu_id=$usuario and eus_estado=2");
+        foreach($nuevo as $list){
+             $valor3.="tab_expusuario.eus_id=".$list->eus_id."";
 					if($t<$cantidad){
                                         $valor3.=" or ";}
-				$t++;	
+				$t++;
+            
+        }
     }      
         
-       $where2.= " AND $valor3 ";            
+       $where.= " AND $valor3 ";            
        
         $sql = "SELECT
                 tab_fondo.fon_cod,
@@ -655,7 +658,9 @@ class coTransferenciaController extends baseController {
 
         $expediente = new expediente ();
         $result = $this->expediente->dbselectBySQL($sql);
+        //$total=$this->expediente->countBySQL($sql);
         $total = $expediente->countExp2($where);
+      
         header("Content-type: text/x-json");
         $json = "";
         $json .= "{\n";
@@ -677,7 +682,7 @@ class coTransferenciaController extends baseController {
             $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo .  DELIMITER . $un->exp_codigo) . "'";
             $json .= ",'" . addslashes($un->ser_categoria) . "'";
             $json .= ",'" . addslashes($un->exp_titulo) . "'";
-            //$json .= ",'" . addslashes($un->exp_descripcion) . "'";
+            //$json .= ",'" . addslashes($un->exp_descripcion) . $un->exp_titulo "'";
             $json .= ",'" . addslashes($un->exp_fecha_exi) . "'";
             $json .= ",'" . addslashes($un->exp_fecha_exf) . "'";
             $json .= ",'" . addslashes($expediente->obtenerCustodios($un->exp_id)) . "'";

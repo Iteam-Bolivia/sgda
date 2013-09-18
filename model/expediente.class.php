@@ -41,6 +41,19 @@ class expediente extends tab_expediente {
         }
         return $codigo;
     }    
+    function cantidadExpedientes($id){
+    
+        $sql="SELECT COUNT(tab_archivo.fil_titulo) as exp_cantidad
+FROM
+tab_expediente
+INNER JOIN tab_exparchivo ON tab_exparchivo.exp_id = tab_expediente.exp_id
+INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+WHERE
+tab_expediente.exp_id  = $id";
+      $result=$this->expediente->dbSelectBySQL($sql);
+      $result=$result[0];
+      return $result->exp_cantidad;
+    }
     
     function obtenerSelectNivelDescripcion($default=null) {
         $option = "";
