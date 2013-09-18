@@ -142,23 +142,30 @@
             </div>
             <div id="container">
                 <div id="containerTop">
+                    
                     <div id="menuOther">
+                        
                         <div id="boxMenu">
+                            
                             <div class="boxMenutop">
+                                
                                 <div id="dlmenu">
+                                    
                                     <ul id="menu4">
                                         <?php echo $men_titulo; ?>
                                     </ul>
+                                    
                                 </div>
+                                
                                 <div class="clear"></div>
+                                
                             </div>
+                            
                         </div>
+                        
                         <div class="clear"></div>
-                        <br />
-                        <br />
                         <div class="clear"></div>
                         <div class="boxPub"></div>
-                        <br />
                         <div class="clear"></div>
                         <div class="clear"></div>
                         <div class="clear"></div>

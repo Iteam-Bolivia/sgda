@@ -1,6 +1,8 @@
 <div class="clear"></div>
+
 <p><table id="flex1" style="display:none"></table></p>
 <p><table id="flex2" style="display:none"></table></p>
+
 <div class="clear"></div>
 
 <form id="formA" name="formA" method="post" class="validable" 
