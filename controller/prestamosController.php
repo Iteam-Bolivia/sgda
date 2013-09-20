@@ -58,7 +58,7 @@ class prestamosController extends baseController {
     }
 
     function search() { 
-        $archivo = new archivo();
+        $archivo = new archivo2();
         $request = $this->setRequestTrim($_REQUEST);
         $json = $archivo->buscar($request);
         echo $json;
@@ -139,7 +139,7 @@ class prestamosController extends baseController {
     
     // Reporte para Buscar documentos
     function rpteBuscar() {
-        $archivo = new archivo();
+        $archivo = new archivo2();
         $tarchivo = new tab_archivo ();
         $tarchivo->setRequest2Object($_REQUEST);
         $where = ""; 
@@ -710,7 +710,7 @@ class prestamosController extends baseController {
         $this->registry->template->show('footer');
     }
     function listar(){ 
-      $archivo = new archivo();
+      $archivo = new archivo2();
         $request = $this->setRequestTrim($_REQUEST);
         $json = $archivo->buscar2($request);
         echo $json;   

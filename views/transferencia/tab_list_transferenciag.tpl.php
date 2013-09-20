@@ -27,7 +27,7 @@
 </form>
 <input type="hidden" id="exp_reprobado">
 <form id="form" name="form" method="post" class="validable" 
-      action="<?php echo $PATH_DOMAIN ?>/transferencia/guardarTransferencia/">
+      action="<?php echo $PATH_DOMAIN ?>/transferencia/guardarTransferencia/" target="_blank">
     <input name="sql" id="sql" type="hidden" value="" />
     <input type="hidden" name="archivos" id="archivos" value="">
     <table width="100%" border="0">

@@ -224,23 +224,7 @@
             }  
         }else if (com=='Caratulas'){
             if($('.trSelected div',grid).html()){ 
-                $('#tipo').val('caratulas');
-                $("#exp_id").val($('.trSelected div',grid).html());
-                $.ajax({                    
-                    url: "<?php echo $PATH_DOMAIN ?>/etiqexpediente/getNroInicial/",
-                    type: "POST",
-                    data: 'tipo=CARATULA&Exp_id='+$('#exp_id').val(),
-                    dataType: "json",
-                    success: function(datos){
-                        if(datos!=''){
-                            jQuery.each(datos, function(i,item){
-                                $('#nro_ini').val(datos.nro_inicial);
-                                $('#nro_fin').val(datos.nro_final);                                					    	   
-                            });                            
-                        }
-                        $('#dialogNro').dialog('open');
-                    }
-                });
+             window.location.href="<?php echo $PATH_DOMAIN ?>/etiqexpediente/viewCaratulas2/"+$('.trSelected div',grid).html()+"/";
             }else{
                 alert("Seleccione un registro");
             }            

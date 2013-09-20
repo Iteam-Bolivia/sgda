@@ -41,6 +41,24 @@ class expediente extends tab_expediente {
         }
         return $codigo;
     }    
+    function obtenerCaja($i,$idexp){
+        $sql="SELECT
+MAX(tab_archivo.fil_nro) AS maximo,
+MIN(tab_archivo.fil_nro) AS minimo
+FROM
+tab_expediente
+INNER JOIN tab_exparchivo ON tab_exparchivo.exp_id = tab_expediente.exp_id
+INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+WHERE
+tab_expediente.exp_id = $idexp AND
+tab_archivo.fil_nrocaj = '$i' AND
+tab_expediente.exp_estado = 1";
+   
+        $obtenerExp=$this->expediente->dbSelectBySQL($sql);
+        $obtenerExp=$obtenerExp[0];
+        return $obtenerExp;
+    }
+    
     function cantidadExpedientes($id){
     
         $sql="SELECT COUNT(tab_archivo.fil_titulo) as exp_cantidad

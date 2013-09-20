@@ -95,6 +95,13 @@ class solicitud_prestamo extends tab_solprestamo {
     $id=$mx->spr_id;
     return $id;
     }
+    function obtenerEstado($sprId){
+        
+    $sql="select spr_estado from tab_solprestamo where spr_id=$sprId";
+     $result=$this->solicitud_prestamo->dbSelectBySQL($sql);
+     $result=$result[0];
+     return $result->spr_estado;
+    }
 }
 
 ?>
