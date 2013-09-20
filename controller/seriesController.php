@@ -108,19 +108,19 @@ class seriesController Extends baseController {
             $json .= "\n{";
             $json .= "id:'" . $un->ser_id . "',";
             $json .= "cell:['" . $un->ser_id . "'";
-            if ($un->ser_codigo=='') {
-                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";            
-            }else{
-                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER .$un->ser_codigo) . "'";            
-           }
-            $json .= ",'" . addslashes($un->tco_codigo) . "'";              
-            if ($un->ser_par=='-1'){
+            if ($un->ser_codigo == '') {
+                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";
+            } else {
+                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo) . "'";
+            }
+            $json .= ",'" . addslashes($un->tco_codigo) . "'";
+            if ($un->ser_par == '-1') {
                 $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
-            }else{
+            } else {
                 $json .= ",'" . addslashes("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . utf8_decode($un->ser_categoria)) . "'";
                 //$json .= ",'" . addslashes("----- " . utf8_encode($un->ser_categoria)) . "'";
-            }             
-            $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";            
+            }
+            $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";
             $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
             $json .= ",'" . addslashes(utf8_decode($un->fon_descripcion)) . "'";
             $json .= ",'" . addslashes(utf8_decode($un->red_codigo)) . "'";
@@ -133,8 +133,6 @@ class seriesController Extends baseController {
         $json .= "}";
         echo $json;
     }
-
-
 
     function add() {
         $this->usuario = new usuario ();
@@ -150,31 +148,31 @@ class seriesController Extends baseController {
         $serie = new series();
         $tipo_corr = new tipocorr();
         $retensiondoc = new retensiondoc();
-        
+
         $fondo = new fondo();
         $this->registry->template->adm = $adm;
         $this->registry->template->delimiter = DELIMITER;
-        
+
         $this->registry->template->ser_id = "";
         $this->registry->template->fon_id = $fondo->obtenerSelectFondos();
         //$this->registry->template->ser_par = $serie->obtenerSelectTodas(); 
-        $this->registry->template->ser_par = ""; 
+        $this->registry->template->ser_par = "";
         $this->registry->template->ser_categoria = "";
         $this->registry->template->ser_tipo = "N";
         $this->registry->template->ser_codigop = ""; //$_SESSION['DEP_CODIGO'] . DELIMITER . $_SESSION['UNI_CODIGO'];
-        $this->registry->template->ser_codigo = "";        
+        $this->registry->template->ser_codigo = "";
         $this->registry->template->titulo = "Nueva ";
-        
+
         $this->registry->template->tco_id = $tipo_corr->obtenerSelect();
         $this->registry->template->red_id = $retensiondoc->obtenerSelect();
-        
+
         $this->registry->template->fon_cod = "";
         $this->registry->template->uni_cod = "";
-        $this->registry->template->tco_codigo = "";                
-        
+        $this->registry->template->tco_codigo = "";
+
         $this->menu = new menu();
         $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
-        $this->registry->template->men_titulo = $this->liMenu;        
+        $this->registry->template->men_titulo = $this->liMenu;
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
         $this->registry->template->PATH_EVENT = "save";
@@ -182,8 +180,8 @@ class seriesController Extends baseController {
         $this->registry->template->PATH_J = "jquery-1.4.1";
 
 
-              
-        
+
+
         $tramiteSerie = new tab_tramite();
         $tramites = $tramiteSerie->dbSelectBySQL("SELECT * FROM tab_tramite
         WHERE tra_estado = '1' ORDER BY tra_descripcion ASC ");
@@ -197,11 +195,11 @@ class seriesController Extends baseController {
         } else {
             $tramiteTr = "<tr><td colspan='2'>No existen tramites</td></tr>";
         }
-        
+
         $this->registry->template->LISTA_TRAMITES = $tramiteTr;
         $this->registry->template->LISTA_TRAMITES_SELECT = "";
 
-        
+
 
         $this->registry->template->show('headerF');
         $this->registry->template->show('tab_series.tpl');
@@ -217,55 +215,55 @@ class seriesController Extends baseController {
         $tseries->setSer_id($_REQUEST['ser_id']);
         $tseries->setUni_id($_REQUEST['uni_id']);
         $tseries->setTco_id($_REQUEST['tco_id']);
-        $tseries->setRed_id($_REQUEST['red_id']); 
-        
-        if ($_REQUEST['ser_par']){
+        $tseries->setRed_id($_REQUEST['red_id']);
+
+        if ($_REQUEST['ser_par']) {
             $codigo = $this->generaCodigo($_REQUEST['ser_par']);
             $ser_nivel = $this->generaNivel($codigo);
-            
+
             $tseries->setSer_codigo($codigo);
             $tseries->setSer_nivel($ser_nivel);
             $tseries->setSer_par($_REQUEST['ser_par']);
             $tseries->setSer_contador('0');
-            $tseries->setSer_categoria($_REQUEST['ser_categoria']);                   
+            $tseries->setSer_categoria($_REQUEST['ser_categoria']);
             $tseries->setSer_estado(1);
-            $id_serie = $tseries->insert2();            
-            
+            $id_serie = $tseries->insert2();
+
             // Actualizar Código Seccion
             $row2 = $this->series->dbselectByField("ser_id", $_REQUEST['ser_par']);
             $row2 = $row2[0];
             $this->series->setSer_id($row2->ser_id);
-                        
+
             $this->series->setUni_id($row2->uni_id);
             $this->series->setTco_id($row2->tco_id);
             $this->series->setRed_id($row2->red_id);
             $this->series->setSer_codigo($row2->ser_codigo);
-            
-            $this->series->setSer_par($row2->ser_par);            
+
+            $this->series->setSer_par($row2->ser_par);
             $this->series->setSer_categoria($row2->ser_categoria);
-            
-            $ser_contador = $row2->ser_contador+1;            
-            $this->series->setSer_contador($ser_contador);            
-            
-            $this->series->setSer_estado(1);            
-            $this->series->update();             
-        }else{            
+
+            $ser_contador = $row2->ser_contador + 1;
+            $this->series->setSer_contador($ser_contador);
+
+            $this->series->setSer_estado(1);
+            $this->series->update();
+        } else {
             $codigo = $this->getCodigoPadre();
-            if ($_REQUEST['ser_tipo']== 'R') {
+            if ($_REQUEST['ser_tipo'] == 'R') {
                 $tseries->setSer_codigo('');
-            }else{
+            } else {
                 $tseries->setSer_codigo($codigo . DELIMITER . "0");
-            }            
+            }
             $ser_nivel = 0;
             $tseries->setSer_nivel($ser_nivel);
-            $tseries->setSer_par(-1);   
+            $tseries->setSer_par(-1);
             $tseries->setSer_contador('0');
-            $tseries->setSer_categoria($_REQUEST['ser_categoria']);                   
+            $tseries->setSer_categoria($_REQUEST['ser_categoria']);
             $tseries->setSer_estado(1);
-            $id_serie = $tseries->insert2();             
-        }                
+            $id_serie = $tseries->insert2();
+        }
 
-        
+
         // SERIE DEFAULT
         // Nuevo tramite
         $tramite = new tab_tramite ();
@@ -276,18 +274,18 @@ class seriesController Extends baseController {
         $tramite->setTra_fecha_crea(date("Y-m-d"));
         $tramite->setTra_usuario_crea($_SESSION ['USU_ID']);
         $tramite->setTra_estado(1);
-        $tra_id = $tramite->insert();        
+        $tra_id = $tramite->insert();
         //insert
         $seriet = new Tab_serietramite();
         $seriet->setSer_id($id_serie);
         $seriet->setTra_id($tra_id);
         $seriet->setSts_estado(1);
-        $seriet->insert();        
-        
-        
+        $seriet->insert();
+
+
         // Nuevo cuerpo
         $tcuerpos = new tab_cuerpos ();
-        $tcuerpos->setRequest2Object($_REQUEST);        
+        $tcuerpos->setRequest2Object($_REQUEST);
         $tcuerpos->setCue_id("1");
         $tcuerpos->setCue_orden("1");
         $tcuerpos->setCue_codigo("1");
@@ -295,18 +293,18 @@ class seriesController Extends baseController {
         $tcuerpos->setCue_estado(1);
         $cue_id = $tcuerpos->insert();
 
-        
+
         // Last code
         $tramitecc = new tab_tramitecuerpos();
         $tramitecc->setCue_id($cue_id);
         $tramitecc->setTra_id($tra_id);
         $tramitecc->setTrc_estado(1);
-        $tramitecc->insert();        
-        
-        
-        
-        
-        
+        $tramitecc->insert();
+
+
+
+
+
         Header("Location: " . PATH_DOMAIN . "/series/");
     }
 
@@ -323,12 +321,11 @@ class seriesController Extends baseController {
             foreach ($result as $row) {
                 $res = $row->contador;
             }
-            $contador = $res+1;
-        }        
+            $contador = $res + 1;
+        }
         return $contador;
     }
-    
-    
+
     // Nueva generación de codigo 
     function generaCodigo($ser_par) {
         $new_cod = "";
@@ -343,40 +340,37 @@ class seriesController Extends baseController {
         $result = $series->dbSelectBySQL($sql);
         if ($result != null) {
             foreach ($result as $row) {
-                if ($row->ser_codigo==''){
+                if ($row->ser_codigo == '') {
                     $res = sprintf("%01d", $row->ser_contador + 1);
-                }else{
-                    $res = $row->ser_codigo. DELIMITER . sprintf("%01d", $row->ser_contador + 1);
+                } else {
+                    $res = $row->ser_codigo . DELIMITER . sprintf("%01d", $row->ser_contador + 1);
                 }
             }
             $new_cod = $res;
-        }else{
+        } else {
             $new_cod = "1";
-        }        
+        }
         return $new_cod;
-    }            
+    }
 
     // Nivel
     function generaNivel($ser_codigo) {
         $count = 0;
-        $nomArray=explode(DELIMITER, $ser_codigo);
+        $nomArray = explode(DELIMITER, $ser_codigo);
         foreach ($nomArray as $nom) {
             $count++;
-        }                
+        }
         return $count;
-    }    
-    
-    
-    
-    
-    
-    
+    }
+
     function edit() {
         Header("Location: " . PATH_DOMAIN . "/series/view/" . $_REQUEST["ser_id"] . "/");
     }
 
     function view() {
-        if(! VAR3){ die("Error del sistema 404"); }
+        if (!VAR3) {
+            die("Error del sistema 404");
+        }
         $codigo = "";
         $codigop = "";
         $serie = new series();
@@ -403,19 +397,19 @@ class seriesController Extends baseController {
         $this->registry->template->ser_par = $serie->obtenerSelectTodas($row->ser_par);
         $this->registry->template->ser_categoria = utf8_encode($row->ser_categoria);
         $this->registry->template->ser_tipo = $row->ser_tipo;
-  
+
         $this->registry->template->fon_cod = $fondo->getCod($row->uni_id);
-        $this->registry->template->uni_cod = $unidad->getCodigo($row->uni_id); 
-        
-        
+        $this->registry->template->uni_cod = $unidad->getCodigo($row->uni_id);
+
+
         $tipo_corr = new tipocorr();
-        $this->registry->template->tco_codigo = $tipo_corr->getCodigoById($row->tco_id); 
+        $this->registry->template->tco_codigo = $tipo_corr->getCodigoById($row->tco_id);
         $retensiondoc = new retensiondoc();
         $this->registry->template->tco_id = $tipo_corr->obtenerSelect($row->tco_id);
-        $this->registry->template->red_id = $retensiondoc->obtenerSelect($row->red_id);        
-        
+        $this->registry->template->red_id = $retensiondoc->obtenerSelect($row->red_id);
+
         $this->registry->template->delimiter = DELIMITER;
-        $this->registry->template->ser_codigo = $row->ser_codigo;        
+        $this->registry->template->ser_codigo = $row->ser_codigo;
 
         $tramiteSerie = new tramite();
         $tramites = $tramiteSerie->obtenerTramitesSerie(VAR3);
@@ -431,7 +425,7 @@ class seriesController Extends baseController {
         }
         $this->registry->template->LISTA_TRAMITES = $tramiteTr;
         $this->registry->template->LISTA_TRAMITES_SELECT = ''; //$tramiteLi;        
-        
+
         $this->registry->template->titulo = "Editar ";
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
@@ -441,13 +435,12 @@ class seriesController Extends baseController {
         $this->menu = new menu();
         $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
         $this->registry->template->men_titulo = $this->liMenu;
-        
+
         $this->registry->template->show('headerF');
         $this->registry->template->show('tab_series.tpl');
         $this->registry->template->show('footer');
-    }  
-    
-    
+    }
+
     function update() {
         $tseries = new tab_series();
         $tseries->setRequest2Object($_REQUEST);
@@ -455,18 +448,18 @@ class seriesController Extends baseController {
         $rows = $tseries->dbselectByField("ser_id", $ser_id);
         $rows = $rows[0];
         $tseries->setSer_id($rows->ser_id);
-        $tseries->setUni_id($_REQUEST['uni_id']);        
+        $tseries->setUni_id($_REQUEST['uni_id']);
         $tseries->setTco_id($_REQUEST['tco_id']);
-        $tseries->setRed_id($_REQUEST['red_id']);        
+        $tseries->setRed_id($_REQUEST['red_id']);
         $tseries->setSer_codigo($rows->ser_codigo);
-        if ($_REQUEST['ser_par']){
+        if ($_REQUEST['ser_par']) {
             $tseries->setSer_par($_REQUEST['ser_par']);
-        }else{
+        } else {
             $tseries->setSer_par(-1);
-        }            
+        }
         $tseries->setSer_categoria($_REQUEST['ser_categoria']);
         $tseries->setSer_contador($rows->ser_contador);
-        $tseries->setSer_estado(1);       
+        $tseries->setSer_estado(1);
         $tseries->update();
 
 
@@ -498,11 +491,11 @@ class seriesController Extends baseController {
         $swDepen = $series->validaDependencia($_REQUEST['ser_id']);
         if ($swDepen != 0) {
             echo 'No se puede eliminar la serie ! \nTiene expedientes o documentos';
-        }else{
+        } else {
             echo '';
         }
-    }     
-    
+    }
+
     function verifTramite() {
         $tramitec = new tab_serietramite();
         $tramite = $_REQUEST['ser_id'];
@@ -513,7 +506,7 @@ class seriesController Extends baseController {
             echo false;
     }
 
-    function reporte() {
+    function impresion() {
 
         //$usu_id = $_REQUEST["usu_id"];
         $this->tab_series = new Tab_series();
@@ -527,12 +520,11 @@ class seriesController Extends baseController {
         $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Freddy Velasco');
-        $pdf->SetTitle('Reporte Postulante');
-        $pdf->SetSubject('Reporte Postulante');
+        $pdf->SetAuthor('Arsenio Castellon');
+        $pdf->SetTitle('Reporte Series');
+        $pdf->SetSubject('Reporte Series');
         $pdf->SetKeywords('ITEAM, Iteam, Iteam SRL');
-
-
+        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'ABC', 'ADMINISTRADORA BOLIVIANA DE CARRETERAS');
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
         // set default monospaced font
@@ -550,63 +542,78 @@ class seriesController Extends baseController {
         $pdf->setLanguageArray($l);
         // set font
         $pdf->AddPage();
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        // set font
-// datos del usuario
-        $sql = "SELECT ser.ser_id,ser.ser_codigo,ser.ser_categoria,ser.ser_par,ser.ser_estado
-FROM tab_series AS ser WHERE ser.ser_estado = 1 AND ser.ser_par = 0
-ORDER BY ser.ser_categoria ASC ";
-        $row = $this->tab_series->dbSelectBySQL($sql);
+
+        
+        
         $cadena = "";
         $cadena .= '<table border="1">';
         $cadena .= '<tr align="center">
-<td width="30"><b>Nro</b></td>
-<td width="40"><b>C&oacute;digo</b></td>
-<td width="250"><b>Serie</b></td>
-<td width="60"><b>C&oacute;digo Sub Serie</b></td>
-<td width="250"><b>Sub Serie</b></td>
-                </tr>';
+                        <td width="30"><b>Nro</b></td>
+                        <td width="150"><b>C&oacute;digo</b></td>
+                        <td width="500"><b>Serie</b></td>
+                    </tr>';
+        
+        
+        $sql = "SELECT
+                tab_fondo.fon_cod,
+                tab_unidad.uni_cod,
+                tab_tipocorr.tco_codigo,
+                ser.ser_codigo,
+                tab_unidad.uni_id,
+                tab_unidad.uni_descripcion,
+                ser.ser_id,
+                ser.ser_categoria,
+                ser.ser_par,
+                ser.ser_estado
+                FROM
+                tab_series AS ser
+                INNER JOIN tab_unidad ON tab_unidad.uni_id = ser.uni_id
+                INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = ser.tco_id
+                WHERE
+                ser.ser_estado = 1 
+                ORDER BY ser.ser_id ASC ";
+        $row = $this->tab_series->dbSelectBySQL($sql);        
+                //AND ser.ser_par = -1        
+        
+        
         $i = 1;
+        $uni_descripciona = "";
+        $uni_descripcionn = "";
         foreach ($row as $value) {
-            $sql = "SELECT ser.ser_codigo,ser.ser_categoria,ser.ser_par,ser.ser_estado
-FROM tab_series AS ser WHERE ser.ser_par = " . $value->ser_id . " AND ser.ser_estado = 1
-ORDER BY ser.ser_categoria ASC";
-            $row_sub = $this->tab_series->dbSelectBySQL($sql);
-
             if ($i % 2 == 0)
                 $color = $blanco;
             else
                 $color = $gris;
 
-            $cadena .= '<tr bgcolor="' . $color . '">
-<td width="30">' . $i . '</td>
-<td width="40">' . $value->ser_codigo . '</td>
-<td width="250">' . $value->ser_categoria . '</td>
-
-<td width="60"></td>
-<td width="250"></td>
-                </tr>';
-            $i++;
-
-            if (count($row_sub) > 0) {
-                foreach ($row_sub as $val) {
-                    if ($i % 2 == 0)
-                        $color = $blanco;
-                    else
-                        $color = $gris;
-
-                    $cadena .= '<tr bgcolor="' . $color . '">
-<td width="30">' . $i . '</td>
-<td width="40"></td>
-<td width="250"></td>
-
-<td width="60">' . $val->ser_codigo . '</td>
-<td width="250">' . $val->ser_categoria . '</td>
-                </tr>';
-                    $i++;
-                }
+            
+            $uni_descripcionn = $value->uni_descripcion;
+            if ($uni_descripcionn != $uni_descripciona){
+                $cadena .= '<tr bgcolor="' . $color . '">
+                                <td width="680" colspan="3">' . "SECCION: " . $value->uni_descripcion . '</td>
+                            </tr>';
+            
             }
+            
+            if ($value->ser_codigo == '') {
+                $cadena .= '<tr bgcolor="' . $color . '">
+                                <td width="30">' . $i . '</td>
+                                <td width="150">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . '</td>
+                                <td width="500">' . $value->ser_categoria . '</td>
+                            </tr>';
+            } else {
+                $cadena .= '<tr bgcolor="' . $color . '">
+                                <td width="30">' . $i . '</td>
+                                <td width="150">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . '</td>
+                                <td width="500">' . $value->ser_categoria . '</td>
+                            </tr>';
+            }
+            $i++;
+            $uni_descripciona = $value->uni_descripcion;
+            
         }
+        
+        
         $cadena .= "</table>";
 
         // print a line using Cell()
@@ -621,6 +628,8 @@ ORDER BY ser.ser_categoria ASC";
         $pdf->Output('listado_series.pdf', 'I');
     }
 
+    
+    
     function loadAjaxSeries() {
         $uni_id = $_POST["Uni_id"];
         $sql = "SELECT 
@@ -639,16 +648,16 @@ ORDER BY ser.ser_categoria ASC";
         $res = array();
         $series = new series();
         foreach ($result as $row) {
-            if ($row->ser_par=='-1'){
+            if ($row->ser_par == '-1') {
                 $res[$row->ser_id] = $row->ser_categoria;
-            }else{
+            } else {
                 $spaces = $series->getSpaces($row->ser_nivel);
                 $res[$row->ser_id] = $spaces . " " . $row->ser_categoria;
             }
         }
         echo json_encode($res);
-    }    
-    
+    }
+
     function loadAjax() { //despliega las unidades padre de un nivel dado (unidad hija)
         $res = array();
         $ser_id = $_POST["Ser_id"];

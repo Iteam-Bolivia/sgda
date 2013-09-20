@@ -32,7 +32,9 @@
             {separator: true},
             {name: 'Adicionar Grupos Documentales', bclass: 'add', onpress : test},
             {separator: true},
-            {name: 'Adicionar Información a los Expedientes', bclass: 'fields', onpress : test}            
+            {name: 'Adicionar Información a los Expedientes', bclass: 'fields', onpress : test},
+            {separator: true},
+            {name: 'Impresion', bclass: 'print', onpress : test}            
             
         ],
         searchitems : [
@@ -141,6 +143,10 @@
                 window.location ="<?php echo $PATH_DOMAIN ?>/expcampo/index/"+id+"/";
             }
             else alert("Seleccione un registro");
+        }
+        else if (com=='Impresion')
+        {
+            window.location ="<?php echo $PATH_DOMAIN ?>/series/impresion/";
         }        
     }
 </script>

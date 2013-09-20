@@ -60,7 +60,7 @@ class prestamosController extends baseController {
     function search() { 
         $archivo = new archivo();
         $request = $this->setRequestTrim($_REQUEST);
-        $json = $archivo->buscar($request);
+        $json = $archivo->buscarPrestamos($request);
         echo $json;
     }
 
