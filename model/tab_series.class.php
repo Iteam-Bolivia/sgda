@@ -20,7 +20,8 @@ class Tab_series extends db {
     var $ser_categoria;
     var $ser_contador;
     var $ser_estado;
-
+    var $ser_nivel;
+    
     // Others
     var $ser_tipo;
     var $dep_id;
@@ -118,7 +119,13 @@ class Tab_series extends db {
         $this->dep_id = $dep_id;
     }
     
+    function getSer_nivel() {
+        return $this->ser_nivel;
+    }
 
+    function setSer_nivel($ser_nivel) {
+        $this->ser_nivel = $ser_nivel;
+    } 
 
 
     

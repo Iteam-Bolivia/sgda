@@ -25,9 +25,7 @@ define("ROUNDED", "2");
 
 /* * * Define PostgreSQL database server connect parameters - SGDA ** */
 define('PGHOST', 'localhost');
-
-define('PGPORT', 5432);
-
+define('PGPORT', 5444);
 define('PGDATABASE', 'bd_abc_archivo');
 define('PGUSER', 'jovando');
 define('PGPASSWORD', 'iteam123');

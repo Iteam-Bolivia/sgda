@@ -569,6 +569,13 @@ class series extends tab_series {
         return $ser_categoria;
     }    
     
+    function getSpaces($ser_nivel) {
+        $spaces = "";
+        for($i=0; $i<$ser_nivel; $i++){
+            $spaces .= "----";
+        }
+        return $spaces;
+    }    
     
 }
 
