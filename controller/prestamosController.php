@@ -1,13 +1,13 @@
 <?php
 
 /**
- * prestamosController.php Controller
+ * buscarArchivoController.php Controller
  *
  * @package
  * @author lic. castellon
  * @copyright ITEAM
  * @version $Id$ 2013
- * @access public
+ * @access publicsss
  */
 class prestamosController extends baseController {
 

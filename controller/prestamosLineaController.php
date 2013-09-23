@@ -7,7 +7,7 @@
  * @author lic. castellon
  * @copyright ITEAM
  * @version $Id$ 2013
- * @access public
+ * @access publicssss
  */
 class prestamosLineaController extends baseController {
 
@@ -32,7 +32,7 @@ class prestamosLineaController extends baseController {
         $this->registry->template->cue_id = "";
         
         $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("prestamos", $_SESSION ['USU_ID']);
+        $liMenu = $tmenu->imprimirMenu("prestamosLinea", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
        
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
@@ -60,7 +60,7 @@ class prestamosLineaController extends baseController {
     function search() { 
         $archivo = new prestamoslinea();
         $request = $this->setRequestTrim($_REQUEST);
-        $json = $archivo->buscar($request);
+        $json = $archivo->buscarprestlinea($request);
         echo $json;
     }
 
@@ -652,14 +652,14 @@ class prestamosLineaController extends baseController {
     function recarga(){
  $valor=$_REQUEST['valor'];
 
-   if(isset($_SESSION['id_lista']))
+   if(isset($_SESSION['id_lista2']))
        {$cadena="";
-     $nuevo=$_SESSION['id_lista']; 
+     $nuevo=$_SESSION['id_lista2']; 
      $cadena=$nuevo.",".$valor;
-     $_SESSION['id_lista']=$cadena;
+     $_SESSION['id_lista2']=$cadena;
  
    }else{
-       $_SESSION['id_lista']=$valor;
+       $_SESSION['id_lista2']=$valor;
    }
     }
     function listado(){
@@ -712,11 +712,11 @@ class prestamosLineaController extends baseController {
     function listar(){ 
       $archivo = new prestamoslinea();
         $request = $this->setRequestTrim($_REQUEST);
-        $json = $archivo->buscar2($request);
+        $json = $archivo->buscar2preslinea($request);
         echo $json;   
     }
     function guardarPrestamo(){
-        unset($_SESSION["id_lista"]); 
+        unset($_SESSION["id_lista2"]); 
          $this->solicitud_prestamo = new tab_solprestamo();
          $this->docprestamo=new tab_docprestamo();
          $documento=new docprestamo();
@@ -774,7 +774,7 @@ for($i=0;$i<$cantidad;$i++){
         $this->docprestamo->setDpr_orden($inc);
         $this->docprestamo->insert();
 }  
-       //$_SESSION['id_lista']="";
+       //$_SESSION['id_lista2']="";
 
         Header("Location: " . PATH_DOMAIN . "/prestamosLinea/listarprestamo/");
         
@@ -1121,7 +1121,7 @@ echo "<font style='font-size:15px;font-weight:400'>".$fechaInicio."</font>";
         
     }
     function eliminarsession(){
-        unset($_SESSION['id_lista']);
+        unset($_SESSION['id_lista2']);
     }
     
     function verRpte_prestamo(){

@@ -2,8 +2,8 @@
 <script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
 <div class="clear"></div><div align="left">
   <?php
-  if(isset($_SESSION['id_lista'])){
-   $dtt=$_SESSION['id_lista'];
+  if(isset($_SESSION['id_lista2'])){
+   $dtt=$_SESSION['id_lista2'];
   }else{
    $dtt=0;
   }
