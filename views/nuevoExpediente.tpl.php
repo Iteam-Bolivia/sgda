@@ -504,22 +504,22 @@
                 id="exp_ori" maxlength="3" value="<?php echo $exp_ori; ?>" 
                 size="1" autocomplete="off"
                 class="numeric" 
-                title="Nro. Documentos Originales" />                 
+                title="Nro. Documentos Originales" onfocus="if(this.value==0){this.value='';}" />                 
                                   
                 Copia(s):
                 <input name="exp_cop" type="text"
                 id="exp_cop" maxlength="3" value="<?php echo $exp_cop; ?>" 
                 size="1" autocomplete="off"
                 class="numeric" 
-                title="Nro. Documentos Copia" />                 
+                title="Nro. Documentos Copia" onfocus="if(this.value==0){this.value='';}"  />                 
                  
                 Fotocopia(s):
                 <input name="exp_fot" type="text"
                 id="exp_fot" maxlength="3" value="<?php echo $exp_fot; ?>" 
                 size="1" autocomplete="off"
                 class="numeric" 
-                title="Nro. Documentos Fotocopias" /> 
-                                    
+                title="Nro. Documentos Fotocopias" onfocus="if(this.value==0){this.value='';}" /> 
+                <span id="error"></span>                  
             </td>
         </tr>        
 
@@ -530,7 +530,7 @@
                                    size="120" autocomplete="off" maxlength="255"
                                    class="" title="Descripci&oacute;n" />
 <!--                (<input type="checkbox" name="pac_nombre" value="ON"/> Guardar)-->
-                <a href="#" title="Ver palabras claves" id="verPC">(+ Ver)</a>
+                <br><a href="javascript:void(0)" title="Ver palabras claves" id="verPC">(+ Ver)</a>
             </td>
         </tr>
         
@@ -548,11 +548,11 @@
         
         <tr>
             <td width="166">Observaciones:</td>
-            <td colspan="3"><input name="exp_obs" type="text"
-                                   id="exp_obs" maxlength="100" value="<?php echo $exp_obs; ?>" 
-                                   size="120" autocomplete="off"
-                                   class="alphanumeric" 
-                                   title="Observaciones del registro de expediente" /></td>
+            <td colspan="3">
+                <textarea name="exp_obs"  cols="55" id="exp_obs" autocomplete="off" class="alphanumeric" maxlength="100" title="Observaciones del registro de expediente"  ><?php echo $exp_obs; ?></textarea>
+      
+            
+            </td>
         </tr>                    
         
     </table>
@@ -709,5 +709,93 @@
         
     });
     
+    
+</script>
+<script languaje="javascript">
+/*exp_nroejem
+exp_ori
+exp_cop
+exp_fot*/
+    $(function(){
+
+        
+        
+      /*
+            $("#exp_ori").change(function(){original=0;
+                totalejemp=Number($("#exp_nroejem").val());
+                original=Number($("#exp_ori").val());
+             
+        if(original>totalejemp){
+            $("#exp_ori").val(totalejemp);
+            $("#exp_cop").val(0);
+            $("#exp_fot").val(0);
+        }else{
+            $("#exp_ori").val(original);
+            $("#exp_cop").val(0);
+            $("#exp_fot").val(0);
+        }
+        
+    })
+                $("#exp_cop").change(function(){copia=0;
+                    totalejemp=Number($("#exp_nroejem").val());
+                copia=Number($("#exp_cop").val());
+             
+        if(copia>totalejemp){
+            $("#exp_ori").val(0);
+            $("#exp_cop").val(totalejemp);
+            $("#exp_fot").val(0);
+        }else{
+            $("#exp_ori").val(0);
+            $("#exp_cop").val(copia);
+            $("#exp_fot").val(0);
+        }
+        
+    })
+                $("#exp_fot").change(function(){
+                    foto=0;
+             totalejemp=Number($("#exp_nroejem").val());
+                foto=Number($("#exp_fot").val());
+             
+        if(foto>totalejemp){
+            $("#exp_ori").val(0);
+            $("#exp_cop").val(0);
+            $("#exp_fot").val(totalejemp);
+        }else{
+          original=$("#exp_ori").val();
+           copia=$("#exp_cop").val(0);
+           var cantidad=original+copia;
+           if(cantidad>totalejemp){
+               this.value="a";
+           }
+            $("#exp_fot").val(foto);
+        }
+        
+    })*/
+            var  totalejemp;
+        var  original;
+        var  copia;
+        var  foto;
+        $("#exp_obs,#accion,#palabra,#exp_descripcion").click(function(){
+    
+              totalejemp=Number($("#exp_nroejem").val());
+              copia=Number($("#exp_cop").val());
+              original=Number($("#exp_ori").val());
+              foto=Number($("#exp_fot").val());
+              var cantidad=original+copia+foto;
+          
+              if(cantidad>totalejemp){
+                  $("#error").html("No es válido, Excede la Cantidad de ejemplares");
+                $("#exp_nroejem").css("border","1px solid red");
+                  return false;
+              }else{
+                $("#error").html("");
+                $("#exp_nroejem").css("border","1px solid #E3E2E2");
+              }
+              
+        })
+        
+    })
+    
+
     
 </script>
