@@ -9,7 +9,6 @@
  * @version $Id$ 2013
  * @access public
  */
-
 class etiqexpedienteController extends baseController {
 
     function index() {
@@ -581,7 +580,7 @@ class etiqexpedienteController extends baseController {
 
         $texp = new Tab_etiquetas();
         $usuario = new usuario();
-        
+
         $sql = "SELECT
                 tab_fondo.fon_cod,
                 u.uni_cod,
@@ -626,10 +625,10 @@ class etiqexpedienteController extends baseController {
 
 
         $rows = $texp->dbSelectBySQL($sql);
-        
-        
-        
-        
+
+
+
+
 
         // Include the main TCPDF library (search for installation path).
         //require_once('tcpdf/tcpdf_include.php');
@@ -648,7 +647,6 @@ class etiqexpedienteController extends baseController {
         // set default header data
         $pdf->SetHeaderData('logo_abc.png', 25, 'ADMINISTRADORA BOLIVIANA DE CARRETERA', 'IMPRESIÓN DE CAJAS');
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
-
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -668,13 +666,12 @@ class etiqexpedienteController extends baseController {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-            require_once(dirname(__FILE__).'/lang/eng.php');
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
 
         // ---------------------------------------------------------
-
         // set font
         $pdf->SetFont('helvetica', 'B', 8);
 
@@ -684,214 +681,218 @@ class etiqexpedienteController extends baseController {
         $pdf->Write(0, '', '', 0, 'L', true, 0, false, false, 0);
 
         $pdf->SetFont('helvetica', '', 8);
-$st="";
+        $st = "";
         // -----------------------------------------------------------------------------
 
         for ($i = $ini; $i <= $fin; $i++) {
 
 
-                foreach ($rows as $value) {
-                    $expediente=new expediente();
-                    $obteneCaja=$expediente->obtenerCaja($i,$_REQUEST['exp_id']); 
-                    $cantMin=strlen($obteneCaja->minimo); 
-                    $cantMax=strlen($obteneCaja->maximo);
-                  
-                    switch ($cantMin){
-                        case 1:$cero="0000";break;
-                        case 2:$cero="000";break;
-                        case 3:$cero="00";break;
-                        case 4:$cero="0";break;
-                        case 5:$cero="";break;
-                    }
-                     switch ($cantMax){
-                        case 1:$cero2="0000";break;
-                        case 2:$cero2="000";break;
-                        case 3:$cero2="00";break;
-                        case 4:$cero2="0";break;
-                        case 5:$cero2="";break;
-                    }
-                    $st.='<table border="1" style="width: 100%">';
-                    
-                    $st.='<tr>';
-                    $st.='<td>';
-                    $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                    //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
-                    $st.='</td>';
-                    $st.='</tr>';
+            foreach ($rows as $value) {
+                $expediente = new expediente();
+                $obteneCaja = $expediente->obtenerCaja($i, $_REQUEST['exp_id']);
+                $cantMin = strlen($obteneCaja->minimo);
+                $cantMax = strlen($obteneCaja->maximo);
 
-                    $st.='<tr>';
-                    $st.='<td>';
+                switch ($cantMin) {
+                    case 1:$cero = "0000";
+                        break;
+                    case 2:$cero = "000";
+                        break;
+                    case 3:$cero = "00";
+                        break;
+                    case 4:$cero = "0";
+                        break;
+                    case 5:$cero = "";
+                        break;
+                }
+                switch ($cantMax) {
+                    case 1:$cero2 = "0000";
+                        break;
+                    case 2:$cero2 = "000";
+                        break;
+                    case 3:$cero2 = "00";
+                        break;
+                    case 4:$cero2 = "0";
+                        break;
+                    case 5:$cero2 = "";
+                        break;
+                }
+                $st.='<table border="1" style="width: 100%">';
 
-                    $st.='<table border="1" style="width: 100%; text-align: center">';
+                $st.='<tr>';
+                $st.='<td>';
+                $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
+                //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
+                $st.='</td>';
+                $st.='</tr>';
+
+                $st.='<tr>';
+                $st.='<td>';
+
+                $st.='<table border="1" style="width: 100%; text-align: center">';
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20"  bgcolor="#CCCCCC"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
+                $st.='<td colspan="11" height="20">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>GERENCIA / UNIDAD</b></td>';
+                $st.='</tr>';
+                if ($value->uni_par_cod) {
                     $st.='<tr>';
-                    $st.='<td colspan="11" height="20"  bgcolor="#CCCCCC"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
+                    $st.='<td colspan="11" height="20">' . $value->uni_par_cod . '</td>';
                     $st.='</tr>';
-                    $st.='<tr>';
-                    //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
-                    $st.='<td colspan="11" height="20">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>GERENCIA / UNIDAD</b></td>';
-                    $st.='</tr>';
-                    if ($value->uni_par_cod) {
-                        $st.='<tr>';
-                        $st.='<td colspan="11" height="20">' . $value->uni_par_cod . '</td>';
-                        $st.='</tr>';
-                    } else {
-                        $st.='<tr>';
-                        $st.='<td colspan="11" height="20">' . $value->uni_descripcion . '</td>';
-                        $st.='</tr>';
-                    }
-                    $st.='<tr>';
-                    $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>SECCIÓN</b></td>';
-                    $st.='</tr>';
+                } else {
                     $st.='<tr>';
                     $st.='<td colspan="11" height="20">' . $value->uni_descripcion . '</td>';
                     $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>DESCRIPCIÓN DEL CONTENIDO</b></td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td colspan="11" height="20" style="font-size:50px">' . $value->exp_titulo . '</td>';
-                    $st.='</tr>';
-                    
-                    $fechaextrema=explode("-",$value->exp_fecha_exf);
-                    $fechE=$fechaextrema[2]."-".$fechaextrema[1]."-".$fechaextrema[0];
-                    $pdf->SetFont('helvetica', '', 8);
-                    $st.='<tr>';
-                    $st.='<td colspan="2" height="20" bgcolor="#CCCCCC">FECHAS EXTREMAS</td>';
-                    $st.='<td colspan="9" bgcolor="#CCCCCC" >NRO. DE ORDEN</td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td colspan="2" height="20">' . $fechE . '</td>';
-                    $st.='<td colspan="4" bgcolor="#CCCCCC">DEL</td>';
-                    $st.='<td>'.$cero.$obteneCaja->minimo.'</td>';
-                    $st.='<td colspan="3" bgcolor="#CCCCCC">AL&nbsp;</td>';
-                    $st.='<td>'.$cero2.$obteneCaja->maximo.'</td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td colspan="4" height="20" bgcolor="#CCCCCC">UBICACIÓN TOPOGRÁFICA</td>';
-                    $st.='<td colspan="5"></td>';
-                    $st.='<td colspan="2"></td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td height="20" bgcolor="#CCCCCC">SALA:</td>';
-                    $st.='<td bgcolor="#CCCCCC">ESTANTE:</td>';
-                    $st.='<td bgcolor="#CCCCCC">CUERPO:</td>';
-                    $st.='<td bgcolor="#CCCCCC">BALDA:</td>';
-                    $st.='<td colspan="5" bgcolor="#CCCCCC">FECHA DE TRANSFERENCIA</td>';
-                    $st.='<td colspan="2" bgcolor="#CCCCCC">NRO. DE TRANSFERENCIA</td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    $st.='<td height="20">' . $value->exp_sala . '</td>';
-                    $st.='<td>' . $value->exp_estante . '</td>';
-                    $st.='<td>' . $value->exp_cuerpo . '</td>';
-                    $st.='<td>' . $value->exp_balda . '</td>';
-                    $st.='<td colspan="5"></td>';
-                    $st.='<td colspan="2"></td>';
-                    $st.='</tr>';
-                    $st.='</table>';
+                }
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>SECCIÓN</b></td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20">' . $value->uni_descripcion . '</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>DESCRIPCIÓN DEL CONTENIDO</b></td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="11" height="20" style="font-size:50px">' . $value->exp_titulo . '</td>';
+                $st.='</tr>';
 
-                    $st.='<table border="1" style="width: 100%; text-align: center;">';
-                    $st.='<tr>';
-                    $st.='<td height="20" bgcolor="#CCCCCC">NRO. DE CAJA:</td>';
-                    $st.='<td bgcolor="#CCCCCC">ML:</td>';
-                    $st.='<td bgcolor="#CCCCCC">NRO. DE PIEZAS</td>';
-                    $st.='<td bgcolor="#CCCCCC">ELABORADO POR:</td>';
-                    $st.='</tr>';
-                    $st.='<tr>';
-                    //$st.='<td>' . $value->exp_nrocaj . '</td>';
-                    $st.='<td height="20">' . $i . '</td>';
-                    $st.='<td>' . $value->exp_nroejem . '</td>';
-                    $st.='<td>' . $value->exp_tomovol . '</td>';
-                    $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
-                    $st.='</tr>';
-                    $st.='</table>';
+                $fechaextrema = explode("-", $value->exp_fecha_exf);
+                $fechE = $fechaextrema[2] . "-" . $fechaextrema[1] . "-" . $fechaextrema[0];
+                $pdf->SetFont('helvetica', '', 8);
+                $st.='<tr>';
+                $st.='<td colspan="2" height="20" bgcolor="#CCCCCC">FECHAS EXTREMAS</td>';
+                $st.='<td colspan="9" bgcolor="#CCCCCC" >NRO. DE ORDEN</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="2" height="20">' . $fechE . '</td>';
+                $st.='<td colspan="4" bgcolor="#CCCCCC">DEL</td>';
+                $st.='<td>' . $cero . $obteneCaja->minimo . '</td>';
+                $st.='<td colspan="3" bgcolor="#CCCCCC">AL&nbsp;</td>';
+                $st.='<td>' . $cero2 . $obteneCaja->maximo . '</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td colspan="4" height="20" bgcolor="#CCCCCC">UBICACIÓN TOPOGRÁFICA</td>';
+                $st.='<td colspan="5"></td>';
+                $st.='<td colspan="2"></td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td height="20" bgcolor="#CCCCCC">SALA:</td>';
+                $st.='<td bgcolor="#CCCCCC">ESTANTE:</td>';
+                $st.='<td bgcolor="#CCCCCC">CUERPO:</td>';
+                $st.='<td bgcolor="#CCCCCC">BALDA:</td>';
+                $st.='<td colspan="5" bgcolor="#CCCCCC">FECHA DE TRANSFERENCIA</td>';
+                $st.='<td colspan="2" bgcolor="#CCCCCC">NRO. DE TRANSFERENCIA</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                $st.='<td height="20">' . $value->exp_sala . '</td>';
+                $st.='<td>' . $value->exp_estante . '</td>';
+                $st.='<td>' . $value->exp_cuerpo . '</td>';
+                $st.='<td>' . $value->exp_balda . '</td>';
+                $st.='<td colspan="5"></td>';
+                $st.='<td colspan="2"></td>';
+                $st.='</tr>';
+                $st.='</table>';
 
-                    $st.='</td>';
-                    $st.='</tr>';
-                    $st.='</table>';
-                }    
+                $st.='<table border="1" style="width: 100%; text-align: center;">';
+                $st.='<tr>';
+                $st.='<td height="20" bgcolor="#CCCCCC">NRO. DE CAJA:</td>';
+                $st.='<td bgcolor="#CCCCCC">ML:</td>';
+                $st.='<td bgcolor="#CCCCCC">NRO. DE PIEZAS</td>';
+                $st.='<td bgcolor="#CCCCCC">ELABORADO POR:</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                //$st.='<td>' . $value->exp_nrocaj . '</td>';
+                $st.='<td height="20">' . $i . '</td>';
+                $st.='<td>' . $value->exp_nroejem . '</td>';
+                $st.='<td>' . $value->exp_tomovol . '</td>';
+                $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
+                $st.='</tr>';
+                $st.='</table>';
+
+                $st.='</td>';
+                $st.='</tr>';
+                $st.='</table>';
+            }
 
             //EOD;
 
 
-        $pdf->writeHTML($st, true, false, false, false, '');
-        $st = "";
+            $pdf->writeHTML($st, true, false, false, false, '');
+            $st = "";
         }
 
         // -----------------------------------------------------------------------------
-
         //Close and output PDF document
         $pdf->Output('example_048.pdf', 'I');
 
         //============================================================+
         // END OF FILE
         //============================================================+        
-        
-        
     }
-
-    
-    
 
     function viewCaratulas2() {
 
         $texp = new Tab_etiquetas();
         $usuario = new usuario ();
-        
+
         $sql = "SELECT
-tab_fondo.fon_cod,
-u.uni_cod,
-tab_tipocorr.tco_codigo,
-tab_series.ser_codigo,
-tab_expediente.exp_codigo,
-tab_fondo.fon_descripcion,
-(SELECT uni_descripcion from tab_unidad WHERE tab_unidad.uni_id=u.uni_par) AS uni_par_cod,
-u.uni_codigo,
-u.uni_descripcion,
-tab_series.ser_categoria,
-tab_expisadg.exp_titulo,
-tab_expisadg.exp_fecha_exi,
-(tab_expisadg.exp_fecha_exi + 
-                        (SELECT tab_retensiondoc.red_prearc * INTERVAL '1 year' 
-                        FROM tab_retensiondoc 
-                        WHERE tab_retensiondoc.red_id = tab_series.red_id)) ::DATE AS exp_fecha_exf,
-tab_expediente.exp_nroejem,
-tab_expediente.exp_tomovol,
-tab_expediente.exp_nrocaj,
-(SELECT sof_nombre FROM tab_sopfisico WHERE sof_id=tab_expediente.sof_id AND tab_sopfisico.sof_estado = '1' ) AS sof_nombre,
-tab_expediente.exp_sala,
-tab_expediente.exp_estante,
-tab_expediente.exp_cuerpo,
-tab_expediente.exp_balda,
-tab_expediente.exp_obs,
-tab_sopfisico.sof_codigo
-FROM
-tab_fondo
-INNER JOIN tab_unidad as u ON tab_fondo.fon_id = u.fon_id
-INNER JOIN tab_series ON u.uni_id = tab_series.uni_id
-INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
-INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
-INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
-INNER JOIN tab_exparchivo ON tab_exparchivo.exp_id = tab_expediente.exp_id
-INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
-WHERE
-tab_fondo.fon_estado = 1 AND
-u.uni_estado = 1 AND
-tab_tipocorr.tco_estado = 1 AND
-tab_series.ser_estado = 1 AND
-tab_expediente.exp_estado = 1 AND
-tab_expisadg.exp_estado = 1 AND
-tab_expediente.exp_id = '" . VAR3 . "' ";
+                tab_fondo.fon_cod,
+                u.uni_cod,
+                tab_tipocorr.tco_codigo,
+                tab_series.ser_codigo,
+                tab_expediente.exp_codigo,
+                tab_fondo.fon_descripcion,
+                (SELECT uni_descripcion from tab_unidad WHERE tab_unidad.uni_id=u.uni_par) AS uni_par_cod,
+                u.uni_codigo,
+                u.uni_descripcion,
+                tab_series.ser_categoria,
+                tab_expisadg.exp_titulo,
+                tab_expisadg.exp_fecha_exi,
+                (tab_expisadg.exp_fecha_exi + 
+                                        (SELECT tab_retensiondoc.red_prearc * INTERVAL '1 year' 
+                                        FROM tab_retensiondoc 
+                                        WHERE tab_retensiondoc.red_id = tab_series.red_id)) ::DATE AS exp_fecha_exf,
+                tab_expediente.exp_nroejem,
+                tab_expediente.exp_tomovol,
+                tab_expediente.exp_nrocaj,
+                (SELECT sof_nombre FROM tab_sopfisico WHERE sof_id=tab_expediente.sof_id AND tab_sopfisico.sof_estado = '1' ) AS sof_nombre,
+                tab_expediente.exp_sala,
+                tab_expediente.exp_estante,
+                tab_expediente.exp_cuerpo,
+                tab_expediente.exp_balda,
+                tab_expediente.exp_obs,
+                tab_sopfisico.sof_codigo
+                FROM
+                tab_fondo
+                INNER JOIN tab_unidad as u ON tab_fondo.fon_id = u.fon_id
+                INNER JOIN tab_series ON u.uni_id = tab_series.uni_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
+                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+                INNER JOIN tab_exparchivo ON tab_exparchivo.exp_id = tab_expediente.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+                INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
+                WHERE
+                tab_fondo.fon_estado = 1 AND
+                u.uni_estado = 1 AND
+                tab_tipocorr.tco_estado = 1 AND
+                tab_series.ser_estado = 1 AND
+                tab_expediente.exp_estado = 1 AND
+                tab_expisadg.exp_estado = 1 AND
+                tab_expediente.exp_id = '" . VAR3 . "' ";
 
 
         $rows = $texp->dbSelectBySQL($sql);
-        
-        $rows=$rows[0];
-        
-        
+
+        $rows = $rows[0];
+
+
 
         // Include the main TCPDF library (search for installation path).
         //require_once('tcpdf/tcpdf_include.php');
@@ -910,7 +911,6 @@ tab_expediente.exp_id = '" . VAR3 . "' ";
         // set default header data
         $pdf->SetHeaderData('logo_abc.png', 25, 'ADMINISTRADORA BOLIVIANA DE CARRETERA', 'UNIDAD DE TECNOLOGÍA, INFORMACION Y COMUNICACION');
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 048', PDF_HEADER_STRING);
-
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -930,112 +930,107 @@ tab_expediente.exp_id = '" . VAR3 . "' ";
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-            require_once(dirname(__FILE__).'/lang/eng.php');
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
 
         // ---------------------------------------------------------
-
         // set font
         $pdf->SetFont('helvetica', 'B', 8);
         // add a page
-$td="";$td.="<br>";$td.="<br>";$td.="<br>";
+        $td = "";
+        $td.="<br>";
+        $td.="<br>";
+        $td.="<br>";
         $td.='<table border="0"><tr><td align="center" style="font-size:65px"><b>ARCHIVO CENTRAL</b></td></tr></table>';
-$td.="<br>";
-        $st="";
+        $td.="<br>";
+        $st = "";
         // -----------------------------------------------------------------------------
 
-  
 
-       $st.='<table width="660" border="1" style="font-family:Tahoma, Geneva, sans-serif;font-size:50px">';
-  $st.='<tr>';
-    $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>CODIGO DE PRECEDENCIA:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" height="40" align="center" style="font-size:50px">'.$rows->fon_cod.DELIMITER.$rows->uni_cod.DELIMITER.$rows->tco_codigo.DELIMITER.$rows->ser_codigo.DELIMITER.$rows->exp_codigo.'</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>GERENCIA/UNIDAD:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" height="40" align="center" style="font-size:50px">';
-   
-    if($rows->uni_par_cod==""){
-       $st.=$rows->uni_descripcion;
-    }else{
-        $st.=$rows->uni_par_cod;
-    }
-    
-    $fecha1=explode("-",$rows->exp_fecha_exi);
-    $fecha2=explode("-",$rows->exp_fecha_exf);
-    $fechaInicial=$fecha1[2]."/".$fecha1[1]."/".$fecha1[0];
-    $fechaFinal=$fecha2[2]."/".$fecha2[1]."/".$fecha2[0];
-  
-    $st.='</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>SECCION:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" height="40" align="center" style="font-size:50px">'.$rows->ser_categoria.'</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>TITULO DEL DOCUMENTO:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" height="45" align="center" style="font-size:70px">'.$rows->exp_titulo.'</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td width="220" bgcolor="#CCCCCC" height="35" align="center"><b>Nº DE VOLUMEN:</b></td>';
-    $st.='<td width="220" colspan="2" bgcolor="#CCCCCC" align="center"><b>SOPORTE FISICO:</b></td>';
-    $st.='<td width="220" bgcolor="#CCCCCC" align="center"><b>CONSERVACION DOCUMENTAL:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td height="40" align="center" style="font-size:50px">'.$rows->exp_tomovol.'</td>';
-    $st.='<td colspan="2" align="center" style="font-size:50px">'.$rows->sof_codigo.'</td>';
-    $st.='<td align="center" style="font-size:45px">&nbsp;</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>FECHAS EXTREMAS:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="4" height="40" align="center" style="font-size:50px">'.$fechaInicial.'   -   '.$fechaFinal.'</td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="2" bgcolor="#CCCCCC" height="35"><b>OBSERVACIONES:</b></td>';
-    $st.='<td colspan="2" bgcolor="#CCCCCC"><b>Nº DE ORDEN/INVENTARIO:</b></td>';
-  $st.='</tr>';
-  $st.='<tr>';
-    $st.='<td colspan="2" height="50"  >'.$rows->exp_obs.'</td>';
-    $st.='<td colspan="2">&nbsp;</td>';
-  $st.='</tr>';
-$st.='</table><br>';
-$st.='<strong>*SOPORTE FISICO:</strong> Anillado <strong>AN</strong>,  Archivador de Palanca <strong>AP</strong>,Empastado <strong>EM</strong>, Folder <strong>FL</strong>, Legajo <strong>LG</strong>, Mapas <strong>MA</strong>, Planos <strong>PL</strong><br />';
-$st.='<strong>*CONSERVACION DOCUMENTAL</strong>: Bueno<strong>( B )</strong> Regular<strong>( R )</strong> Malo<strong>( M )</strong>';
+
+        $st.='<table width="660" border="1" style="font-family:Tahoma, Geneva, sans-serif;font-size:50px">';
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>CODIGO DE PRECEDENCIA:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->fon_cod . DELIMITER . $rows->uni_cod . DELIMITER . $rows->tco_codigo . DELIMITER . $rows->ser_codigo . DELIMITER . $rows->exp_codigo . '</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>GERENCIA/UNIDAD:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">';
+
+        if ($rows->uni_par_cod == "") {
+            $st.=$rows->uni_descripcion;
+        } else {
+            $st.=$rows->uni_par_cod;
+        }
+
+        $fecha1 = explode("-", $rows->exp_fecha_exi);
+        $fecha2 = explode("-", $rows->exp_fecha_exf);
+        $fechaInicial = $fecha1[2] . "/" . $fecha1[1] . "/" . $fecha1[0];
+        $fechaFinal = $fecha2[2] . "/" . $fecha2[1] . "/" . $fecha2[0];
+
+        $st.='</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>SECCION:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->ser_categoria . '</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>TITULO DEL DOCUMENTO:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="45" align="center" style="font-size:70px">' . $rows->exp_titulo . '</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td width="220" bgcolor="#CCCCCC" height="35" align="center"><b>Nº DE VOLUMEN:</b></td>';
+        $st.='<td width="220" colspan="2" bgcolor="#CCCCCC" align="center"><b>SOPORTE FISICO:</b></td>';
+        $st.='<td width="220" bgcolor="#CCCCCC" align="center"><b>CONSERVACION DOCUMENTAL:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td height="40" align="center" style="font-size:50px">' . $rows->exp_tomovol . '</td>';
+        $st.='<td colspan="2" align="center" style="font-size:50px">' . $rows->sof_codigo . '</td>';
+        $st.='<td align="center" style="font-size:45px">&nbsp;</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>FECHAS EXTREMAS:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $fechaInicial . '   -   ' . $fechaFinal . '</td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="2" bgcolor="#CCCCCC" height="35"><b>OBSERVACIONES:</b></td>';
+        $st.='<td colspan="2" bgcolor="#CCCCCC"><b>Nº DE ORDEN/INVENTARIO:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="2" height="50"  >' . $rows->exp_obs . '</td>';
+        $st.='<td colspan="2">&nbsp;</td>';
+        $st.='</tr>';
+        $st.='</table><br>';
+        $st.='<strong>*SOPORTE FISICO:</strong> Anillado <strong>AN</strong>,  Archivador de Palanca <strong>AP</strong>,Empastado <strong>EM</strong>, Folder <strong>FL</strong>, Legajo <strong>LG</strong>, Mapas <strong>MA</strong>, Planos <strong>PL</strong><br />';
+        $st.='<strong>*CONSERVACION DOCUMENTAL</strong>: Bueno<strong>( B )</strong> Regular<strong>( R )</strong> Malo<strong>( M )</strong>';
 
         $pdf->AddPage();
 
         $pdf->Write(0, '', '', 0, 'L', true, 0, false, false, 0);
 
         $pdf->SetFont('helvetica', '', 8);
-        $pst=$td.$st;
+        $pst = $td . $st;
         // -----------------------------------------------------------------------------
-$pdf->writeHTML($pst, true, false, false, false, '');
+        $pdf->writeHTML($pst, true, false, false, false, '');
         //Close and output PDF document
         $pdf->Output('example_048.pdf', 'D');
 
         //============================================================+
         // END OF FILE
         //============================================================+        
-        
-        
-        
     }
-    
-    
-    
-    
 
     function viewCarpetas() {
         require_once ('tcpdf/config/lang/eng.php');
@@ -1147,8 +1142,6 @@ $pdf->writeHTML($pst, true, false, false, false, '');
         $pdf->Output('etiquetasCarpetas.pdf', 'I');
     }
 
-
-
     function obtenerContenido($tipo) {
         $usu_id = $_SESSION['USU_ID'];
         $anio = date("Y");
@@ -1257,8 +1250,6 @@ $pdf->writeHTML($pst, true, false, false, false, '');
         $json_array['rows'] = $rows; //print_r($rows);die(" ");
         return $rows;
     }
-
-
 
 }
 
