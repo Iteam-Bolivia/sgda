@@ -224,7 +224,9 @@
             }  
         }else if (com=='Caratulas'){
             if($('.trSelected div',grid).html()){ 
-             window.location.href="<?php echo $PATH_DOMAIN ?>/etiqexpediente/viewCaratulas2/"+$('.trSelected div',grid).html()+"/";
+                $('#tipo').val('caratulas');
+                //$('#formImprimir').submit();                
+                window.location.href="<?php echo $PATH_DOMAIN ?>/etiqexpediente/viewCaratulas2/"+$('.trSelected div',grid).html()+"/";
             }else{
                 alert("Seleccione un registro");
             }            

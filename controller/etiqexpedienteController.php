@@ -584,14 +584,14 @@ class etiqexpedienteController extends baseController {
         
         $sql = "SELECT
                 tab_fondo.fon_cod,
-                tab_unidad.uni_cod,
+                u.uni_cod,
                 tab_tipocorr.tco_codigo,
                 tab_series.ser_codigo,
                 tab_expediente.exp_codigo,
                 tab_fondo.fon_descripcion,
-                (SELECT uni_descripcion from tab_unidad WHERE uni_id=tab_unidad.uni_par) AS uni_par_cod,
-                tab_unidad.uni_codigo,
-                tab_unidad.uni_descripcion,
+                (SELECT uni_descripcion from tab_unidad WHERE tab_unidad.uni_id=u.uni_par) AS uni_par_cod,
+                u.uni_codigo,
+                u.uni_descripcion,
                 tab_series.ser_categoria,
                 tab_expisadg.exp_titulo,
                 tab_expisadg.exp_fecha_exi,
@@ -610,14 +610,14 @@ class etiqexpedienteController extends baseController {
                 tab_expediente.exp_obs
                 FROM
                 tab_fondo
-                INNER JOIN tab_unidad ON tab_fondo.fon_id = tab_unidad.fon_id
-                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_unidad as u ON tab_fondo.fon_id = u.fon_id
+                INNER JOIN tab_series ON u.uni_id = tab_series.uni_id
                 INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
                 INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
                 INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
                 WHERE
                 tab_fondo.fon_estado = 1 AND
-                tab_unidad.uni_estado = 1 AND
+                u.uni_estado = 1 AND
                 tab_tipocorr.tco_estado = 1 AND
                 tab_series.ser_estado = 1 AND
                 tab_expediente.exp_estado = 1 AND
@@ -842,14 +842,14 @@ $st="";
         
         $sql = "SELECT
 tab_fondo.fon_cod,
-tab_unidad.uni_cod,
+u.uni_cod,
 tab_tipocorr.tco_codigo,
 tab_series.ser_codigo,
 tab_expediente.exp_codigo,
 tab_fondo.fon_descripcion,
-(SELECT uni_descripcion from tab_unidad WHERE uni_id=tab_unidad.uni_par) AS uni_par_cod,
-tab_unidad.uni_codigo,
-tab_unidad.uni_descripcion,
+(SELECT uni_descripcion from tab_unidad WHERE tab_unidad.uni_id=u.uni_par) AS uni_par_cod,
+u.uni_codigo,
+u.uni_descripcion,
 tab_series.ser_categoria,
 tab_expisadg.exp_titulo,
 tab_expisadg.exp_fecha_exi,
@@ -869,8 +869,8 @@ tab_expediente.exp_obs,
 tab_sopfisico.sof_codigo
 FROM
 tab_fondo
-INNER JOIN tab_unidad ON tab_fondo.fon_id = tab_unidad.fon_id
-INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+INNER JOIN tab_unidad as u ON tab_fondo.fon_id = u.fon_id
+INNER JOIN tab_series ON u.uni_id = tab_series.uni_id
 INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
 INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
 INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
@@ -879,7 +879,7 @@ INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
 INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
 WHERE
 tab_fondo.fon_estado = 1 AND
-tab_unidad.uni_estado = 1 AND
+u.uni_estado = 1 AND
 tab_tipocorr.tco_estado = 1 AND
 tab_series.ser_estado = 1 AND
 tab_expediente.exp_estado = 1 AND
