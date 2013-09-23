@@ -1,7 +1,7 @@
 <?php
 
 /**
- * buscarArchivoController.php Controller
+ * prestamosController.php Controller
  *
  * @package
  * @author lic. castellon
@@ -32,7 +32,7 @@ class prestamosController extends baseController {
         $this->registry->template->cue_id = "";
         
         $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+        $liMenu = $tmenu->imprimirMenu("prestamos", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
        
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
@@ -60,7 +60,7 @@ class prestamosController extends baseController {
     function search() { 
         $archivo = new prestamoslinea();
         $request = $this->setRequestTrim($_REQUEST);
-        $json = $archivo->buscarPrestamos($request);
+        $json = $archivo->buscar($request);
         echo $json;
     }
 
@@ -685,7 +685,7 @@ class prestamosController extends baseController {
         $this->registry->template->cue_id = "";
         
         $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+        $liMenu = $tmenu->imprimirMenu("prestamos", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
        
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
@@ -781,7 +781,7 @@ for($i=0;$i<$cantidad;$i++){
     }
     function listarprestamo(){
                 $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+        $liMenu = $tmenu->imprimirMenu("prestamos", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
        $this->registry->template->spr_id = "";
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
