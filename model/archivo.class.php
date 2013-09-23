@@ -108,11 +108,11 @@ class archivo extends tab_archivo {
 
     function buscar($busquedaArray) {
          $valor="";$id_listar="";
-  if(isset($_SESSION['id_lista'])){
-    $id_listar=$_SESSION['id_lista'];
-    //$id_listar=$_SESSION['id_lista'];
-    
-  }
+        if(isset($_SESSION['id_lista'])){
+          $id_listar=$_SESSION['id_lista'];
+          //$id_listar=$_SESSION['id_lista'];
+
+        }
         $page = $busquedaArray['page'];
         $rp = $busquedaArray['rp'];
         $sortname = $busquedaArray['sortname'];
@@ -121,7 +121,7 @@ class archivo extends tab_archivo {
             
         }
         
-        //
+        $palabra = $busquedaArray['palabra'];
 //        $fon_id = $busquedaArray['fon_id'];
         $uni_id = $busquedaArray['uni_id'];
         $ser_id = $busquedaArray['ser_id'];        
@@ -135,6 +135,7 @@ class archivo extends tab_archivo {
         $fil_proc = $busquedaArray['fil_proc'];
         $fil_firma = $busquedaArray['fil_firma'];
         $fil_cargo = $busquedaArray['fil_cargo'];
+        $fil_tipoarch = $busquedaArray['fil_tipoarch'];
         
         
         // Search
@@ -243,21 +244,42 @@ class archivo extends tab_archivo {
                 tab_expusuario.usu_id='$usu_id' ";
         
         $where = "";        
-//        if (strlen($fon_id)> 0 && $fon_id!='null') {
-//            $where .= " AND tab_fondo.fon_id='$fon_id' ";            
-//        }
-               if($id_listar<>""){
-                  $explode=explode(",",$id_listar);
-                $cantidad=  count($explode);	
-                for($i=0;$i<$cantidad;$i++){
-					$valor.="tab_archivo.fil_id<>".$explode[$i];
-					if($i<$cantidad-1){
-					$valor.=" and ";
-					}
-                }
-       $where .= " AND $valor ";            
-        
+        if($id_listar<>""){
+           $explode=explode(",",$id_listar);
+            $cantidad=  count($explode);	
+            for($i=0;$i<$cantidad;$i++){
+                                    $valor.="tab_archivo.fil_id<>".$explode[$i];
+                                    if($i<$cantidad-1){
+                                    $valor.=" and ";
+                                    }
+            }
+            $where .= " AND $valor ";                    
         }
+        
+        
+        //
+        if (strlen($palabra)) {
+            $where .= " AND (tab_expisadg.exp_titulo like '%$palabra%' "; 
+            $where .= " OR f.fon_descripcion like '%$palabra%' "; 
+            $where .= " OR tab_unidad.uni_descripcion like '%$palabra%' "; 
+            $where .= " OR tab_series.ser_categoria like '%$palabra%' ";             
+            $where .= " OR tab_archivo.fil_titulo like '%$palabra%' "; 
+            $where .= " OR tab_archivo.fil_subtitulo like '%$palabra%' "; 
+            $where .= " OR tab_archivo.fil_proc like '%$palabra%' "; 
+            $where .= " OR tab_archivo.fil_firma like '%$palabra%' "; 
+            $where .= " OR tab_archivo.fil_cargo like '%$palabra%' "; 
+            $where .= " OR tab_archivo.fil_tipoarch like '%$palabra%' "; 
+
+            $palclave = new palclave();
+            $ids = $palclave->listaPCSearchFile($palabra);
+            if ($ids == ""){                
+            }else{
+                $where .= " OR tab_archivo.fil_id IN ($ids) ";             
+            }
+            $where .= " ) "; 
+        }        
+        
+        
         if (strlen($uni_id) > 0 && $uni_id!='null') {
             $where .= " AND tab_unidad.uni_id='$uni_id' ";            
         }
@@ -272,10 +294,7 @@ class archivo extends tab_archivo {
         }
         if (strlen($exp_titulo)) {
             $where .= " AND tab_expisadg.exp_titulo like '%$exp_titulo%' ";            
-        }
-        if (strlen($fil_nur)) {
-            $where .= " AND tab_archivo.fil_nur like '%$fil_nur%' ";            
-        }        
+        }       
         if (strlen($fil_titulo)) {
             $where .= " AND tab_archivo.fil_titulo like '%$fil_titulo%' ";            
         }              
@@ -290,12 +309,24 @@ class archivo extends tab_archivo {
         }                 
         if (strlen($fil_cargo)) {
             $where .= " AND tab_archivo.fil_cargo like '%$fil_cargo%' ";            
-        }             
+        }           
+        if (strlen($fil_tipoarch)) {
+            $where .= " AND tab_archivo.fil_tipoarch like '%$fil_tipoarch%' ";            
+        }   
+
+        
+//        if (strlen($fil_nur)) {
+//            $where .= " AND tab_archivo.fil_nur like '%$fil_nur%' ";            
+//        }         
+        
         // Search addwords
         if (strlen($pac_nombre)) {
             $palclave = new palclave();
             $ids = $palclave->listaPCSearchFile($pac_nombre);
-            $where .= " AND tab_archivo.fil_id IN ($ids) ";            
+            if ($ids == ""){                            
+            }else{
+                $where .= " AND tab_archivo.fil_id IN ($ids) "; 
+            }
         }  
         
         $sql = "$select $from $where $sort $limit";

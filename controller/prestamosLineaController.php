@@ -58,7 +58,7 @@ class prestamosLineaController extends baseController {
     }
 
     function search() { 
-        $archivo = new archivo2();
+        $archivo = new prestamoslinea();
         $request = $this->setRequestTrim($_REQUEST);
         $json = $archivo->buscar($request);
         echo $json;
@@ -139,7 +139,7 @@ class prestamosLineaController extends baseController {
     
     // Reporte para Buscar documentos
     function rpteBuscar() {
-        $archivo = new archivo2();
+        $archivo = new prestamoslinea();
         $tarchivo = new tab_archivo ();
         $tarchivo->setRequest2Object($_REQUEST);
         $where = ""; 
@@ -685,7 +685,7 @@ class prestamosLineaController extends baseController {
         $this->registry->template->cue_id = "";
         
         $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+        $liMenu = $tmenu->imprimirMenu("prestamosLinea", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
        
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
@@ -710,7 +710,7 @@ class prestamosLineaController extends baseController {
         $this->registry->template->show('footer');
     }
     function listar(){ 
-      $archivo = new archivo2();
+      $archivo = new prestamoslinea();
         $request = $this->setRequestTrim($_REQUEST);
         $json = $archivo->buscar2($request);
         echo $json;   

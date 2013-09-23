@@ -4,7 +4,7 @@
 <div class="clear"></div>
 <input type="hidden" name="archivos" id="archivos">
 <form id="formA" name="formA" method="post" class="validable" 
-      action="<?php echo $PATH_DOMAIN ?>/buscarArchivo/<?php echo $PATH_EVENT ?>/">
+      action="<?php echo $PATH_DOMAIN ?>/prestamosLinea/<?php echo $PATH_EVENT ?>/">
     <input name="sql" id="sql" type="hidden" value="" />
     
     <table width="100%" border="0">
@@ -300,7 +300,7 @@ document.getElementById("checkAll").value=1;
     {
 $("#archivos").val($('.trSelected div',grid).html());
         if (com=='Imprimir'){            
-            $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/buscarArchivo/rpteBuscar/");
+            $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/prestamosLinea/rpteBuscar/");
             document.getElementById('formA').submit();                        
         }
              if (com=='Adicionar'){  
@@ -368,7 +368,7 @@ if(cadena==""){
                 else{
                     $.ajax({
                         type: "POST",
-                        url: "<?php echo $PATH_DOMAIN ?>/buscarArchivo/<?php echo $PATH_EVENT_EXPORT ?>/",
+                        url: "<?php echo $PATH_DOMAIN ?>/prestamosLinea/<?php echo $PATH_EVENT_EXPORT ?>/",
                         data: "fil_ids="+$("#fil_ids").val(),
                         dataType: "json",
                         success: function(msg){
@@ -425,7 +425,7 @@ if(cadena==""){
         if($("#fon_id").val()==""){
         }else{
             $.ajax({
-                url: '<?php echo $PATH_DOMAIN ?>/buscarArchivo/loadAjaxUnidades/',
+                url: '<?php echo $PATH_DOMAIN ?>/prestamosLinea/loadAjaxUnidades/',
                 type: 'POST',
                 data: 'Fon_id='+$("#fon_id").val(),
                 dataType:  		"json",
@@ -449,7 +449,7 @@ if(cadena==""){
         if($("#uni_id").val()==""){
         }else{    
             $.ajax({
-                url: '<?php echo $PATH_DOMAIN ?>/buscarArchivo/loadAjaxSeries/',
+                url: '<?php echo $PATH_DOMAIN ?>/prestamosLinea/loadAjaxSeries/',
                 type: 'POST',
                 data: 'Uni_id='+$("#uni_id").val(),
                 dataType:  		"json",
@@ -473,7 +473,7 @@ if(cadena==""){
         if($("#ser_id").val()==""){
         }else{    
             $.ajax({
-                url: '<?php echo $PATH_DOMAIN ?>/buscarArchivo/loadAjaxTramites/',
+                url: '<?php echo $PATH_DOMAIN ?>/prestamosLinea/loadAjaxTramites/',
                 type: 'POST',
                 data: 'Ser_id='+$("#ser_id").val(),
                 dataType:  		"json",
@@ -497,7 +497,7 @@ if(cadena==""){
         if($("#tra_id").val()==""){
         }else{    
             $.ajax({
-                url: '<?php echo $PATH_DOMAIN ?>/buscarArchivo/loadAjaxCuerpos/',
+                url: '<?php echo $PATH_DOMAIN ?>/prestamosLinea/loadAjaxCuerpos/',
                 type: 'POST',
                 data: 'Tra_id='+$("#tra_id").val(),
                 dataType:  		"json",

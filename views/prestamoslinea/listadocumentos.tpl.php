@@ -296,7 +296,7 @@ if(cadena==""){
     
 $("#archivos").val($('.trSelected div',grid).html());
         if (com=='Imprimir'){            
-            $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/buscarArchivo/rpteBuscar/");
+            $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/prestamosLinea/rpteBuscar/");
             document.getElementById('formA').submit();                        
         }
 if (com=='Cancelar'){
@@ -342,7 +342,7 @@ $("#recarga").load(urlhack);
                 else{
                     $.ajax({
                         type: "POST",
-                        url: "<?php echo $PATH_DOMAIN ?>/buscarArchivo/<?php echo $PATH_EVENT_EXPORT ?>/",
+                        url: "<?php echo $PATH_DOMAIN ?>/prestamosLinea/<?php echo $PATH_EVENT_EXPORT ?>/",
                         data: "fil_ids="+$("#fil_ids").val(),
                         dataType: "json",
                         success: function(msg){
