@@ -462,9 +462,9 @@ tab_expediente.exp_id  = $id";
                                         $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-". $una->fil_extension .".png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='viewFile icon' title='Ver Documento Digital'   />";                                        
                                         //$verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-view.png' file='$una->fil_id' class='viewFicha icon' title='Ver Ficha de Documento'/>";
 
-                                        if ($una->usu_id == $_SESSION ['USU_ID']) {
-                                            $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
-                                        }                                        
+//                                        if ($una->usu_id == $_SESSION ['USU_ID']) {
+//                                            $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
+//                                        }                                        
                                         $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
                                         break;
                                     case '2' :
@@ -477,9 +477,9 @@ tab_expediente.exp_id  = $id";
                                             }          
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/b_view.png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='view icon' title='Ver Datos Documento'   />";
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-". $una->fil_extension .".png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='viewFile icon' title='Ver Documento Digital'   />";                                        
-                                            if ($una->usu_id == $_SESSION ['USU_ID']) {
-                                                $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
-                                            }
+//                                            if ($una->usu_id == $_SESSION ['USU_ID']) {
+//                                                $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
+//                                            }
                                             $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
                                         } else {
                                             //$verarch = '<li><a class="suboptActBockA" href="#" onclick="return false">';

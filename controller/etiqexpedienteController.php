@@ -368,6 +368,8 @@ class etiqexpedienteController extends baseController {
         //$nro_ini = $_REQUEST['nro_ini'];
         if ($tipo == 'cajas') {
             $this->viewCajas2();
+        } elseif ($tipo == 'MARBETES') {
+            $this->viewMarbetes2();
         } elseif ($tipo == 'folders') {
             $this->viewFolders2();
         } elseif ($tipo == 'caratulas') {
@@ -380,29 +382,14 @@ class etiqexpedienteController extends baseController {
     }
 
     function getNroInicial() {
+        $tipo = $_REQUEST['Tipo'];
         $exp_id = $_REQUEST['Exp_id'];
         $usu_id = $_SESSION['USU_ID'];
         $res = array();
-        // Minimo
-        $sql = "SELECT min(tab_archivo.fil_nrocaj) as minimo
-                FROM
-                tab_expediente
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-		WHERE 
-                tab_expediente.exp_estado = '1' AND
-                tab_expediente.exp_id =  '$exp_id' ";
-        $etiquetas = new tab_etiquetas();
-        $result = $etiquetas->dbSelectBySQL($sql);
 
-        foreach ($result as $row) {
-            if (strlen($row->minimo) > 0)
-                $res['nro_inicial'] = $row->minimo;
-            else
-                $res['nro_inicial'] = 0;
-        }
-        // Maximo
-        $sql = "SELECT min(tab_archivo.fil_nrocaj) as maximo
+        if ($tipo == 'MARBETES') {            
+            // Minimo
+            $sql = "SELECT MIN(tab_archivo.fil_nro) as minimo
                 FROM
                 tab_expediente
                 INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
@@ -410,17 +397,282 @@ class etiqexpedienteController extends baseController {
 		WHERE 
                 tab_expediente.exp_estado = '1' AND
                 tab_expediente.exp_id =  '$exp_id' ";
-        //$etiquetas = new etiquetas();
-        $result = $etiquetas->dbSelectBySQL($sql);
-        foreach ($result as $row) {
-            if (strlen($row->maximo) > 0)
-                $res['nro_maximo'] = $row->maximo;
-            else
-                $res['nro_final'] = 0;
+            $etiquetas = new tab_etiquetas();
+            $result = $etiquetas->dbSelectBySQL($sql);
+
+            foreach ($result as $row) {
+                if (strlen($row->minimo) > 0)
+                    $res['nro_inicial'] = $row->minimo;
+                else
+                    $res['nro_inicial'] = 0;
+            }
+            // Maximo
+            $sql = "SELECT MAX(tab_archivo.fil_nro) as maximo
+                FROM
+                tab_expediente
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+		WHERE 
+                tab_expediente.exp_estado = '1' AND
+                tab_expediente.exp_id =  '$exp_id' ";
+            //$etiquetas = new etiquetas();
+            $result = $etiquetas->dbSelectBySQL($sql);
+            foreach ($result as $row) {
+                if (strlen($row->maximo) > 0)
+                    $res['nro_final'] = $row->maximo;
+                else
+                    $res['nro_final'] = 0;
+            }
+            
+        } else {
+            // Minimo
+            $sql = "SELECT min(tab_archivo.fil_nrocaj) as minimo
+                FROM
+                tab_expediente
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+		WHERE 
+                tab_expediente.exp_estado = '1' AND
+                tab_expediente.exp_id =  '$exp_id' ";
+            $etiquetas = new tab_etiquetas();
+            $result = $etiquetas->dbSelectBySQL($sql);
+
+            foreach ($result as $row) {
+                if (strlen($row->minimo) > 0)
+                    $res['nro_inicial'] = $row->minimo;
+                else
+                    $res['nro_inicial'] = 0;
+            }
+            // Maximo
+            $sql = "SELECT min(tab_archivo.fil_nrocaj) as maximo
+                FROM
+                tab_expediente
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+		WHERE 
+                tab_expediente.exp_estado = '1' AND
+                tab_expediente.exp_id =  '$exp_id' ";
+            //$etiquetas = new etiquetas();
+            $result = $etiquetas->dbSelectBySQL($sql);
+            foreach ($result as $row) {
+                if (strlen($row->maximo) > 0)
+                    $res['nro_final'] = $row->maximo;
+                else
+                    $res['nro_final'] = 0;
+            }
         }
         echo json_encode($res);
     }
 
+
+    
+    
+   // New
+    function viewMarbetes2() {
+        $exp_id = $_REQUEST['exp_id'];
+        $ini = $_REQUEST['nro_inicial'];
+        $fin = $_REQUEST['nro_final'];      
+        if ($fin == NULL) {
+            $fin = $ini;
+        }
+
+        $usuario = new usuario();
+        // Aqui
+        $tarchivo = new tab_archivo ();
+        
+        $select = "SELECT
+                tab_archivo.fil_id,
+                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
+                tab_unidad.uni_descripcion,
+                tab_series.ser_categoria,
+                tab_expisadg.exp_titulo,
+                f.fon_cod,
+                tab_unidad.uni_cod,
+                tab_tipocorr.tco_codigo,
+                tab_series.ser_codigo,                
+                tab_expediente.exp_codigo,
+                tab_expediente.exp_id,
+                tab_cuerpos.cue_codigo,
+                tab_archivo.fil_codigo,
+                tab_cuerpos.cue_descripcion,
+                tab_archivo.fil_titulo,
+                tab_archivo.fil_subtitulo,
+                tab_archivo.fil_proc,
+                tab_archivo.fil_firma,
+                tab_archivo.fil_cargo,
+                tab_archivo.fil_nrofoj,
+                tab_archivo.fil_tomovol,
+                tab_archivo.fil_nroejem,
+                tab_archivo.fil_nrocaj,
+                tab_archivo.fil_sala,
+                tab_archivo.fil_estante,
+                tab_archivo.fil_cuerpo,
+                tab_archivo.fil_balda,
+                tab_archivo.fil_tipoarch,
+                tab_archivo.fil_mrb,
+                tab_archivo.fil_ori,
+                tab_archivo.fil_cop,
+                tab_archivo.fil_fot,
+                (CASE tab_exparchivo.exa_condicion 
+                                    WHEN '1' THEN 'DISPONIBLE' 
+                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
+                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
+                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
+                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
+                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
+                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
+                tab_archivo.fil_obs";
+        $from = "FROM
+                tab_fondo as f
+                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
+                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
+                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
+                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
+                WHERE
+                f.fon_estado = 1 AND
+                tab_unidad.uni_estado = 1 AND
+                tab_tipocorr.tco_estado = 1 AND
+                tab_series.ser_estado = 1 AND
+                tab_expediente.exp_estado = 1 AND
+                tab_archivo.fil_estado = 1 AND
+                tab_exparchivo.exa_estado = 1 AND
+                tab_expusuario.eus_estado = 1 AND
+                tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
+                tab_expediente.exp_id = '$exp_id' ";                
+        $sql = "$select $from ";
+        $result = $tarchivo->dbSelectBySQL($sql); //print $sql;   
+        
+
+        // Include the main TCPDF library (search for installation path).
+        require_once('tcpdf/tcpdf.php');
+
+        // create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Iteam S.R.L.');
+        $pdf->SetTitle('Marbetes de documentos');
+        $pdf->SetSubject('Marbetes de documentos');
+        $pdf->SetKeywords('Marbetes, documentos');
+
+        // set default header data
+        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 027', PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__).'tcpdf/lang/eng.php')) {
+            require_once(dirname(__FILE__).'tcpdf/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+
+        // ---------------------------------------------------------
+
+        // set a barcode on the page footer
+        //$pdf->setBarcode(date('Y-m-d H:i:s'));
+
+        // set font
+        $pdf->SetFont('helvetica', '', 11);
+
+        // add a page
+        $pdf->AddPage();
+
+
+
+        $pdf->SetFont('helvetica', '', 10);
+
+        // define barcode style
+        $style = array(
+            'position' => '',
+            'align' => 'C',
+            'stretch' => true,
+            'fitwidth' => true,
+            'cellfitalign' => '',
+            'border' => true,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array(0,0,0),
+            'bgcolor' => false, //array(255,255,255),
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 8,
+            'stretchtext' => 8
+        );
+
+
+
+
+
+        foreach ($result as $value) {
+            $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;        
+
+            //  BAR CODE
+            // CODE 39 + CHECKSUM
+            $pdf->Cell(0, 0, $codigo, 0, 1);
+            $pdf->write1DBarcode($codigo, 'C39', '', '', '', 18, 0.4, $style, 'N');
+
+            
+//            // BAR CODE 2
+//            // define barcode style
+//            $style2 = array(
+//                'position' => '',
+//                'align' => '',
+//                'stretch' => true,
+//                'fitwidth' => false,
+//                'cellfitalign' => '',
+//                'border' => true,
+//                'hpadding' => 'auto',
+//                'vpadding' => 'auto',
+//                'fgcolor' => array(0,0,128),
+//                'bgcolor' => array(255,255,128),
+//                'text' => true,
+//                'label' => $codigo,
+//                'font' => 'helvetica',
+//                'fontsize' => 8,
+//                'stretchtext' => 4
+//            );     
+//            // CODE 39 EXTENDED + CHECKSUM
+//            $pdf->Cell(0, 0, $codigo, 0, 1);
+//            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
+//            $pdf->write1DBarcode($codigo, 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
+            
+            
+            // New
+            $pdf->Ln();
+
+        }
+
+        //Close and output PDF document
+        $pdf->Output('viewMarbetes2.pdf', 'I');
+
+
+    }    
+        
+    
     function viewFolders2() {
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
@@ -958,7 +1210,7 @@ class etiqexpedienteController extends baseController {
         $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->fon_cod . DELIMITER . $rows->uni_cod . DELIMITER . $rows->tco_codigo . DELIMITER . $rows->ser_codigo . DELIMITER . $rows->exp_codigo . '</td>';
         $st.='</tr>';
         $st.='<tr>';
-        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>GERENCIA/UNIDAD:</b></td>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>GERENCIA/UNIDAD/SECCION:</b></td>';
         $st.='</tr>';
         $st.='<tr>';
         $st.='<td colspan="4" height="40" align="center" style="font-size:50px">';
@@ -977,13 +1229,13 @@ class etiqexpedienteController extends baseController {
         $st.='</td>';
         $st.='</tr>';
         $st.='<tr>';
-        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>SECCION:</b></td>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>SERIE DOCUMENTAL:</b></td>';
         $st.='</tr>';
         $st.='<tr>';
         $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->ser_categoria . '</td>';
         $st.='</tr>';
         $st.='<tr>';
-        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>TITULO DEL DOCUMENTO:</b></td>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>TITULO DEL EXPEDIENTE:</b></td>';
         $st.='</tr>';
         $st.='<tr>';
         $st.='<td colspan="4" height="45" align="center" style="font-size:70px">' . $rows->exp_titulo . '</td>';

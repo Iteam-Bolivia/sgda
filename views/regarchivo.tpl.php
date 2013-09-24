@@ -169,7 +169,7 @@
         </tr>        
 
         <tr>
-            <td width="166">Procedencia (Empresa):</td>
+            <td width="166">Productor (Empresa):</td>
             <td colspan="3"><input name="fil_proc" type="text"
                                    id="fil_proc" maxlength="256" value="<?php echo $fil_proc; ?>" size="120" autocomplete="off"
                                    class="alphanumeric" title="Nro de ejemplares" /></td>

@@ -148,7 +148,7 @@
 <div id="div2" style="background-color:#eeeeee;border:0px solid;display:none">
     <table width="100%" border="0">   
         <tr>
-            <td>Nombre del o de los Productores:</td>                
+            <td>Nombre del o de los Productores(Procedencia):</td>                
                 <td colspan="3">
                     <select name="exp_nomprod" id="exp_nomprod" class="required">
                         <option value="" selected="selected">(seleccionar)</option>
