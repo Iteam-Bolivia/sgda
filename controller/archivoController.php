@@ -311,7 +311,7 @@ class archivoController extends baseController {
         $archivo_ext = array_pop($archivo_name_array);
         $archivo_sin_ext = implode($archivo_name_array);
         //$archivo_name = $arc->generarNombre($archivo_sin_ext);
-        $archivo_name = "";
+        //$archivo_name = "";
         $archivo_cifrado = md5($archivo_name);
         $sis_tammax = 0;
 
