@@ -345,7 +345,7 @@
                         size="1" autocomplete="off"
                         class="numeric" 
                         title="Nro. Documentos Fotocopias" /> 
-                                    
+                  <span id="error"></span>                    
             </td>
         </tr>        
 
@@ -355,9 +355,9 @@
             <td colspan="3"><input name="fil_descripcion" type="text"
                                    id="fil_descripcion" value="<?php echo $fil_descripcion; ?>"
                                    size="120" autocomplete="off" maxlength="255"
-                                   class="" title="Descripci&oacute;n o Palabras clave" />
+                                   class="" title="Descripci&oacute;n o Palabras clave" onblur="caracteres(this.value)" />
 <!--                (<input type="checkbox" name="pac_nombre" value="ON"/> Guardar)-->
-                <a href="#" title="Ver palabras claves" id="verPC">(+ Ver)</a>
+                <br><a href="javascript:void(0)" title="Ver palabras claves" id="verPC">(+ Ver)</a>
             </td>
         </tr>
         
@@ -571,6 +571,60 @@
 
     });
 
+</script>
+<script languaje="javascript">
+        $(function(){
+
+        var  totalejemp;
+        var  original;
+        var  copia;
+        var  foto;
+        $("#fil_obs,#accion,#palabra,#fil_descripcion").click(function(){
+    
+              totalejemp=Number($("#fil_nroejem").val());
+              copia=Number($("#fil_cop").val());
+              original=Number($("#fil_ori").val());
+              foto=Number($("#fil_fot").val());
+              var cantidad=original+copia+foto;
+          
+              if(cantidad>totalejemp){
+                  $("#error").html("No es válido, Excede la Cantidad de ejemplares");
+       
+                   $("#fil_nroejem").css("border","1px solid red");
+                $("#fil_nroejem").css("background","#FFF0F0");
+                  return false;
+              }else{
+                $("#error").html("");
+                $("#fil_nroejem").css("border","1px solid #E3E2E2");
+                $("#fil_nroejem").css("background","#ffffff");
+              }
+              
+        })
+        
+    })
+    
+    function caracteres(s){
+        //var mycars = new Array();
+    document.getElementById("fil_descripcion").value="";
+        var cantidad=s.length;
+       var i;
+        for(i=0;i<cantidad;i++){
+          
+            if(s[i]=="."){
+             document.getElementById("fil_descripcion").value+=";";
+            }else if(s[i]=="-"){
+             document.getElementById("fil_descripcion").value+=";";
+            }else if(s[i]==","){
+             document.getElementById("fil_descripcion").value+=";";
+            }else{
+          document.getElementById("fil_descripcion").value+=s[i];
+            }
+          
+        }
+        
+    }
+    
+    
 </script>
 </body>
 </html>

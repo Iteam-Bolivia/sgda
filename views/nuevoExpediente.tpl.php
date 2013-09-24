@@ -116,6 +116,7 @@
                     <select name="exp_nivdes" id="exp_nivdes" class="required">
                         <?php echo $exp_nivdes; ?>
                     </select> 
+                   Tiene documentos<input type="checkbox" id="validarexpediente"  onclick="llenar()">
                 </td>
             </tr>            
 
@@ -528,7 +529,7 @@
             <td colspan="3"><input name="exp_descripcion" type="text"
                                    id="exp_descripcion" value="<?php echo $exp_descripcion; ?>"
                                    size="120" autocomplete="off" maxlength="255"
-                                   class="" title="Descripci&oacute;n" />
+                                   class="" title="Descripci&oacute;n" onblur="caracteres(this.value)" />
 <!--                (<input type="checkbox" name="pac_nombre" value="ON"/> Guardar)-->
                 <br><a href="javascript:void(0)" title="Ver palabras claves" id="verPC">(+ Ver)</a>
             </td>
@@ -718,60 +719,7 @@ exp_cop
 exp_fot*/
     $(function(){
 
-        
-        
-      /*
-            $("#exp_ori").change(function(){original=0;
-                totalejemp=Number($("#exp_nroejem").val());
-                original=Number($("#exp_ori").val());
-             
-        if(original>totalejemp){
-            $("#exp_ori").val(totalejemp);
-            $("#exp_cop").val(0);
-            $("#exp_fot").val(0);
-        }else{
-            $("#exp_ori").val(original);
-            $("#exp_cop").val(0);
-            $("#exp_fot").val(0);
-        }
-        
-    })
-                $("#exp_cop").change(function(){copia=0;
-                    totalejemp=Number($("#exp_nroejem").val());
-                copia=Number($("#exp_cop").val());
-             
-        if(copia>totalejemp){
-            $("#exp_ori").val(0);
-            $("#exp_cop").val(totalejemp);
-            $("#exp_fot").val(0);
-        }else{
-            $("#exp_ori").val(0);
-            $("#exp_cop").val(copia);
-            $("#exp_fot").val(0);
-        }
-        
-    })
-                $("#exp_fot").change(function(){
-                    foto=0;
-             totalejemp=Number($("#exp_nroejem").val());
-                foto=Number($("#exp_fot").val());
-             
-        if(foto>totalejemp){
-            $("#exp_ori").val(0);
-            $("#exp_cop").val(0);
-            $("#exp_fot").val(totalejemp);
-        }else{
-          original=$("#exp_ori").val();
-           copia=$("#exp_cop").val(0);
-           var cantidad=original+copia;
-           if(cantidad>totalejemp){
-               this.value="a";
-           }
-            $("#exp_fot").val(foto);
-        }
-        
-    })*/
-            var  totalejemp;
+        var  totalejemp;
         var  original;
         var  copia;
         var  foto;
@@ -786,16 +734,57 @@ exp_fot*/
               if(cantidad>totalejemp){
                   $("#error").html("No es válido, Excede la Cantidad de ejemplares");
                 $("#exp_nroejem").css("border","1px solid red");
+                $("#exp_nroejem").css("background","#FFF0F0");
                   return false;
               }else{
                 $("#error").html("");
                 $("#exp_nroejem").css("border","1px solid #E3E2E2");
+                $("#exp_nroejem").css("background","#ffffff");
               }
               
         })
         
     })
     
-
     
+    
+    
+</script>
+<script languaje="javascript">
+    function caracteres(s){
+        //var mycars = new Array();
+    document.getElementById("exp_descripcion").value="";
+        var cantidad=s.length;
+       var i;
+        for(i=0;i<cantidad;i++){
+          
+            if(s[i]=="."){
+             document.getElementById("exp_descripcion").value+=";";
+            }else if(s[i]=="-"){
+             document.getElementById("exp_descripcion").value+=";";
+            }else if(s[i]==","){
+             document.getElementById("exp_descripcion").value+=";";
+            }else{
+          document.getElementById("exp_descripcion").value+=s[i];
+            }
+          
+        }
+        
+    }
+    
+    function llenar(){
+        if(document.getElementById("validarexpediente").checked==false){
+                    $("#div8").toggle(500)// alert("marcado")
+            
+             $("#div8 table").css("display","block");
+        }else{
+            
+               $("#div8").toggle(0)//alert("no marcado")
+             $("#div8 table").css("display","none");     
+ 
+        }
+        
+   
+        
+    }
 </script>
