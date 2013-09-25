@@ -169,21 +169,21 @@
         </tr>        
 
         <tr>
-            <td width="166">Productor (Empresa):</td>
+            <td width="166">Productor:</td>
             <td colspan="3"><input name="fil_proc" type="text"
                                    id="fil_proc" maxlength="256" value="<?php echo $fil_proc; ?>" size="120" autocomplete="off"
                                    class="alphanumeric" title="Nro de ejemplares" /></td>
         </tr>
 
         <tr>
-            <td>Firma:</td>
+            <td>Responsable:</td>
             <td colspan="3"><input name="fil_firma" type="text" id="fil_firma"
                                    value="<?php echo $fil_firma; ?>" size="120" autocomplete="off"
                                    maxlength="256" class="alphanum" title="Nombre del o de los Productores" /></td>
         </tr>
 
         <tr>
-            <td>Cargo:</td>
+            <td>Cargo del responsable:</td>
             <td colspan="3"><input name="fil_cargo" type="text" id="fil_cargo"
                                    value="<?php echo $fil_cargo; ?>" size="120" autocomplete="off"
                                    maxlength="128" class="alphanum" title="Nombre del o de los Productores" /></td>
