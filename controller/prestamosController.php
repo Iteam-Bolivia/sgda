@@ -745,6 +745,7 @@ class prestamosController extends baseController {
            $this->solicitud_prestamo->setUni_id($id_unidad->uni_id);
         
     }
+    //usu_prestamista
         $this->solicitud_prestamo->setRequest2Object($_REQUEST);
         $this->solicitud_prestamo->setUsu_id($usu);
         $this->solicitud_prestamo->setSpr_solicitante($_REQUEST['nuevoUsu']);
@@ -754,7 +755,7 @@ class prestamosController extends baseController {
         $this->solicitud_prestamo->setSpr_fecent($fecha_inicio);
         $this->solicitud_prestamo->setSpr_fecdev($fecha_final);
         $this->solicitud_prestamo->setSpr_fecha(date("Y-m-d"));
-        $this->solicitud_prestamo->setUsur_id($_SESSION ['USU_ID']);
+        $this->solicitud_prestamo->setUsur_id($_REQUEST['usu_prestamista']);
         $this->solicitud_prestamo->setSpr_estado(1);
         $this->solicitud_prestamo->setSpr_obs($_REQUEST['usu_observ']);
         //$this->solicitud_prestamo->setUsu_fech_fin(date("Y-m-d"));

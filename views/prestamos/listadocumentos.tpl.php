@@ -47,6 +47,20 @@
                 </select>
             </td>
         </tr>
+        
+             <tr>
+            <td>Prestamista:</td>
+            <td><select name="usu_prestamista" type="text" id="usu_prestamista" class="required"
+                        title="Nombre del prestamista">
+                    <option value="">(seleccionar)/ o ninguno</option>
+                    <?php $usuario=new tab_usuario();
+                    $dato=$usuario->dbSelectBySQL("select* from tab_usuario where usu_estado=1");
+                   foreach($dato as $row){ ?>
+                    <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
+                       <?php } ?>
+                </select>
+            </td>
+        </tr>
 
   <tr>
             <td>Fecha Inicial:</td>
