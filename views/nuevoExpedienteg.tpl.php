@@ -70,7 +70,7 @@
             {name: 'Eliminar', bclass: 'delete', onpress : test2}, {separator: true},
             {name: 'Documentos del expediente', bclass: 'ver', onpress : test2}, {separator: true},
             {name: 'Cerrar expediente', bclass: 'ver', onpress : test2}, {separator: true},
-            {name: 'Imprimir marbetes documentos', bclass: 'ver', onpress : test2}, {separator: true},
+            //{name: 'Imprimir marbetes documentos', bclass: 'ver', onpress : test2}, {separator: true},
             {name: 'Imprimir inventario documentos', bclass: 'print', onpress : test2}            
         ],
         searchitems : [
@@ -172,7 +172,7 @@
             }
         }
         
-        else if (com=='Imprimir inventario de documentos'){
+        else if (com=='Imprimir inventario documentos'){
             if($('.trSelected div',grid).html()){
                 $("#exp_id").val($('.trSelected div',grid).html());
                 $("#formB").attr("action","<?php echo $PATH_DOMAIN ?>/rpteInventarioDoc/verRpte/");

@@ -21,7 +21,7 @@
             </td>
         </tr>
     </table>
-    <div id="div1" style="background-color:#eeeeee;border:0px solid">
+    <div id="div1" style="background-color:#eeeeee;border:0px solid;display:none">
         <table width="100%" border="0">
             <tr>
                 <td>NUR/NURI (SIACO):</td>
