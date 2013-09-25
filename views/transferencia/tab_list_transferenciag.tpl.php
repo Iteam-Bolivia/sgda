@@ -93,7 +93,7 @@
         <tr>
             <th>Direcci&oacute;n:</th>
                 <td>
-                <input type="text" name="direccion" id="direccion" size="40">
+                <input type="text" name="direccion" id="direccion" size="40" >
                 </td>
         </tr>
             <tr>
@@ -353,4 +353,6 @@ $("#btnSubB").click(function(){
      });    
      
 </script>
+
+
 <div id="recarga"></div>

@@ -27,7 +27,7 @@
                     <?php $usuario=new tab_usuario();
                     $dato=$usuario->dbSelectBySQL("select* from tab_usuario where usu_estado=1");
                    foreach($dato as $row){ ?>
-                    <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
+                    <option value="<?php echo $row->usu_id ?>" <?php if($row->usu_id==$_SESSION ['USU_ID']){ echo "selected='selected'"; } ?>><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
                        <?php } ?>
                 </select>
                 <span id="textNuevo"><a href="javascript:void(0)" style="color: #3F5A7C" onclick="NuevoRegistro()">Nuevo</a></span>
@@ -36,7 +36,7 @@
         </tr>
            <tr>
             <td>Autoriza:</td>
-            <td><select name="usu_autoriza" type="text" id="usu_autoriza" 
+            <td><select name="usu_autoriza" type="text" id="usu_autoriza" class="required" 
                         title="Nombre del solicitante">
                     <option value="">(seleccionar)/ o ninguno</option>
                     <?php $usuario=new tab_usuario();
@@ -140,7 +140,7 @@
         <tr>
             <td>Correo electrónico:</td>
             <td><input type="text" name="usu_correo" type="text" id="usu_correo" 
-                       title="Correo electrónico del usuario" size="47" onfocus="loadarhivos()" class="required email">
+                       title="Correo electrónico del usuario" size="47" onfocus="loadarhivos()" class="email">
                                   
                 </td>
         </tr>    
@@ -149,7 +149,7 @@
             </td>
             <td>Teléfono:</td>
             <td>
-                <input type="text" name="usu_telefono" id="usu_telefono" title="Serie" class="required">
+                <input type="text" name="usu_telefono" id="usu_telefono" title="Serie" >
               
           
             </td>
@@ -422,6 +422,92 @@ function cagarusuario(st){
 }
 
 </script>
+<script languaje="javascript">
+            jQuery(document).ready(function($) {  
+                $("form.validable").bind("submit", function(e){
+                    var post = "";
+                    if (typeof filters == 'undefined') return;
+                    $(this).find("input, textarea, select").each(function(x,el){
+                        if ($(el).attr("className") != 'undefined') { 
+                            $(el).removeClass("req");
+                            $.each(new String($(el).attr("className")).split(" "), function(x, klass){
+                                if ($.isFunction(filters[klass])){
+                                    if (!filters[klass](el)){
+                                        $(el).addClass("req");
+                                        var idName = $(el).attr("name");
+                                        $("#e_"+idName).fadeIn(800);
+                                    }else{
+                                        var idName = $(el).attr("name");
+                                        if(post==''){
+                                            post = idName + "=" + $(el).val();
+                                        }else{
+                                            post = post + "&"+idName + "=" + $(el).val();
+                                        }
+									
+                                    }
+                                }	
+                            });
+                        }
+                    });
+                    if ($(this).find(".req").size() > 0) {
+                        $.stop(e || window.event);
+                        return false;
+                    }
+                    return true;
+                }); 
+                // on focus	remueve los tag de error
+                $("form.validable").find("input, textarea, select").each(function(x,el){ 
+                    $(el).bind("focus",function(e){
+                        if ($(el).attr("className") != 'undefined') { 
+                            $(el).removeClass("req");
+                            var idName = $(el).attr("name");
+                            $("#e_"+idName).fadeOut(800);
+                        }
+                    });
+                });
+                /* para el acordeon */
+		
+                $(".pagClik").click(function(){
+                    if($("."+$(this).attr('id')+"x").is(':visible')){
+                        $("."+$(this).attr('id')+"x").hide();
+                    }else{
+                        $("."+$(this).attr('id')+"x").slideDown();
+                    }
+                });
+                $("#menuarch a").click(function(){
+                    var d = $(this).attr('di');
+                    if($("."+d+"a").is(':visible')){
+                        $("."+d+"a").hide();
+                    }else{
+                        $("."+d+"a").slideDown();
+                    }
+                });        
+                $(".suboptAct").click(function(){
+                    if($("#"+$(this).attr('id')+"x").is(':visible')){
+                        $("#"+$(this).attr('id')+"x").hide();
+                    }else{
+                        $("#"+$(this).attr('id')+"x").slideDown();
+                    }
+                });
+                $(".suboptAct").dblclick(function(){
+                    location.href = $(this).attr('href');
+                });
+                // end	
+                $("#menu4 dt a").click(function(){
+                    var id = $(this).attr('id');
+                    $("#menu4 dl").each(function(x,el){
+                        if($("dt a",this).attr('id')==id){
+                            if($(this).attr('class')=='Act'){
+                                $(this).removeClass('Act');
+                            }else{
+                                $(this).attr('class','Act');
+                            }
+                        }						
+                    });
+                });
+            })
+	
+        </script>
 
 <div id="recarga"></div>
 

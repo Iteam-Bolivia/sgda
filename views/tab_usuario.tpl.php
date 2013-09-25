@@ -81,7 +81,7 @@
 
             <td>Email:</td>
             <td><input autocomplete="off"
-                       class="email"
+                   
                        id="usu_email"
                        maxlength="50"
                        name="usu_email"

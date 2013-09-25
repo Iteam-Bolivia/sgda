@@ -6,7 +6,7 @@ var filters = {
         if($(el).val() != '' && $(el).val() != -1){
             return true;
         }else{
-            alert("Error: Debe completar los datos. \n O existen caracteres invalidos!");
+            $.msgbox("Error: Debe completar los datos. \n O existen caracteres invalidos!");
             return false;
         }
     },
@@ -15,7 +15,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese un formato de email correcto");
+            $.msgbox("Error de validacion del campo: \nIngrese un formato de email correcto");
             return false;
         }
     },
@@ -24,7 +24,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese telefono correcto");
+            $.msgbox("Error de validacion del campo: \nIngrese telefono correcto");
             return false;
         }
     },
@@ -33,7 +33,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese valor numerico con puntos decimales");
+            $.msgbox("Error de validacion del campo: \nIngrese valor numerico con puntos decimales");
             return false;
         }
     },
@@ -43,7 +43,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese solo letras, no caracteres especiales ni acentos");
+            $.msgbox("Error de validacion del campo: \nIngrese solo letras, no caracteres especiales ni acentos");
             return false;
         }
     },
@@ -53,7 +53,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese solo letras y numeros, no caracteres especiales ni acentos");
+            $.msgbox("Error de validacion del campo: \nIngrese solo letras y numeros, no caracteres especiales ni acentos");
             return false;
         }
     },
@@ -63,7 +63,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese solo letras y numeros, no caracteres especiales ni acentos");
+            $.msgbox("Error de validacion del campo: \nIngrese solo letras y numeros, no caracteres especiales ni acentos");
             return false;
         }
     },
@@ -75,7 +75,7 @@ var filters = {
         if(res || $(el).val() == ''){
             return true;
         }else{
-            alert("Error de validacion del campo: \nIngrese un valor entero");
+            $.msgbox("Error de validacion del campo: \nIngrese un valor entero");
             return false;
         }
     }
@@ -88,6 +88,6 @@ $.extend({
     }, 
     /* PERSONALIZAMOS LA SALIDA POR PANTALLA */
     alert: function(str) {
-        alert(str);	
+        $.msgbox(str);	
     }
 });

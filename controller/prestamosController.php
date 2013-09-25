@@ -776,7 +776,7 @@ for($i=0;$i<$cantidad;$i++){
 }  
        //$_SESSION['id_lista']="";
 
-        Header("Location: " . PATH_DOMAIN . "/prestamos/listarprestamo/");
+        Header("Location: " . PATH_DOMAIN . "/prestamos/");
         
     }
     function listarprestamo(){
@@ -811,6 +811,7 @@ for($i=0;$i<$cantidad;$i++){
         $solprestamos=new solicitud_prestamo();
         $this->solprestamos=new tab_solprestamo();
             $this->solprestamos->setRequest2Object($_REQUEST);
+            $usures=$_SESSION ['USU_ID'];
           $page = $_REQUEST ['page'];
         $rp = $_REQUEST ['rp'];
         $sortname = $_REQUEST ['sortname'];
@@ -841,7 +842,7 @@ for($i=0;$i<$cantidad;$i++){
         } else {
             $sql = "SELECT * 
                     FROM tab_solprestamo
-                    WHERE spr_estado = 1 $sort $limit ";
+                    WHERE spr_estado = 1 and usua_id=$usures $sort $limit ";
         }
         $result = $this->solprestamos->dbselectBySQL($sql);
         $total = $solprestamos->count3($qtype, $query);

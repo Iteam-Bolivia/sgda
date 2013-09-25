@@ -27,6 +27,8 @@
         <script type="text/javascript" src="<?php echo $PATH_WEB ?>/js/validable.js"></script>
         <script type="text/javascript" src="<?php echo $PATH_WEB ?>/js/flexigridBuscador.js"></script>
         <script type="text/javascript" src="<?php echo $PATH_WEB ?>/js/personalizados.js"></script>    
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
 
 
         <script type="text/javascript">
