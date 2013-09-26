@@ -209,7 +209,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
          $usu_destino=$_REQUEST['trn_usuario_des'];
          $direccion=$_REQUEST['direccion'];
          $telefono=$_REQUEST['telefono'];
-
+   
         $explode=explode(",",$idsExp);
 
         foreach ($explode as $list){
@@ -217,6 +217,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
          $rowlist=$rowlist[0];
          $rowlist2=$this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_destino AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 0");
          $tt=0;
+      
          foreach ($rowlist2 as $catt){
              $tt++;
          }     
@@ -269,7 +270,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
           }
           $this->VerRTransferencia($id);
   
-       //Header("Location: " . PATH_DOMAIN . "/transferencia/VerRTransferencia/ target: '_blank"); 
+    
     }
     function VerRTransferencia($id){
             //$id_prestamo=VAR3;
@@ -378,13 +379,14 @@ $cadena.='<table width="740" border="1">';
    $cadena.='<tr>';
      $cadena.='<td width="20" rowspan="2" align="center"><strong>Nº</strong></td>';
      $cadena.='<td width="140" rowspan="2"><strong>Serie</strong></td>';
-     $cadena.='<td width="120" rowspan="2"><strong>Subserie</strong></td>';
+     $cadena.='<td width="100" rowspan="2"><strong>Subserie</strong></td>';
+     $cadena.='<td width="110" rowspan="2"><strong>Título del expediente</strong></td>';
      $cadena.='<td width="80" rowspan="2"><strong>Codigo de Referencia</strong></td>';
      $cadena.='<td colspan="2" width="130"><strong>Fechas extremas</strong></td>';
      $cadena.='<td width="30" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
      $cadena.='<td width="30" rowspan="2"><strong>Cajas</strong></td>';
      $cadena.='<td width="30" rowspan="2"><strong>M.L.</strong></td>';
-     $cadena.='<td width="160" rowspan="2"><p><strong>Observ.</strong></p></td>';
+     $cadena.='<td width="70" rowspan="2"><p><strong>Observ.</strong></p></td>';
    $cadena.='</tr>';
    $cadena.='<tr>';
      $cadena.='<td width="65"><strong>Inicio</strong></td>';
@@ -431,7 +433,9 @@ $cadena.='<table width="740" border="1">';
      $sum=$sum+$expedientes->cantidadExpedientes($row->exp_id);
      $sum2=$sum2+$row->str_nrocajas;
     $cadena.='</td>';
+      $cadena.='<td align="center">'.$row->exp_titulo.'</td>';
     $cadena.='<td align="center">'.$row->fon_codigo. DELIMITER . $row->uni_codigo. DELIMITER . $row->ser_codigo. DELIMITER . $row->exp_codigo.'</td>';
+  
     $cadena.='<td align="center">'.$fei.'</td>';
     $cadena.='<td align="center">'.$fef.'</td>';
     $cadena.='<td align="center">'.$expedientes->cantidadExpedientes($row->exp_id).'</td>';

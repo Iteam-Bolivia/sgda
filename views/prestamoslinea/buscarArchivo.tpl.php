@@ -317,6 +317,7 @@ if (com=='Adicionar'){
 while(t<=cantidad){
     if($(".fil_chk"+t).attr('checked')==true){
          dt=$(".fil_chk"+t).val();
+         
          //var cadena=new array();
          
 cadena=document.getElementById("archivos").value;

@@ -715,6 +715,12 @@ class prestamosLineaController extends baseController {
         $json = $archivo->buscar2preslinea($request);
         echo $json;   
     }
+        function listar2(){ 
+      $archivo = new prestamoslinea();
+        $request = $this->setRequestTrim($_REQUEST);
+        $json = $archivo->buscar2preslinealistar($request,VAR3);
+        echo $json;   
+    }
     function guardarPrestamo(){
         unset($_SESSION["id_lista2"]); 
          $this->solicitud_prestamo = new tab_solprestamo();
@@ -807,14 +813,35 @@ for($i=0;$i<$cantidad;$i++){
     }
     function lisprestSelect(){
         
-                    $tmenu = new menu ();
-        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+  $tseries = new series();
+        $series = "";
+        if ($_SESSION["ROL_COD"] == "SUBF" || $_SESSION["ROL_COD"] == "ACEN" || $_SESSION["ROL_COD"] == "ADM") {
+            $series = $tseries->obtenerSelectTodas();
+        } else {
+            $series = $tseries->obtenerSelectSeries();
+        }
+  
+  
+                    
+     
+                    
+        $departamento = new departamento();        
+        $this->registry->template->dep_id = $departamento->obtenerSelect();        
+      
+        $this->registry->template->uni_id = "";
+        $this->registry->template->ser_id = ""; 
+        //$this->registry->template->exp_id = ""; 
+        $this->registry->template->tra_id = "";
+        $this->registry->template->cue_id = "";
+        
+        $tmenu = new menu ();
+        $liMenu = $tmenu->imprimirMenu("prestamosLinea", $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
-       $this->registry->template->spr_id = "";
+       
         $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
-       $this->registry->template->PATH_EVENT = "gridprestamo";
+        $this->registry->template->PATH_EVENT = "search";
         $this->registry->template->PATH_EVENT2 = "verifpass";
         $this->registry->template->PATH_EVENT_VERIF_PASS = "verifpass";
         $this->registry->template->PATH_EVENT3 = "download";
@@ -826,7 +853,7 @@ for($i=0;$i<$cantidad;$i++){
         //session
         
         //ajax
-        //$this->registry->template->PATH_EVENT_LISTA = "guardarLista";
+        $this->registry->template->PATH_EVENT_LISTA = "guardarLista";
       //$this->registry->template->cantidad= $tseries->countBySQL();
         $this->registry->template->show('prestamoslinea/headerBuscador');
         $this->registry->template->show('prestamoslinea/listprestamoSelect.tpl');
