@@ -341,7 +341,17 @@ tab_usuario.usu_id  = $valor";
             $uni_id = $val->uni_id;
         }
         return $uni_id;
-    }     
+    }     function obtenersolounidad($id){
+        $sql="SELECT
+tab_unidad.uni_descripcion
+FROM
+tab_unidad
+WHERE
+tab_unidad.uni_id = 14";
+         $unidad=$this->unidad->dbselectBySQL($sql);
+         $unidad=$unidad[0];
+         return $unidad->uni_descripcion;
+    }
 
 }
 

@@ -49,7 +49,7 @@
         </tr>
              <tr>
             <td>Prestamista:</td>
-            <td><select name="usu_prestamista" type="text" id="usu_autoriza" class="required" 
+            <td><select name="usu_prestamista" type="text" id="usu_prestamista" class="required" 
                         title="Nombre del solicitante">
                     <option value="">(seleccionar)/ o ninguno</option>
                     <?php $usuario=new tab_usuario();

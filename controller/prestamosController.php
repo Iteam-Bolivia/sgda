@@ -755,7 +755,7 @@ class prestamosController extends baseController {
         $this->solicitud_prestamo->setSpr_fecent($fecha_inicio);
         $this->solicitud_prestamo->setSpr_fecdev($fecha_final);
         $this->solicitud_prestamo->setSpr_fecha(date("Y-m-d"));
-        $this->solicitud_prestamo->setUsur_id($_REQUEST['usu_prestamista']);
+        $this->solicitud_prestamo->setUsur_id($_SESSION ['USU_ID']);
         $this->solicitud_prestamo->setSpr_estado(1);
         $this->solicitud_prestamo->setSpr_obs($_REQUEST['usu_observ']);
         //$this->solicitud_prestamo->setUsu_fech_fin(date("Y-m-d"));
@@ -843,7 +843,7 @@ for($i=0;$i<$cantidad;$i++){
         } else {
             $sql = "SELECT * 
                     FROM tab_solprestamo
-                    WHERE spr_estado = 1 and usua_id=$usures $sort $limit ";
+                    WHERE spr_estado = 1 and usur_id=$usures $sort $limit ";
         }
         $result = $this->solprestamos->dbselectBySQL($sql);
         $total = $solprestamos->count3($qtype, $query);

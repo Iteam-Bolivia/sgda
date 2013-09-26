@@ -1,7 +1,7 @@
 <link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
 <script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
 
-<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/prestamosLinea/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
+<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/prestamosLinea/listarprestamo/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
 </div>
     <div class="clear"></div>
 <p>
@@ -32,16 +32,6 @@
         {display: 'Télefono', name : 'spr_tel', width : 80, sortable : true, align: 'left'},
         {display: 'Observación', name : 'spr_obs', width : 275, sortable : true, align: 'left'},
           ],
-        buttons : [
-            //{name: 'Adicionar', bclass: 'add', onpress : test},
-            {name: 'Devolver', bclass: 'devolt', onpress : test},
-            {separator: true},
-            {name: 'Reporte', bclass: 'pdf', onpress : test},
-            {separator: true},
-            {name: 'Prestar', bclass: 'accept', onpress : test},
-            {separator: true},
-            {name: 'Ver-lista', bclass: 'view', onpress : test},
-        ],
         searchitems : [
          
             {display: 'Solicitante', name : 'spr_solicitante'},

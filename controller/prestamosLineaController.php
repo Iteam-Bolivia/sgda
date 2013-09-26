@@ -754,7 +754,7 @@ class prestamosLineaController extends baseController {
         $this->solicitud_prestamo->setSpr_fecent($fecha_inicio);
         $this->solicitud_prestamo->setSpr_fecdev($fecha_final);
         $this->solicitud_prestamo->setSpr_fecha(date("Y-m-d"));
-        $this->solicitud_prestamo->setUsur_id($_SESSION ['USU_ID']);
+        $this->solicitud_prestamo->setUsur_id($_REQUEST['usu_prestamista']);
         $this->solicitud_prestamo->setSpr_estado(1);
         $this->solicitud_prestamo->setSpr_obs($_REQUEST['usu_observ']);
         //$this->solicitud_prestamo->setUsu_fech_fin(date("Y-m-d"));
@@ -805,6 +805,35 @@ for($i=0;$i<$cantidad;$i++){
         $this->registry->template->show('prestamoslinea/listarprestamo.tpl');
         $this->registry->template->show('footer');
     }
+    function lisprestSelect(){
+        
+                    $tmenu = new menu ();
+        $liMenu = $tmenu->imprimirMenu("buscarArchivo", $_SESSION ['USU_ID']);
+        $this->registry->template->men_titulo = $liMenu;
+       $this->registry->template->spr_id = "";
+        $this->registry->template->UNI_ID = $_SESSION['UNI_ID'];
+        $this->registry->template->PATH_WEB = PATH_WEB;
+        $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
+       $this->registry->template->PATH_EVENT = "gridprestamo";
+        $this->registry->template->PATH_EVENT2 = "verifpass";
+        $this->registry->template->PATH_EVENT_VERIF_PASS = "verifpass";
+        $this->registry->template->PATH_EVENT3 = "download";
+        $this->registry->template->PATH_EVENT4 = "getConfidencialidad";
+        $this->registry->template->PATH_EVENT_EXPORT = "exportar";
+        $this->registry->template->GRID_SW = "false";
+        $this->registry->template->PATH_J = "jquery-1.4.1";
+        
+        //session
+        
+        //ajax
+        //$this->registry->template->PATH_EVENT_LISTA = "guardarLista";
+      //$this->registry->template->cantidad= $tseries->countBySQL();
+        $this->registry->template->show('prestamoslinea/headerBuscador');
+        $this->registry->template->show('prestamoslinea/listprestamoSelect.tpl');
+        $this->registry->template->show('footer');
+        
+    }
+    
     
     function gridprestamo(){
         
@@ -841,7 +870,7 @@ for($i=0;$i<$cantidad;$i++){
                     spr_estado = 1   $sort $limit ";
         } else {
             $sql = "SELECT * 
-                    FROM tab_solprestamo where usua_id=$usur $sort $limit ";
+                    FROM tab_solprestamo where usur_id=$usur $sort $limit ";
         }
         $result = $this->solprestamos->dbselectBySQL($sql);
         $total = $solprestamos->count3($qtype, $query);

@@ -44,7 +44,6 @@
                        id="men_enlace" 
                        maxlength="100"
                        name="men_enlace" 
-                       readonly
                        size="50" 
                        title="Enlace"
                        type="text"                       
