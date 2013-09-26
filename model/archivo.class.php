@@ -640,36 +640,36 @@ class archivo extends tab_archivo {
             }
 
             
-            $json .= ",'" . $un->fil_id . "'";                        
-            $json .= ",'" . addslashes($un->fon_codigo) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->exp_titulo)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->cue_descripcion)) . "'";            
             $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo . DELIMITER . $un->exp_codigo . DELIMITER . $un->cue_codigo .  DELIMITER . $un->fil_codigo) . "'";            
+            //$json .= ",'" . $un->fil_id . "'";                        
+            //$json .= ",'" . addslashes($un->fon_codigo) . "'";
+            $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
+            $json .= ",'" . addslashes(utf8_decode($un->exp_titulo)) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->cue_descripcion)) . "'";                        
             $json .= ",'" . addslashes(utf8_decode($un->fil_titulo)) . "'";
             $json .= ",'" . addslashes(utf8_decode($un->fil_proc)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->fil_firma)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->fil_cargo)) . "'";
-            $json .= ",'" . addslashes($un->fil_nrofoj) . "'";
-            $json .= ",'" . addslashes($un->fil_nrocaj) . "'";
-            $json .= ",'" . addslashes($un->fil_sala) . "'";
-            $json .= ",'" . addslashes($un->fil_estante) . "'";
-            $json .= ",'" . addslashes($un->fil_cuerpo) . "'";
-            $json .= ",'" . addslashes($un->fil_balda) . "'";
-            $json .= ",'" . addslashes($un->fil_tipoarch) . "'";
-            $json .= ",'" . addslashes($un->fil_mrb) . "'";
-            $json .= ",'" . addslashes($un->fil_ori) . "'";
-            $json .= ",'" . addslashes($un->fil_cop) . "'";
-            $json .= ",'" . addslashes($un->fil_fot) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->fil_firma)) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->fil_cargo)) . "'";
+            //$json .= ",'" . addslashes($un->fil_nrofoj) . "'";
+            //$json .= ",'" . addslashes($un->fil_nrocaj) . "'";
+            //$json .= ",'" . addslashes($un->fil_sala) . "'";
+            //$json .= ",'" . addslashes($un->fil_estante) . "'";
+            //$json .= ",'" . addslashes($un->fil_cuerpo) . "'";
+            //$json .= ",'" . addslashes($un->fil_balda) . "'";
+            //$json .= ",'" . addslashes($un->fil_tipoarch) . "'";
+            //$json .= ",'" . addslashes($un->fil_mrb) . "'";
+            //$json .= ",'" . addslashes($un->fil_ori) . "'";
+            //$json .= ",'" . addslashes($un->fil_cop) . "'";
+            //$json .= ",'" . addslashes($un->fil_fot) . "'";
             
             $json .= ",'" . addslashes($un->fil_nur) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->fil_asunto)) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->fil_asunto)) . "'";
             
-            $json .= ",'" . addslashes($un->disponibilidad) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->fil_nomoriginal)) . "'";
-            $json .= ",'" . addslashes($un->fil_tamano) . "'";            
-            $json .= ",'" . addslashes(utf8_decode($un->fil_obs)) . "'";
+            //$json .= ",'" . addslashes($un->disponibilidad) . "'";
+            //$json .= ",'" . addslashes(utf8_decode($un->fil_nomoriginal)) . "'";
+            //$json .= ",'" . addslashes($un->fil_tamano) . "'";            
+            //$json .= ",'" . addslashes(utf8_decode($un->fil_obs)) . "'";
             
             $json .= "]}";
             $rc = true;
