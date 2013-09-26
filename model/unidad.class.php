@@ -67,7 +67,7 @@ tab_usuario.usu_id  = $valor";
                 tab_unidad
                 WHERE
                 tab_unidad.uni_estado =  '1' 
-                ORDER BY tab_unidad.uni_cod ASC  ";
+                ORDER BY tab_unidad.uni_id ASC  ";
         $rows = $this->unidad->dbSelectBySQL($sql);
         $option = "";
         foreach ($rows as $unidad) {

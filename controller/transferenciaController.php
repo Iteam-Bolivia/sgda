@@ -278,7 +278,7 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $where="";
    
     $tab_extransferencia=new tab_exptransferencia();
-    $result=$tab_extransferencia->dbSelectBySQL("select* from tab_exptransferencia where str_id=$id");
+    $result=$tab_extransferencia->dbSelectBySQL("select * from tab_exptransferencia where str_id=$id");
     $cantidad=count($result);
     $valor3="";
     $t=1;
@@ -386,7 +386,7 @@ $cadena.='<table width="740" border="1">';
      $cadena.='<td width="30" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
      $cadena.='<td width="30" rowspan="2"><strong>Cajas</strong></td>';
      $cadena.='<td width="30" rowspan="2"><strong>M.L.</strong></td>';
-     $cadena.='<td width="70" rowspan="2"><p><strong>Observ.</strong></p></td>';
+     $cadena.='<td width="60" rowspan="2"><p><strong>Observ.</strong></p></td>';
    $cadena.='</tr>';
    $cadena.='<tr>';
      $cadena.='<td width="65"><strong>Inicio</strong></td>';
@@ -433,7 +433,7 @@ $cadena.='<table width="740" border="1">';
      $sum=$sum+$expedientes->cantidadExpedientes($row->exp_id);
      $sum2=$sum2+$row->str_nrocajas;
     $cadena.='</td>';
-      $cadena.='<td align="center">'.$row->exp_titulo.'</td>';
+    $cadena.='<td align="center">'.$row->exp_titulo.'</td>';
     $cadena.='<td align="center">'.$row->fon_codigo. DELIMITER . $row->uni_codigo. DELIMITER . $row->ser_codigo. DELIMITER . $row->exp_codigo.'</td>';
   
     $cadena.='<td align="center">'.$fei.'</td>';
