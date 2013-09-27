@@ -387,7 +387,7 @@ class etiqexpedienteController extends baseController {
         $usu_id = $_SESSION['USU_ID'];
         $res = array();
 
-        if ($tipo == 'MARBETES') {            
+        if ($tipo == 'MARBETES') {
             // Minimo
             $sql = "SELECT MIN(tab_archivo.fil_nro) as minimo
                 FROM
@@ -423,7 +423,6 @@ class etiqexpedienteController extends baseController {
                 else
                     $res['nro_final'] = 0;
             }
-            
         } else {
             // Minimo
             $sql = "SELECT min(tab_archivo.fil_nrocaj) as minimo
@@ -464,14 +463,11 @@ class etiqexpedienteController extends baseController {
         echo json_encode($res);
     }
 
-
-    
-    
-   // New
+    // New
     function viewMarbetes2() {
         $exp_id = $_REQUEST['exp_id'];
         $ini = $_REQUEST['nro_inicial'];
-        $fin = $_REQUEST['nro_final'];      
+        $fin = $_REQUEST['nro_final'];
         if ($fin == NULL) {
             $fin = $ini;
         }
@@ -479,7 +475,7 @@ class etiqexpedienteController extends baseController {
         $usuario = new usuario();
         // Aqui
         $tarchivo = new tab_archivo ();
-        
+
         $select = "SELECT
                 tab_archivo.fil_id,
                 (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
@@ -545,11 +541,9 @@ class etiqexpedienteController extends baseController {
                 tab_exparchivo.exa_estado = 1 AND
                 tab_expusuario.eus_estado = 1 AND
                 tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
-                tab_expediente.exp_id = '$exp_id' ";                
+                tab_expediente.exp_id = '$exp_id' ";
         $sql = "$select $from ";
         $result = $tarchivo->dbSelectBySQL($sql); //print $sql;   
-        
-
         // Include the main TCPDF library (search for installation path).
         require_once('tcpdf/tcpdf.php');
 
@@ -565,7 +559,6 @@ class etiqexpedienteController extends baseController {
 
         // set default header data
         //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 027', PDF_HEADER_STRING);
-
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -585,16 +578,14 @@ class etiqexpedienteController extends baseController {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__).'tcpdf/lang/eng.php')) {
-            require_once(dirname(__FILE__).'tcpdf/lang/eng.php');
+        if (@file_exists(dirname(__FILE__) . 'tcpdf/lang/eng.php')) {
+            require_once(dirname(__FILE__) . 'tcpdf/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
 
         // ---------------------------------------------------------
-
         // set a barcode on the page footer
         //$pdf->setBarcode(date('Y-m-d H:i:s'));
-
         // set font
         $pdf->SetFont('helvetica', '', 11);
 
@@ -615,7 +606,7 @@ class etiqexpedienteController extends baseController {
             'border' => true,
             'hpadding' => 'auto',
             'vpadding' => 'auto',
-            'fgcolor' => array(0,0,0),
+            'fgcolor' => array(0, 0, 0),
             'bgcolor' => false, //array(255,255,255),
             'text' => true,
             'font' => 'helvetica',
@@ -628,16 +619,16 @@ class etiqexpedienteController extends baseController {
 
 
         foreach ($result as $value) {
-            $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;        
+            $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo . DELIMITER . $value->fil_codigo;
             $fil_id = str_pad($value->fil_id, 10, "0", STR_PAD_LEFT);
             //  BAR CODE
             // CODE 39 + CHECKSUM
-            $pdf->SetFont('helvetica', '', 23);
-            $pdf->Cell(0, 0, $codigo, 0, 1);            
+            $pdf->SetFont('helvetica', '', 20);
+            $pdf->Cell(0, 0, $codigo, 0, 1);
             $pdf->SetFont('helvetica', '', 11);
             $pdf->write1DBarcode($fil_id, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
-            
+
 //            // BAR CODE 2
 //            // define barcode style
 //            $style2 = array(
@@ -661,20 +652,14 @@ class etiqexpedienteController extends baseController {
 //            $pdf->Cell(0, 0, $codigo, 0, 1);
 //            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
 //            $pdf->write1DBarcode($codigo, 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
-            
-            
             // New
             $pdf->Ln();
-
         }
 
         //Close and output PDF document
         $pdf->Output('viewMarbetes2.pdf', 'I');
+    }
 
-
-    }    
-        
-    
     function viewFolders2() {
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
@@ -702,6 +687,7 @@ class etiqexpedienteController extends baseController {
         $pdf->setPrintFooter(false);
         //set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 3);
+
         $pdf->SetFont('helvetica', '', 18);
 
         $st = '';
@@ -757,26 +743,21 @@ class etiqexpedienteController extends baseController {
         $rows = $texp->dbSelectBySQL($sql);
         foreach ($rows as $value) {
             $st.='<table border = "1" style="width: 40%">';
+
             $st.='<tr>';
             $st.='<td>';
-            $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="60" height="60" border="0" />';
-            //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
+            $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" height="60" border="0" />';
+            $st.='</td>';
+            $st.='<td>';
+            $st.='<img src="' . PATH_ROOT . '/web/img/iso.png" height="60" border="0" align="right" />';
             $st.='</td>';
             $st.='</tr>';
 
 
             $st.='<tr>';
-            $st.='<td>';
-            $st.='<table border = "1" style="width: 100%; text-align: center">';
-            $st.='<tr>';
-            $st.='<td height="40"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
-            $st.='</tr>';
-            $st.='<tr>';
-            $st.='<td>' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
-            $st.='</tr>';
-            $st.='<tr>';
-            $st.='<td><b>GERENCIA / UNIDAD</b></td>';
-            $st.='</tr>';
+            $st.='<td colspan="2">';
+
+            $st.='<table border = "0" style="width: 100%; text-align: center">';
 
             if ($value->uni_par_cod) {
                 $st.='<tr>';
@@ -789,33 +770,50 @@ class etiqexpedienteController extends baseController {
             }
 
             $st.='<tr>';
-            $st.='<td><b>SECCIÓN</b></td>';
+            $st.='<td></td>';
             $st.='</tr>';
+
             $st.='<tr>';
             $st.='<td>' . $value->uni_descripcion . '</td>';
             $st.='</tr>';
+
             $st.='<tr>';
-            $st.='<td><b>TÍTULO DEL DOCUMENTO</b></td>';
+            $st.='<td></td>';
             $st.='</tr>';
+
+            $st.='<tr>';
+            $st.='<td>' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
+            $st.='</tr>';
+
+            $st.='<tr>';
+            $st.='<td></td>';
+            $st.='</tr>';
+
             $st.='<tr>';
             $st.='<td>' . $value->exp_titulo . '</td>';
             $st.='</tr>';
+
             $st.='<tr>';
-            $st.='<td><b>NRO. VOLUMEN</b></td>';
+            $st.='<td></td>';
             $st.='</tr>';
+
             $st.='<tr>';
-            $st.='<td>' . $value->exp_tomovol . '</td>';
+            $st.='<td>' . "VOL. " . $value->exp_tomovol . '</td>';
             $st.='</tr>';
+
             $st.='<tr>';
-            $st.='<td><b>FECHAS EXTREMAS</b></td>';
+            $st.='<td></td>';
             $st.='</tr>';
+
             $st.='<tr>';
             $st.='<td>' . $value->exp_fecha_exf . '</td>';
             $st.='</tr>';
+
             $st.='</table>';
 
             $st.='</td>';
             $st.='</tr>';
+
             $st.='</table>';
         }
 
@@ -1197,7 +1195,7 @@ class etiqexpedienteController extends baseController {
         $td.="<br>";
         $td.="<br>";
         $td.="<br>";
-        $td.='<table border="0"><tr><td align="center" style="font-size:65px"><b>ARCHIVO CENTRAL</b></td></tr></table>';
+        $td.='<table border="0"><tr><td align="center" style="font-size:65px"><b>CARATULA LEGAJO</b></td></tr></table>';
         $td.="<br>";
         $st = "";
         // -----------------------------------------------------------------------------
@@ -1205,12 +1203,8 @@ class etiqexpedienteController extends baseController {
 
 
         $st.='<table width="660" border="1" style="font-family:Tahoma, Geneva, sans-serif;font-size:50px">';
-        $st.='<tr>';
-        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>CODIGO DE PRECEDENCIA:</b></td>';
-        $st.='</tr>';
-        $st.='<tr>';
-        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->fon_cod . DELIMITER . $rows->uni_cod . DELIMITER . $rows->tco_codigo . DELIMITER . $rows->ser_codigo . DELIMITER . $rows->exp_codigo . '</td>';
-        $st.='</tr>';
+
+
         $st.='<tr>';
         $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>GERENCIA/UNIDAD/SECCION:</b></td>';
         $st.='</tr>';
@@ -1230,45 +1224,50 @@ class etiqexpedienteController extends baseController {
 
         $st.='</td>';
         $st.='</tr>';
+
+        $st.='<tr>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>CODIGO DE REFERENCIA:</b></td>';
+        $st.='</tr>';
+        $st.='<tr>';
+        $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->fon_cod . DELIMITER . $rows->uni_cod . DELIMITER . $rows->tco_codigo . DELIMITER . $rows->ser_codigo . DELIMITER . $rows->exp_codigo . '</td>';
+        $st.='</tr>';
+
+
         $st.='<tr>';
         $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>SERIE DOCUMENTAL:</b></td>';
         $st.='</tr>';
+
         $st.='<tr>';
         $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $rows->ser_categoria . '</td>';
         $st.='</tr>';
+
         $st.='<tr>';
         $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>TITULO DEL EXPEDIENTE:</b></td>';
         $st.='</tr>';
+
         $st.='<tr>';
         $st.='<td colspan="4" height="45" align="center" style="font-size:70px">' . $rows->exp_titulo . '</td>';
         $st.='</tr>';
+
         $st.='<tr>';
-        $st.='<td width="220" bgcolor="#CCCCCC" height="35" align="center"><b>Nº DE VOLUMEN:</b></td>';
-        $st.='<td width="220" colspan="2" bgcolor="#CCCCCC" align="center"><b>SOPORTE FISICO:</b></td>';
-        $st.='<td width="220" bgcolor="#CCCCCC" align="center"><b>CONSERVACION DOCUMENTAL:</b></td>';
+        $st.='<td colspan="4" bgcolor="#CCCCCC" height="35" ><b>NRO. DE VOLUMEN:</b></td>';
         $st.='</tr>';
+
         $st.='<tr>';
-        $st.='<td height="40" align="center" style="font-size:50px">' . $rows->exp_tomovol . '</td>';
-        $st.='<td colspan="2" align="center" style="font-size:50px">' . $rows->sof_codigo . '</td>';
-        $st.='<td align="center" style="font-size:45px">&nbsp;</td>';
+        $st.='<td colspan="4" height="45" align="center" style="font-size:70px">' . $rows->exp_tomovol . '</td>';
         $st.='</tr>';
+
+
         $st.='<tr>';
         $st.='<td colspan="4" bgcolor="#CCCCCC" height="35"><b>FECHAS EXTREMAS:</b></td>';
         $st.='</tr>';
+
         $st.='<tr>';
         $st.='<td colspan="4" height="40" align="center" style="font-size:50px">' . $fechaInicial . '   -   ' . $fechaFinal . '</td>';
         $st.='</tr>';
-        $st.='<tr>';
-        $st.='<td colspan="2" bgcolor="#CCCCCC" height="35"><b>OBSERVACIONES:</b></td>';
-        $st.='<td colspan="2" bgcolor="#CCCCCC"><b>Nº DE ORDEN/INVENTARIO:</b></td>';
-        $st.='</tr>';
-        $st.='<tr>';
-        $st.='<td colspan="2" height="50"  >' . $rows->exp_obs . '</td>';
-        $st.='<td colspan="2">&nbsp;</td>';
-        $st.='</tr>';
+
+
         $st.='</table><br>';
-        $st.='<strong>*SOPORTE FISICO:</strong> Anillado <strong>AN</strong>,  Archivador de Palanca <strong>AP</strong>,Empastado <strong>EM</strong>, Folder <strong>FL</strong>, Legajo <strong>LG</strong>, Mapas <strong>MA</strong>, Planos <strong>PL</strong><br />';
-        $st.='<strong>*CONSERVACION DOCUMENTAL</strong>: Bueno<strong>( B )</strong> Regular<strong>( R )</strong> Malo<strong>( M )</strong>';
 
         $pdf->AddPage();
 

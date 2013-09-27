@@ -12,15 +12,15 @@
 class transferenciaController extends baseController {
 
     function index() {
-      
+
         $this->uni = new unidad ();
         $this->usu = new usuario ();
         $this->registry->template->str_id = "";
         $this->registry->template->trn_uni_destino = $this->uni->obtenerSelectUnidades();
-        $this->registry->template->trn_usuario_des = ""; 
+        $this->registry->template->trn_usuario_des = "";
         //$this->usu->listUsuariosOper($_SESSION ['USU_ID'],$ins_id);
-        
-        
+
+
         $this->series = new series ();
         $this->usuario = new usuario ();
         $adm = $this->usuario->esAdm();
@@ -28,10 +28,10 @@ class transferenciaController extends baseController {
         $this->registry->template->PATH_B = $this->series->loadMenu($adm, "test2");
 
         $this->registry->template->titulo = "Expedientes";
-        $this->registry->template->titulo2 = "Expedientes transferidos";          
+        $this->registry->template->titulo2 = "Expedientes transferidos";
         $this->menu = new menu ();
         $liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION ['USU_ID']);
-        $this->registry->template->men_titulo = $liMenu;        
+        $this->registry->template->men_titulo = $liMenu;
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
         $this->registry->template->PATH_EVENT = "add";
@@ -43,122 +43,125 @@ class transferenciaController extends baseController {
         $this->registry->template->show('headerG');
         $this->registry->template->show('tab_transferenciag.tpl');
         $this->registry->template->show('footer');
-
     }
+
     //freddy
-    function recarga(){
+    function recarga() {
         error_reporting(0);
- $valor=$_REQUEST['valor'];
- $valor2=$_REQUEST['valor2'];
-$result_menor=0;$result_mayor=0;$cad="";$sd="";
-   if(isset($_SESSION['id_transferencia']))
-       {$cadena="";
-     $nuevo=$_SESSION['id_transferencia']; 
-     $cadena=$nuevo.",".$valor;
-    // $cadena2=  array_unique($cadena);
-     $explode1=explode(",",$cadena);
-     $cantidad=  count($explode1);
-     $explode2=explode(",",$valor2);
-     $cantidad2=  count($explode2);
-	 
-     if($cantidad>$cantidad2){
-         $result_menor=$cantidad2;
-         $result_mayor=$cantidad;
-     }else{
-         $result_menor=$cantidad;
-         $result_mayor=$cantidad2;
-     }
-	 
-     for($j=0;$j<$result_mayor;$j++){
+        $valor = $_REQUEST['valor'];
+        $valor2 = $_REQUEST['valor2'];
+        $result_menor = 0;
+        $result_mayor = 0;
+        $cad = "";
+        $sd = "";
+        if (isset($_SESSION['id_transferencia'])) {
+            $cadena = "";
+            $nuevo = $_SESSION['id_transferencia'];
+            $cadena = $nuevo . "," . $valor;
+            // $cadena2=  array_unique($cadena);
+            $explode1 = explode(",", $cadena);
+            $cantidad = count($explode1);
+            $explode2 = explode(",", $valor2);
+            $cantidad2 = count($explode2);
 
-         $k=0;
-         for($t=0;$t<$result_menor;$t++){
-			 
-			if($explode1[$j]<>$explode2[$t]){
-				$k++;
-				}
-         }
-                            if($k==$result_menor){
-                                    $sd.=$explode1[$j];
-					 if($cantidad>$cantidad2){
-					if($j<$result_mayor-1){
-					$sd.=",";
-					}
-					 }else{
-					if($j<$result_menor-1){
-					$sd.=",";
-					}}
-	}
-         
-     }
-     	 $tr="";
-	 $explodecito=explode(",",$sd);
-	 $cant=count($explodecito);
-	 for($y=0;$y<$cant;$y++){
-		 if($explodecito[$y]==""){
-			 $explodecito[$y]=0;
-			 }
-			
-		$tr.=$explodecito[$y];
-		  if($y<$cant-1){
-			 $tr.=",";
-			 }
-		 }
-          $tt="";
-   $dtt=explode(",",$tr);
-   $dtcant=count($dtt);
-   for($u=0;$u<$dtcant;$u++){
-       if($dtt[$u]<>0){
-           $tt.=$dtt[$u];
-            if($u<$dtcant-1){
-			 $tt.=",";
-			 }
-       }
-   }
-   
-     $_SESSION['id_transferencia']=$tt;
- 
-   }else{
-       $_SESSION['id_transferencia']=$valor;
-   }
+            if ($cantidad > $cantidad2) {
+                $result_menor = $cantidad2;
+                $result_mayor = $cantidad;
+            } else {
+                $result_menor = $cantidad;
+                $result_mayor = $cantidad2;
+            }
+
+            for ($j = 0; $j < $result_mayor; $j++) {
+
+                $k = 0;
+                for ($t = 0; $t < $result_menor; $t++) {
+
+                    if ($explode1[$j] <> $explode2[$t]) {
+                        $k++;
+                    }
+                }
+                if ($k == $result_menor) {
+                    $sd.=$explode1[$j];
+                    if ($cantidad > $cantidad2) {
+                        if ($j < $result_mayor - 1) {
+                            $sd.=",";
+                        }
+                    } else {
+                        if ($j < $result_menor - 1) {
+                            $sd.=",";
+                        }
+                    }
+                }
+            }
+            $tr = "";
+            $explodecito = explode(",", $sd);
+            $cant = count($explodecito);
+            for ($y = 0; $y < $cant; $y++) {
+                if ($explodecito[$y] == "") {
+                    $explodecito[$y] = 0;
+                }
+
+                $tr.=$explodecito[$y];
+                if ($y < $cant - 1) {
+                    $tr.=",";
+                }
+            }
+            $tt = "";
+            $dtt = explode(",", $tr);
+            $dtcant = count($dtt);
+            for ($u = 0; $u < $dtcant; $u++) {
+                if ($dtt[$u] <> 0) {
+                    $tt.=$dtt[$u];
+                    if ($u < $dtcant - 1) {
+                        $tt.=",";
+                    }
+                }
+            }
+
+            $_SESSION['id_transferencia'] = $tt;
+        } else {
+            $_SESSION['id_transferencia'] = $valor;
+        }
     }
-    
-        function recarga2(){
-     
- $valor=$_REQUEST['valor'];
- $_SESSION['id_transferencia']=$valor;
-   }
-    
-       function eliminarsession(){
+
+    function recarga2() {
+
+        $valor = $_REQUEST['valor'];
+        $_SESSION['id_transferencia'] = $valor;
+    }
+
+    function eliminarsession() {
         unset($_SESSION['id_transferencia']);
     }
-      function listado(){
+
+    function listado() {
 
         $this->uni = new unidad ();
         $this->usu = new usuario ();
         $this->registry->template->str_id = "";
         $this->registry->template->trn_uni_destino = $this->uni->obtenerSelectUnidades();
-        $this->registry->template->trn_usuario_des = ""; 
+        $this->registry->template->trn_usuario_des = "";
         //$this->usu->listUsuariosOper($_SESSION ['USU_ID'],$ins_id);
-          if(isset($_SESSION['id_transferencia'])){
-    $id_transferencia=$_SESSION['id_transferencia'];
-    //elimina la copia que en una cadena
-    $nuevo_session="";
-    $explode=explode(",",$id_transferencia);
-    $nuevo=array_unique($explode);
-    $cantidad=count($nuevo);$r=0;
-    foreach($nuevo as $lis){
-        
-        if($r>0){
-            $nuevo_session.=",";
+        if (isset($_SESSION['id_transferencia'])) {
+            $id_transferencia = $_SESSION['id_transferencia'];
+            //elimina la copia que en una cadena
+            $nuevo_session = "";
+            $explode = explode(",", $id_transferencia);
+            $nuevo = array_unique($explode);
+            $cantidad = count($nuevo);
+            $r = 0;
+            foreach ($nuevo as $lis) {
+
+                if ($r > 0) {
+                    $nuevo_session.=",";
+                }
+                $nuevo_session.=$lis;
+                $r++;
+            }
+            $_SESSION['id_transferencia'] = $nuevo_session;
         }
-        $nuevo_session.=$lis;
-        $r++;
-    }
-    $_SESSION['id_transferencia']=$nuevo_session;
- 
-  }
-        
+
         $this->series = new series ();
         $this->usuario = new usuario ();
         $adm = $this->usuario->esAdm();
@@ -166,10 +169,10 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $this->registry->template->PATH_B = $this->series->loadMenu($adm, "test2");
 
         $this->registry->template->titulo = "Expedientes";
-        $this->registry->template->titulo2 = "Expedientes transferidos";          
+        $this->registry->template->titulo2 = "Expedientes transferidos";
         $this->menu = new menu ();
         $liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION ['USU_ID']);
-        $this->registry->template->men_titulo = $liMenu;        
+        $this->registry->template->men_titulo = $liMenu;
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
         $this->registry->template->PATH_EVENT = "add";
@@ -182,63 +185,61 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $this->registry->template->show('transferencia/tab_list_transferenciag.tpl');
         $this->registry->template->show('footer');
     }
-    function ajaxsession(){
-        $id_transferencia=$_SESSION['id_transferencia'];
-        echo '<input type="hidden" id="sesi" value="'.$id_transferencia.'">';
-        
-    }
-      function ajaxsession2(){
-        $id_transferencia=$_SESSION['id_transferencia'];
-         echo '<input name="idsExp" id="idsExp" type="hidden" value="'.$id_transferencia.'" />';
-    }
-    function guardarTransferencia(){
-        
-          unset($_SESSION["id_transferencia"]); 
-         $expusuario = new expusuario();
-         $soltransferencia=new soltransferencia();
-         $exptransferencia=new exp_transferencia();
-         
-         $this->tab_expusuario = new tab_expusuario();
-         $this->tab_soltransferencia=new tab_soltransferencia();
-         $this->tab_exptransferencia=new tab_exptransferencia();
 
-         $uni_id=$_REQUEST['uni_id'];
-         $idsExp=$_REQUEST['idsExp'];
-         $usu_id=$_REQUEST['usu_id'];
-         $uni_destino=$_REQUEST['trn_uni_destino'];
-         $usu_destino=$_REQUEST['trn_usuario_des'];
-         $direccion=$_REQUEST['direccion'];
-         $telefono=$_REQUEST['telefono'];
-   
-        $explode=explode(",",$idsExp);
+    function ajaxsession() {
+        $id_transferencia = $_SESSION['id_transferencia'];
+        echo '<input type="hidden" id="sesi" value="' . $id_transferencia . '">';
+    }
 
-        foreach ($explode as $list){
-         $rowlist=$this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_id AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 1");
-         $rowlist=$rowlist[0];
-         $rowlist2=$this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_destino AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 0");
-         $tt=0;
-      
-         foreach ($rowlist2 as $catt){
-             $tt++;
-         }     
-         if($tt>0)
-         {
-         $this->tab_expusuario->updateMult("eus_estado",0,$rowlist->eus_id);
-         $this->tab_expusuario->setUsu_id($usu_destino);
-         $this->tab_expusuario->setExp_id($list);
-         $this->tab_expusuario->setEus_estado(2);
-         $this->tab_expusuario->insert(); 
-         }
-         else
-         {
-         $this->tab_expusuario->updateMult("eus_estado",0,$rowlist->eus_id);
-         $this->tab_expusuario->setUsu_id($usu_destino);
-         $this->tab_expusuario->setExp_id($list);
-         $this->tab_expusuario->setEus_estado(2);
-         $this->tab_expusuario->insert();
-         }
-         
-         }
+    function ajaxsession2() {
+        $id_transferencia = $_SESSION['id_transferencia'];
+        echo '<input name="idsExp" id="idsExp" type="hidden" value="' . $id_transferencia . '" />';
+    }
+
+    function guardarTransferencia() {
+
+        unset($_SESSION["id_transferencia"]);
+        $expusuario = new expusuario();
+        $soltransferencia = new soltransferencia();
+        $exptransferencia = new exp_transferencia();
+
+        $this->tab_expusuario = new tab_expusuario();
+        $this->tab_soltransferencia = new tab_soltransferencia();
+        $this->tab_exptransferencia = new tab_exptransferencia();
+
+        $uni_id = $_REQUEST['uni_id'];
+        $idsExp = $_REQUEST['idsExp'];
+        $usu_id = $_REQUEST['usu_id'];
+        $uni_destino = $_REQUEST['trn_uni_destino'];
+        $usu_destino = $_REQUEST['trn_usuario_des'];
+        $direccion = $_REQUEST['direccion'];
+        $telefono = $_REQUEST['telefono'];
+
+        $explode = explode(",", $idsExp);
+
+        foreach ($explode as $list) {
+            $rowlist = $this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_id AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 1");
+            $rowlist = $rowlist[0];
+            $rowlist2 = $this->tab_expusuario->dbSelectBySQL("SELECT* FROM tab_expusuario WHERE tab_expusuario.usu_id = $usu_destino AND tab_expusuario.exp_id = $list AND tab_expusuario.eus_estado = 0");
+            $tt = 0;
+
+            foreach ($rowlist2 as $catt) {
+                $tt++;
+            }
+            if ($tt > 0) {
+                $this->tab_expusuario->updateMult("eus_estado", 0, $rowlist->eus_id);
+                $this->tab_expusuario->setUsu_id($usu_destino);
+                $this->tab_expusuario->setExp_id($list);
+                $this->tab_expusuario->setEus_estado(2);
+                $this->tab_expusuario->insert();
+            } else {
+                $this->tab_expusuario->updateMult("eus_estado", 0, $rowlist->eus_id);
+                $this->tab_expusuario->setUsu_id($usu_destino);
+                $this->tab_expusuario->setExp_id($list);
+                $this->tab_expusuario->setEus_estado(2);
+                $this->tab_expusuario->insert();
+            }
+        }
         $this->tab_soltransferencia->setRequest2Object($_REQUEST);
         $this->tab_soltransferencia->setStr_fecha(date("Y-m-d"));
         $this->tab_soltransferencia->setUni_id($uni_id);
@@ -246,234 +247,250 @@ $result_menor=0;$result_mayor=0;$cad="";$sd="";
         $this->tab_soltransferencia->setStr_nrocajas(1);
         $this->tab_soltransferencia->setStr_totpzas(1);
         $this->tab_soltransferencia->setStr_totml(1);
-        $this->tab_soltransferencia->setStr_nroreg(1);        
+        $this->tab_soltransferencia->setStr_nroreg(1);
         $this->tab_soltransferencia->setStr_fecini(date('Y-m-d'));
         $this->tab_soltransferencia->setStr_fecfin(date('Y-m-d'));
         $this->tab_soltransferencia->setStr_estado(2);
         $this->tab_soltransferencia->setUsu_id($usu_id);
         $this->tab_soltransferencia->setUsud_id($usu_destino);
-        $this->tab_soltransferencia->setStr_direccion($direccion);  
-        $this->tab_soltransferencia->setStr_telefono($telefono);  
+        $this->tab_soltransferencia->setStr_direccion($direccion);
+        $this->tab_soltransferencia->setStr_telefono($telefono);
         $this->tab_soltransferencia->insert();
-        $id=$soltransferencia->obtenerMaximo("str_id");
-        $id2=$exptransferencia->obtenerMaximo("etr_orden");
-      
-        $cant=$id2;
-          foreach ($explode as $list){
-        $this->tab_exptransferencia->setStr_id($id);
-        $this->tab_exptransferencia->setEtr_orden($cant);
-        $this->tab_exptransferencia->setExp_id($list);
-        $this->tab_exptransferencia->setEtr_obs("obs");
-        $this->tab_exptransferencia->setEtr_estado(1);
-        $this->tab_exptransferencia->insert();
-        $cant++;
-          }
-          $this->VerRTransferencia($id);
-  
-    
+        $id = $soltransferencia->obtenerMaximo("str_id");
+        $id2 = $exptransferencia->obtenerMaximo("etr_orden");
+
+        $cant = $id2;
+        foreach ($explode as $list) {
+            $this->tab_exptransferencia->setStr_id($id);
+            $this->tab_exptransferencia->setEtr_orden($cant);
+            $this->tab_exptransferencia->setExp_id($list);
+            $this->tab_exptransferencia->setEtr_obs("obs");
+            $this->tab_exptransferencia->setEtr_estado(1);
+            $this->tab_exptransferencia->insert();
+            $cant++;
+        }
+        $this->VerRTransferencia($id);
     }
-    function VerRTransferencia($id){
-            //$id_prestamo=VAR3;
-        
-        $where="";
-   
-    $tab_extransferencia=new tab_exptransferencia();
-    $result=$tab_extransferencia->dbSelectBySQL("select * from tab_exptransferencia where str_id=$id");
-    $cantidad=count($result);
-    $valor3="";
-    $t=1;
-    foreach($result as $row){
-           $valor3.="tab_expediente.exp_id=$row->exp_id";
-					if($t<$cantidad){
-                                        $valor3.=" or ";}
-				$t++;
-    }      
-        
-       $where.= " AND $valor3 ";     
 
-       
-        $sql="SELECT
-tab_fondo.fon_codigo,
-tab_expediente.exp_codigo,
-tab_soltransferencia.str_id,
-tab_soltransferencia.str_fecha,
-tab_soltransferencia.uni_id,
-tab_soltransferencia.unid_id,
-tab_soltransferencia.str_nrocajas,
-tab_soltransferencia.str_totpzas,
-tab_soltransferencia.str_totml,
-tab_soltransferencia.str_nroreg,
-tab_soltransferencia.str_fecini,
-tab_soltransferencia.str_fecfin,
-tab_soltransferencia.str_estado,
-tab_soltransferencia.usu_id,
-tab_soltransferencia.usud_id,
-tab_soltransferencia.str_direccion,
-tab_soltransferencia.str_telefono,
-tab_expisadg.exp_fecha_exi,
-tab_expisadg.exp_fecha_exf,
-tab_series.ser_codigo,
-tab_unidad.uni_codigo,
-tab_fondo.fon_cod,
-tab_series.ser_categoria,
-tab_expisadg.exp_titulo,
-tab_expediente.exp_obs,
-tab_series.ser_id,
-tab_series.ser_par,
-tab_expediente.exp_id
-FROM
-tab_unidad
-INNER JOIN tab_fondo ON tab_unidad.fon_id = tab_fondo.fon_id
-INNER JOIN tab_series ON tab_series.uni_id = tab_unidad.uni_id
-INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
-INNER JOIN tab_expisadg ON tab_expisadg.exp_id = tab_expediente.exp_id
-INNER JOIN tab_exptransferencia ON tab_expediente.exp_id = tab_exptransferencia.exp_id
-INNER JOIN tab_soltransferencia ON tab_soltransferencia.str_id = tab_exptransferencia.str_id
-WHERE
-tab_soltransferencia.str_estado = 2 AND
-tab_expediente.exp_estado = 1 ".$where;
-        
-   $usua= new usuario();    
-   $subfondo=new fondo();    
-   $seccion=new unidad();
-   $expedientes=new expediente();
-        $archivo=new tab_archivo();
-        $archivo2=new tab_archivo();
-      
-   $query=$archivo->dbSelectBySQL($sql); 
-   $query2=$archivo2->dbSelectBySQL($sql);  
-   $query2=$query2[0];
-   $usuarioOrigen=$usua->obtenerNombre($query2->usu_id);
-   $usuarioDestino=$usua->obtenerNombre($query2->usud_id);
-   $fond=$subfondo->obtenerfon($query2->usu_id);
-   $ob_seccion=$seccion->obtenerSeccion($query2->usu_id);
-   
-   $cadena="";  
-   $cadena="<br/><br/><br/><br/><br/><br/><br/>";
-  
-$cadena.='<b>Cuadro 8. Formulario Normalizado de Transferencias</b>';
-$cadena.='<br/><br/>';
+    function VerRTransferencia($id) {
+        //$id_prestamo=VAR3;
 
-$cadena.='<table width="740" border="1">';
-  $cadena.='<tr>';
-    $cadena.='<td colspan="10" align="center"><b>ADMINISTRADORA BOLIVIANA DE CARRETERAS</b><br />';
-    $cadena.='Formulario de Relacion de Transferencias<br /></td>';
-  $cadena.='</tr>';
-  $cadena.='<tr>';
-    $cadena.='<td colspan="5"><blockquote>';
-      $cadena.='<b>Subfondo:</b> '.$fond.'<br />';
+        $where = "";
+
+        $tab_extransferencia = new tab_exptransferencia();
+        $result = $tab_extransferencia->dbSelectBySQL("select * from tab_exptransferencia where str_id=$id");
+        $cantidad = count($result);
+        $valor3 = "";
+        $t = 1;
+        foreach ($result as $row) {
+            $valor3.="tab_expediente.exp_id=$row->exp_id";
+            if ($t < $cantidad) {
+                $valor3.=" or ";
+            }
+            $t++;
+        }
+
+        $where.= " AND $valor3 ";
+
+
+        $sql = "SELECT
+        tab_fondo.fon_codigo,
+        tab_expediente.exp_codigo,
+        tab_soltransferencia.str_id,
+        tab_soltransferencia.str_fecha,
+        tab_soltransferencia.uni_id,
+        tab_soltransferencia.unid_id,
+        tab_soltransferencia.str_nrocajas,
+        tab_soltransferencia.str_totpzas,
+        tab_soltransferencia.str_totml,
+        tab_soltransferencia.str_nroreg,
+        tab_soltransferencia.str_fecini,
+        tab_soltransferencia.str_fecfin,
+        tab_soltransferencia.str_estado,
+        tab_soltransferencia.usu_id,
+        tab_soltransferencia.usud_id,
+        tab_soltransferencia.str_direccion,
+        tab_soltransferencia.str_telefono,
+        tab_expisadg.exp_fecha_exi,
+        tab_expisadg.exp_fecha_exf,
+        tab_series.ser_codigo,
+        tab_unidad.uni_codigo,
+        tab_fondo.fon_cod,
+        tab_series.ser_categoria,
+        tab_expisadg.exp_titulo,
+        tab_expediente.exp_obs,
+        tab_series.ser_id,
+        tab_series.ser_par,
+        tab_expediente.exp_id
+        FROM
+        tab_unidad
+        INNER JOIN tab_fondo ON tab_unidad.fon_id = tab_fondo.fon_id
+        INNER JOIN tab_series ON tab_series.uni_id = tab_unidad.uni_id
+        INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
+        INNER JOIN tab_expisadg ON tab_expisadg.exp_id = tab_expediente.exp_id
+        INNER JOIN tab_exptransferencia ON tab_expediente.exp_id = tab_exptransferencia.exp_id
+        INNER JOIN tab_soltransferencia ON tab_soltransferencia.str_id = tab_exptransferencia.str_id
+        WHERE
+        tab_soltransferencia.str_estado = 2 AND
+        tab_expediente.exp_estado = 1 " . $where;
+
+        $usua = new usuario();
+        $subfondo = new fondo();
+        $seccion = new unidad();
+        $expedientes = new expediente();
+        $archivo = new tab_archivo();
+        $archivo2 = new tab_archivo();
+
+        $query = $archivo->dbSelectBySQL($sql);
+        $query2 = $archivo2->dbSelectBySQL($sql);
+        $query2 = $query2[0];
+        $usuarioOrigen = $usua->obtenerNombre($query2->usu_id);
+        $usuarioDestino = $usua->obtenerNombre($query2->usud_id);
+        $fond = $subfondo->obtenerfon($query2->usu_id);
+        $ob_seccion = $seccion->obtenerSeccion($query2->usu_id);
+
+        $cadena = "";
+        $cadena = "<br/><br/><br/><br/><br/><br/><br/>";
+
+        $cadena.='<br/><br/>';
+
+        $cadena.='<table width="740" border="1">';
+        $cadena.='<tr>';
+        $cadena.='Formulario de Relacion de Transferencias<br /></td>';
+        $cadena.='</tr>';
+        $cadena.='<tr>';
+        $cadena.='<td colspan="5"><blockquote>';
+        $cadena.='<b>Subfondo:</b> ' . $fond . '<br />';
         $cadena.='<b>Sección:</b> ';
-        if($ob_seccion->tab_sec==""){
-               $cadena.=$ob_seccion->uni_descripcion.'<br />';
-        }else{
-        $cadena.=$ob_seccion->tab_sec.'<br />';
+        if ($ob_seccion->tab_sec == "") {
+            $cadena.=$ob_seccion->uni_descripcion . '<br />';
+        } else {
+            $cadena.=$ob_seccion->tab_sec . '<br />';
         }
         $cadena.='<b>Subsección:</b> ';
-        if($ob_seccion->tab_sec<>""){
-             $cadena.=$ob_seccion->uni_descripcion; 
+        if ($ob_seccion->tab_sec <> "") {
+            $cadena.=$ob_seccion->uni_descripcion;
         }
-    $cadena.='</blockquote></td>';
-    $cadena.='<td colspan="5"  ><blockquote><b>Nº de transferencia:</b> '.$query2->str_id;
-    $cadena.='<br /><b>Dirección  y Teléfono:</b> '.$query2->str_direccion.' '.$query2->str_telefono.'</blockquote></td>';
-  $cadena.='</tr>';
-   $cadena.='<tr>';
-     $cadena.='<td width="20" rowspan="2" align="center"><strong>Nº</strong></td>';
-     $cadena.='<td width="140" rowspan="2"><strong>Serie</strong></td>';
-     $cadena.='<td width="100" rowspan="2"><strong>Subserie</strong></td>';
-     $cadena.='<td width="110" rowspan="2"><strong>Título del expediente</strong></td>';
-     $cadena.='<td width="80" rowspan="2"><strong>Codigo de Referencia</strong></td>';
-     $cadena.='<td colspan="2" width="130"><strong>Fechas extremas</strong></td>';
-     $cadena.='<td width="30" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
-     $cadena.='<td width="30" rowspan="2"><strong>Cajas</strong></td>';
-     $cadena.='<td width="30" rowspan="2"><strong>M.L.</strong></td>';
-     $cadena.='<td width="60" rowspan="2"><p><strong>Observ.</strong></p></td>';
-   $cadena.='</tr>';
-   $cadena.='<tr>';
-     $cadena.='<td width="65"><strong>Inicio</strong></td>';
-     $cadena.='<td width="65"><strong>Final</strong></td>';
-   $cadena.='</tr>';
+        $cadena.='</blockquote></td>';
+        $cadena.='<td colspan="5"  ><blockquote><b>Nº de transferencia:</b> ' . $query2->str_id;
+        $cadena.='<br /><b>Dirección  y Teléfono:</b> ' . $query2->str_direccion . ' ' . $query2->str_telefono . '</blockquote></td>';
+        $cadena.='</tr>';
+        $cadena.='<tr>';
+        $cadena.='<td width="20" rowspan="2" align="center"><strong>Nº</strong></td>';
+        $cadena.='<td width="140" rowspan="2"><strong>Serie</strong></td>';
+        $cadena.='<td width="100" rowspan="2"><strong>Subserie</strong></td>';
+        $cadena.='<td width="110" rowspan="2"><strong>Título del expediente</strong></td>';
+        $cadena.='<td width="80" rowspan="2"><strong>Codigo de Referencia</strong></td>';
+        $cadena.='<td colspan="2" width="130"><strong>Fechas extremas</strong></td>';
+        $cadena.='<td width="30" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
+        $cadena.='<td width="30" rowspan="2"><strong>Cajas</strong></td>';
+        $cadena.='<td width="30" rowspan="2"><strong>M.L.</strong></td>';
+        $cadena.='<td width="60" rowspan="2"><p><strong>Observ.</strong></p></td>';
+        $cadena.='</tr>';
+        $cadena.='<tr>';
+        $cadena.='<td width="65"><strong>Inicio</strong></td>';
+        $cadena.='<td width="65"><strong>Final</strong></td>';
+        $cadena.='</tr>';
 
-  $sum=0;$sum2=0;
-  $i=1;
-  foreach($query as $row){  $tabserie=new tab_series();
-      if($row->exp_fecha_exi==""){ 
-          $fei="";
-      }else{
-        $fechainicial=explode("-",$row->exp_fecha_exi);
-      $fei=$fechainicial[2]."/".$fechainicial[1]."/".$fechainicial[0];}
-      if($row->exp_fecha_exf==""){ 
-          $fef="";
-      }else{
-     $fechafinal=explode("-",$row->exp_fecha_exf);
-     $fef=$fechafinal[2]."/".$fechafinal[1]."/".$fechafinal[0];
-      }
-      if($row->ser_par==""){$ser_id=0;}else{$ser_id=$row->ser_par;}
-      $obtenerSubserie=$tabserie->dbselectByField("ser_id",$ser_id);
-   
-      $u=0;
-      foreach($obtenerSubserie as $ver){
-          $u++;
-          $cte=$ver->ser_categoria;
-      }
-  $cadena.='<tr>';
-    $cadena.='<td align="center">'.$i.'</td>';
-    $cadena.='<td>';
-    if($u==0){
-        $cadena.=$row->ser_categoria;
-    }else{
-        $cadena.=$cte;
-    }
-    
-    
-    $cadena.='</td>';
-    $cadena.='<td>';
-     if($u<>0){
-        $cadena.=$row->ser_categoria;
-     }
-     $sum=$sum+$expedientes->cantidadExpedientes($row->exp_id);
-     $sum2=$sum2+$row->str_nrocajas;
-    $cadena.='</td>';
-    $cadena.='<td align="center">'.$row->exp_titulo.'</td>';
-    $cadena.='<td align="center">'.$row->fon_codigo. DELIMITER . $row->uni_codigo. DELIMITER . $row->ser_codigo. DELIMITER . $row->exp_codigo.'</td>';
-  
-    $cadena.='<td align="center">'.$fei.'</td>';
-    $cadena.='<td align="center">'.$fef.'</td>';
-    $cadena.='<td align="center">'.$expedientes->cantidadExpedientes($row->exp_id).'</td>';
-    $cadena.='<td align="center">'.$row->str_nrocajas.'</td>';
-    $cadena.='<td align="center">'.$row->str_totml.'</td>';
-    $cadena.='<td>'.$row->exp_obs.'</td>';
-  $cadena.='</tr>';
-  $i++;
-  
-  }
-  $cadena.='<tr>';
-    $cadena.='<td colspan="6" align="right" >TOTAL</td>';
-    $cadena.='<td align="center">'.$sum.'</td>';
-    $cadena.='<td align="center">'.$sum2.'</td>';
-    $cadena.='<td>&nbsp;</td>';
-    $cadena.='<td>&nbsp;</td>';
-  $cadena.='</tr>';
-$cadena.='</table>';
-$fecha=explode("-",$query2->str_fecha);
-        $anio=$fecha[0];
-        $mes=$fecha[1];
-        $dia=$fecha[2];
-        switch($mes){
-         case 1:$mes="Enero";break;
-         case 2:$mes="Enero";break; 
-         case 3:$mes="Enero";break; 
-         case 4:$mes="Enero";break; 
-         case 5:$mes="Enero";break; 
-         case 6:$mes="Enero";break; 
-         case 7:$mes="Enero";break; 
-         case 8:$mes="Enero";break; 
-         case 9:$mes="Enero";break; 
-         case 10:$mes="Enero";break; 
-         case 11:$mes="Enero";break; 
-         case 12:$mes="Enero";break;   
+        $sum = 0;
+        $sum2 = 0;
+        $i = 1;
+        foreach ($query as $row) {
+            $tabserie = new tab_series();
+            if ($row->exp_fecha_exi == "") {
+                $fei = "";
+            } else {
+                $fechainicial = explode("-", $row->exp_fecha_exi);
+                $fei = $fechainicial[2] . "/" . $fechainicial[1] . "/" . $fechainicial[0];
+            }
+            if ($row->exp_fecha_exf == "") {
+                $fef = "";
+            } else {
+                $fechafinal = explode("-", $row->exp_fecha_exf);
+                $fef = $fechafinal[2] . "/" . $fechafinal[1] . "/" . $fechafinal[0];
+            }
+            if ($row->ser_par == "") {
+                $ser_id = 0;
+            } else {
+                $ser_id = $row->ser_par;
+            }
+            $obtenerSubserie = $tabserie->dbselectByField("ser_id", $ser_id);
+
+            $u = 0;
+            foreach ($obtenerSubserie as $ver) {
+                $u++;
+                $cte = $ver->ser_categoria;
+            }
+            $cadena.='<tr>';
+            $cadena.='<td align="center">' . $i . '</td>';
+            $cadena.='<td>';
+            if ($u == 0) {
+                $cadena.=$row->ser_categoria;
+            } else {
+                $cadena.=$cte;
+            }
+
+
+            $cadena.='</td>';
+            $cadena.='<td>';
+            if ($u <> 0) {
+                $cadena.=$row->ser_categoria;
+            }
+            $sum = $sum + $expedientes->cantidadExpedientes($row->exp_id);
+            $sum2 = $sum2 + $row->str_nrocajas;
+            $cadena.='</td>';
+            $cadena.='<td align="center">' . $row->exp_titulo . '</td>';
+            $cadena.='<td align="center">' . $row->fon_codigo . DELIMITER . $row->uni_codigo . DELIMITER . $row->ser_codigo . DELIMITER . $row->exp_codigo . '</td>';
+
+            $cadena.='<td align="center">' . $fei . '</td>';
+            $cadena.='<td align="center">' . $fef . '</td>';
+            $cadena.='<td align="center">' . $expedientes->cantidadExpedientes($row->exp_id) . '</td>';
+            $cadena.='<td align="center">' . $row->str_nrocajas . '</td>';
+            $cadena.='<td align="center">' . $row->str_totml . '</td>';
+            $cadena.='<td>' . $row->exp_obs . '</td>';
+            $cadena.='</tr>';
+            $i++;
         }
-$cadena.='Fecha de la transferencia: '.$dia.' de '.$mes.' de '.$anio;
-$cadena.='<br/>';
+        $cadena.='<tr>';
+        $cadena.='<td colspan="6" align="right" >TOTAL</td>';
+        $cadena.='<td align="center">' . $sum . '</td>';
+        $cadena.='<td align="center">' . $sum2 . '</td>';
+        $cadena.='<td>&nbsp;</td>';
+        $cadena.='<td>&nbsp;</td>';
+        $cadena.='</tr>';
+        $cadena.='</table>';
+        $fecha = explode("-", $query2->str_fecha);
+        $anio = $fecha[0];
+        $mes = $fecha[1];
+        $dia = $fecha[2];
+        switch ($mes) {
+            case 1:$mes = "Enero";
+                break;
+            case 2:$mes = "Enero";
+                break;
+            case 3:$mes = "Enero";
+                break;
+            case 4:$mes = "Enero";
+                break;
+            case 5:$mes = "Enero";
+                break;
+            case 6:$mes = "Enero";
+                break;
+            case 7:$mes = "Enero";
+                break;
+            case 8:$mes = "Enero";
+                break;
+            case 9:$mes = "Enero";
+                break;
+            case 10:$mes = "Enero";
+                break;
+            case 11:$mes = "Enero";
+                break;
+            case 12:$mes = "Enero";
+                break;
+        }
+        $cadena.='Fecha de la transferencia: ' . $dia . ' de ' . $mes . ' de ' . $anio;
+        $cadena.='<br/>';
 
 
         require_once ('tcpdf/config/lang/eng.php');
@@ -481,13 +498,13 @@ $cadena.='<br/>';
         $pdf = new TCPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->setFontSubsetting(FALSE);
-         $pdf->SetAuthor("ITEAM");
+        $pdf->SetAuthor("ITEAM");
         $pdf->SetTitle('Reporte de Transferencia');
         $pdf->SetSubject('Reporte de Transferencia');
 //        aumentado
         $pdf->SetKeywords('Iteam, TEAM DIGITAL');
         // set default header data
-        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'ABC', 'ADMINISTRADORA BOLIVIANA DE CARRETERAS (ABC)');
+        $pdf->SetHeaderData('logo_abc_comp.png', 20, '', '');
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 //        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -509,37 +526,35 @@ $cadena.='<br/>';
 
 //        $pdf->SetXY(110, 200);
         $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
-$cadena2="";
- $cadena2.="<br/><br/><br/><br/>";
-  $cadena2.='<table width="740" border="0">';
-  $cadena2.='<tr>';
-    $cadena2.='<td width="100" height="100" ></td><td width="160" align="center" >';
-    $cadena2.='<h4 style="border-top:1px solid black">Archivista Remitente<br>'.$usuarioOrigen.'</h4>';
-    $cadena2.='</td><td width="100"></td>';
-    $cadena2.='<td width="100" ></td><td width="150" align="center">';
-$cadena2.='<h4 style="border-top:1px solid black">Archivista de Recepción<br>'.$usuarioDestino.'</h4></td>';
-$cadena2.='<td width="100"></td></tr>';
-$cadena2.='</table>';
-        
-        
-        
-        $cadena = $cadena.$cadena2;
+        $cadena2 = "";
+        $cadena2.="<br/><br/><br/><br/>";
+        $cadena2.='<table width="740" border="0">';
+        $cadena2.='<tr>';
+        $cadena2.='<td width="100" height="100" ></td><td width="160" align="center" >';
+        $cadena2.='<h4 style="border-top:1px solid black">Archivista Remitente<br>' . $usuarioOrigen . '</h4>';
+        $cadena2.='</td><td width="100"></td>';
+        $cadena2.='<td width="100" ></td><td width="150" align="center">';
+        $cadena2.='<h4 style="border-top:1px solid black">Archivista de Recepción<br>' . $usuarioDestino . '</h4></td>';
+        $cadena2.='<td width="100"></td></tr>';
+        $cadena2.='</table>';
+
+
+
+        $cadena = $cadena . $cadena2;
         $pdf->writeHTML($cadena, true, false, false, false, '');
 
         // -----------------------------------------------------------------------------
         //Close and output PDF document
-     //   $pdf->Output('reporte_transferencia.pdf', 'D');
-          $pdf->Output('reporte_transferencia.pdf', 'I');
-     
+        //   $pdf->Output('reporte_transferencia.pdf', 'D');
+        $pdf->Output('reporte_transferencia.pdf', 'I');
     }
-    
-    
+
     function loadExp() {
-                 $id_transferencia="";
-  if(isset($_SESSION['id_transferencia'])){
-    $id_transferencia=$_SESSION['id_transferencia'];
-    //$id_listar=$_SESSION['id_lista'];
-  }
+        $id_transferencia = "";
+        if (isset($_SESSION['id_transferencia'])) {
+            $id_transferencia = $_SESSION['id_transferencia'];
+            //$id_listar=$_SESSION['id_lista'];
+        }
         $this->series = new series ();
         $this->expediente = new tab_expediente ();
         $this->expediente->setRequest2Object($_REQUEST);
@@ -566,25 +581,22 @@ $cadena2.='</table>';
             if ($qtype == 'exp_id')
                 $where .= " and tab_expediente.exp_id LIKE '$query' ";
             elseif ($qtype == 'ser_categoria')
-                if ($query=='TODOS'){
+                if ($query == 'TODOS') {
                     $where .= "";
-                }
-                else{
+                } else {
                     $where .= " and tab_series.ser_categoria LIKE '%$query%' ";
-                }
-            elseif ($qtype == 'custodio') {
+                } elseif ($qtype == 'custodio') {
                 $nomArray = explode(" ", $query);
                 foreach ($nomArray as $nom) {
                     $where .= " and (tab_usuario.usu_nombres LIKE '%$nom%' OR tab_usuario.usu_apellidos LIKE '%$nom%') ";
                 }
-            }else{
-                if ($query=='TODOS'){
+            } else {
+                if ($query == 'TODOS') {
                     $where .= "";
-                }else{
+                } else {
                     $where .= " and $qtype LIKE '%$query%' ";
                 }
             }
-                
         }
 
         $sql = "SELECT
@@ -628,10 +640,12 @@ $cadena2.='</table>';
         $expediente = new expediente ();
         $result = $this->expediente->dbselectBySQL($sql);
         $total = $expediente->countExp2($where);
-              if($id_transferencia<>""){
-                  $explode=explode(",",$id_transferencia);
-                $cantidad=  count($explode);	
-        }else{$cantidad=0;}
+        if ($id_transferencia <> "") {
+            $explode = explode(",", $id_transferencia);
+            $cantidad = count($explode);
+        } else {
+            $cantidad = 0;
+        }
         /* header ( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
           header ( "Cache-Control: no-cache, must-revalidate" );
           header ( "Pragma: no-cache" ); */
@@ -642,32 +656,32 @@ $cadena2.='</table>';
         $json .= "total: $total,\n";
         $json .= "rows: [";
         $rc = false;
-        $i = 0;$j=1;
-        $si=0;
+        $i = 0;
+        $j = 1;
+        $si = 0;
         foreach ($result as $un) {
-           
-            for($t=0;$t<$cantidad;$t++){
-                 if($explode[$t]==$un->exp_id){
-                $si=1;
-                    }
+
+            for ($t = 0; $t < $cantidad; $t++) {
+                if ($explode[$t] == $un->exp_id) {
+                    $si = 1;
+                }
             }
-            if($si==1){
-                 $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   checked=\"checked\"/>";
-            $si=0;
-                 
-            }else{
-                $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
+            if ($si == 1) {
+                $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk" . $j . "\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   checked=\"checked\"/>";
+                $si = 0;
+            } else {
+                $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk" . $j . "\"  type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
             }
-            
-            
+
+
             if ($rc)
                 $json .= ",";
             $json .= "\n{";
-            $json .= "id:'" . $un->exp_id . "',";            
-            $json .= "cell:['" . $un->exp_id . "'";            
+            $json .= "id:'" . $un->exp_id . "',";
+            $json .= "cell:['" . $un->exp_id . "'";
             $json .= ",'" . $chk . "'";
-            
-            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo .  DELIMITER . $un->exp_codigo) . "'";
+
+            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo . DELIMITER . $un->exp_codigo) . "'";
             $json .= ",'" . addslashes($un->ser_categoria) . "'";
             $json .= ",'" . addslashes($un->exp_titulo) . "'";
             //$json .= ",'" . addslashes($un->exp_descripcion) . "'";
@@ -676,21 +690,21 @@ $cadena2.='</table>';
             $json .= ",'" . addslashes($expediente->obtenerCustodios($un->exp_id)) . "'";
             $json .= "]}";
             $rc = true;
-            $i++;$j++;
+            $i++;
+            $j++;
         }
         $json .= "]\n";
         $json .= "}";
         echo $json;
-
     }
-    
- function gridtransferencia(){
-     
-                        $id_transferencia="";
-  if(isset($_SESSION['id_transferencia'])){
-    $id_transferencia=$_SESSION['id_transferencia'];
-    //$id_listar=$_SESSION['id_lista'];
-  }
+
+    function gridtransferencia() {
+
+        $id_transferencia = "";
+        if (isset($_SESSION['id_transferencia'])) {
+            $id_transferencia = $_SESSION['id_transferencia'];
+            //$id_listar=$_SESSION['id_lista'];
+        }
         $this->series = new series ();
         $this->expediente = new tab_expediente ();
         $this->expediente->setRequest2Object($_REQUEST);
@@ -717,40 +731,36 @@ $cadena2.='</table>';
             if ($qtype == 'exp_id')
                 $where .= " and tab_expediente.exp_id LIKE '$query' ";
             elseif ($qtype == 'ser_categoria')
-                if ($query=='TODOS'){
+                if ($query == 'TODOS') {
                     $where .= "";
-                }
-                else{
+                } else {
                     $where .= " and tab_series.ser_categoria LIKE '%$query%' ";
-                }
-            elseif ($qtype == 'custodio') {
+                } elseif ($qtype == 'custodio') {
                 $nomArray = explode(" ", $query);
                 foreach ($nomArray as $nom) {
                     $where .= " and (tab_usuario.usu_nombres LIKE '%$nom%' OR tab_usuario.usu_apellidos LIKE '%$nom%') ";
                 }
-            }else{
-                if ($query=='TODOS'){
+            } else {
+                if ($query == 'TODOS') {
                     $where .= "";
-                }else{
+                } else {
                     $where .= " and $qtype LIKE '%$query%' ";
                 }
             }
-                
         }
         //$where2="";
-       $valor3="";
-      // $where="AND tab_expediente.exp_id=23 or tab_expediente.exp_id=24";
- if($id_transferencia<>""){
-                 $explode3=explode(",",$id_transferencia);
-                $cantidad3=  count($explode3);	
-                for($i=0;$i<$cantidad3;$i++){
-					$valor3.="tab_expediente.exp_id='".$explode3[$i]."'";
-					if($i<$cantidad3-1){
-					$valor3.=" or ";
-					}
+        $valor3 = "";
+        // $where="AND tab_expediente.exp_id=23 or tab_expediente.exp_id=24";
+        if ($id_transferencia <> "") {
+            $explode3 = explode(",", $id_transferencia);
+            $cantidad3 = count($explode3);
+            for ($i = 0; $i < $cantidad3; $i++) {
+                $valor3.="tab_expediente.exp_id='" . $explode3[$i] . "'";
+                if ($i < $cantidad3 - 1) {
+                    $valor3.=" or ";
                 }
-       $where .= " AND $valor3 ";              
-        
+            }
+            $where .= " AND $valor3 ";
         }
         $sql = "SELECT
                 tab_fondo.fon_cod,
@@ -800,18 +810,19 @@ $cadena2.='</table>';
         $json .= "total: $total,\n";
         $json .= "rows: [";
         $rc = false;
-        $i = 0;$j=1;
-        $si=0;
+        $i = 0;
+        $j = 1;
+        $si = 0;
         foreach ($result as $un) {
-               $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk".$j."\"   checked=\"checked\" type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
+            $chk = "<input id=\"chk_" . $un->exp_id . "\" restric=\"" . $un->exp_id . "\" class=\"fil_chk" . $j . "\"   checked=\"checked\" type=\"checkbox\" value=\"" . $un->exp_id . "\"   />";
             if ($rc)
                 $json .= ",";
             $json .= "\n{";
-            $json .= "id:'" . $un->exp_id . "',";            
-            $json .= "cell:['" . $un->exp_id . "'";            
+            $json .= "id:'" . $un->exp_id . "',";
+            $json .= "cell:['" . $un->exp_id . "'";
             $json .= ",'" . $chk . "'";
-            
-            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo .  DELIMITER . $un->exp_codigo) . "'";
+
+            $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo . DELIMITER . $un->exp_codigo) . "'";
             $json .= ",'" . addslashes($un->ser_categoria) . "'";
             $json .= ",'" . addslashes($un->exp_titulo) . "'";
             //$json .= ",'" . addslashes($un->exp_descripcion) . "'";
@@ -820,14 +831,13 @@ $cadena2.='</table>';
             $json .= ",'" . addslashes($expediente->obtenerCustodios($un->exp_id)) . "'";
             $json .= "]}";
             $rc = true;
-            $i++;$j++;
+            $i++;
+            $j++;
         }
         $json .= "]\n";
         $json .= "}";
         echo $json;
-
-
- }
+    }
 
     function loadTransf() {
         //trn_confirmado indica lugar: Fondo-Institucion,
@@ -856,23 +866,20 @@ $cadena2.='</table>';
             if ($qtype == 'exp_id')
                 $where = " and tab_transferencia.exp_id LIKE '$query' ";
             elseif ($qtype == 'ser_categoria')
-                if ($query=='TODOS'){
+                if ($query == 'TODOS') {
                     $where .= "";
-                }
-                else{                
+                } else {
                     $where = " and tab_series.ser_categoria LIKE '%$query%' ";
-                }
-            else{
-                if ($query=='TODOS'){
+                } else {
+                if ($query == 'TODOS') {
                     $where .= "";
-                }
-                else{                
+                } else {
                     $where = " and $qtype LIKE '%$query%' ";
                 }
             }
         }
 
-        
+
         $sql = "SELECT
                 tab_soltransferencia.str_id,
                 tab_soltransferencia.str_fecha,
@@ -894,8 +901,8 @@ $cadena2.='</table>';
                 WHERE 
                 tab_soltransferencia.str_estado = 1 AND
                 tab_soltransferencia.usu_id = " . $_SESSION['USU_ID'] . "
-                $where $sort $limit";        
-        
+                $where $sort $limit";
+
         $soltransferencia = new soltransferencia ();
         $result = $this->soltransferencia->dbselectBySQL($sql);
         $total = $soltransferencia->countExp2($where);
@@ -915,13 +922,13 @@ $cadena2.='</table>';
             if ($rc)
                 $json .= ",";
             $json .= "\n{";
-            $json .= "id:'" . $un->str_id . "',";            
+            $json .= "id:'" . $un->str_id . "',";
             $json .= "cell:['" . $un->str_id . "'";
             $json .= ",'" . addslashes($un->str_fecha) . "'";
             $json .= ",'" . addslashes($un->uni_descripcion) . "'";
             $json .= ",'" . addslashes($un->usu_nombres) . "'";
             $json .= ",'" . addslashes($un->unid_descripcion) . "'";
-            $json .= ",'" . addslashes($un->usud_nombres) . "'";            
+            $json .= ",'" . addslashes($un->usud_nombres) . "'";
             $json .= ",'" . addslashes($un->str_nrocajas) . "'";
             $json .= ",'" . addslashes($un->str_totpzas) . "'";
             $json .= ",'" . addslashes($un->str_totml) . "'";
@@ -935,10 +942,8 @@ $cadena2.='</table>';
         $json .= "]\n";
         $json .= "}";
         echo $json;
-
     }
 
-    
     function view() {
         $this->transferencia = new tab_transferencia ();
         $this->transferencia->setRequest2Object($_REQUEST);
@@ -978,34 +983,34 @@ $cadena2.='</table>';
         // Lista de expedientes
         $ids = substr($_REQUEST['idsExp'], 0, -1);
         $array = explode(",", $ids);
-               
+
         // tab_soltransferencia
         $soltransferencia = new tab_soltransferencia ();
         $soltransferencia->setStr_fecha(date('Y-m-d'));
         $soltransferencia->setUni_id($_REQUEST['uni_id']);
         $soltransferencia->setUsu_id($_REQUEST['usu_id']);
         $soltransferencia->setUnid_id($_REQUEST['trn_uni_destino']);
-        $soltransferencia->setUsud_id($_REQUEST['trn_usuario_des']);        
+        $soltransferencia->setUsud_id($_REQUEST['trn_usuario_des']);
         $soltransferencia->setStr_nrocajas(1);
         $soltransferencia->setStr_totpzas(1);
         $soltransferencia->setStr_totml(1);
-        $soltransferencia->setStr_nroreg(1);        
+        $soltransferencia->setStr_nroreg(1);
         $soltransferencia->setStr_fecini(date('Y-m-d'));
-        $soltransferencia->setStr_fecfin(date('Y-m-d'));                
+        $soltransferencia->setStr_fecfin(date('Y-m-d'));
         $soltransferencia->setStr_estado(1);
         $str_id = $soltransferencia->insert();
 
         $exptransferencia = new tab_exptransferencia();
         if (count($array) > 0) {
-            for ($x=0;$x<count($array); $x++) {               
+            for ($x = 0; $x < count($array); $x++) {
                 // tab_exptransferencia
                 $exptransferencia->setStr_id($str_id);
-                $exptransferencia->setEtr_orden($x+1);
+                $exptransferencia->setEtr_orden($x + 1);
                 $exptransferencia->setExp_id($array[$x]);
                 $exptransferencia->setEtr_obs("Ninguna");
                 $exptransferencia->setEtr_estado(1);
                 $exptransferencia->insert();
-                
+
                 // tab_expusuario
                 $expediente = new expediente();
                 $eus_id = $expediente->obtenerExpUsuarioId($array[$x]);
@@ -1024,17 +1029,18 @@ $cadena2.='</table>';
                 $this->expusuariod->setUsu_id($_REQUEST['trn_usuario_des']);
                 $this->expusuariod->setExp_id($array[$x]);
                 $this->expusuariod->setEus_estado(3);
-                $eus_id = $this->expusuariod->insert();                
-                                
+                $eus_id = $this->expusuariod->insert();
             }
-        } 
-        
+        }
     }
 
     function verifSerie() {
         $ids = $_REQUEST['Ids'];
-        $array = explode(",",$ids);$res = "";$t=0;
-        $tususer = new tab_usu_serie();  $num=0;      
+        $array = explode(",", $ids);
+        $res = "";
+        $t = 0;
+        $tususer = new tab_usu_serie();
+        $num = 0;
         foreach ($array as $valor) {
             $sql = "";
             $sql = "SELECT
@@ -1051,22 +1057,21 @@ $cadena2.='</table>';
                 AND tab_series.ser_estado = 1
                 AND tab_expediente.exp_estado = 1
                 AND tab_usuario.usu_id = '" . $_REQUEST['usu_id'] . "' 
-                AND tab_expediente.exp_id = '" . $valor . "'" ;
-           
-            
-            $num = $tususer->countBySQL($sql);
-            
-            if ($num == 0) {
-              
-             if($t>0){
-                 $res.=",";
-             } 
-             $t++;
-             $res .= $valor;
-            }         
+                AND tab_expediente.exp_id = '" . $valor . "'";
 
+
+            $num = $tususer->countBySQL($sql);
+
+            if ($num == 0) {
+
+                if ($t > 0) {
+                    $res.=",";
+                }
+                $t++;
+                $res .= $valor;
+            }
         }
-        
+
 
         echo $res;
     }
@@ -1075,13 +1080,12 @@ $cadena2.='</table>';
         $this->usu = new usuario();
         echo $this->usu->listUsuarioJson();
     }
-    
-    
+
     function verRpte() {
         $where = "";
         $str_id = VAR3;
         $fecha_actual = date("d/m/Y");
-        
+
         $sql = "SELECT
                 tab_soltransferencia.str_id,
                 (SELECT uni_descripcion from tab_unidad WHERE uni_estado = 1 AND uni_id=tab_soltransferencia.uni_id) AS uni_descripcion,
@@ -1137,9 +1141,9 @@ $cadena2.='</table>';
 
         $soltransferencia = new tab_soltransferencia();
         $result = $soltransferencia->dbselectBySQL($sql);
-        
+
         $this->usuario = new usuario ();
-        
+
         // PDF
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
@@ -1170,7 +1174,7 @@ $cadena2.='</table>';
         $pdf->AddPage();
         // Report
         $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
-        
+
         $cadena = "<br/><br/><br/><br/><br/>";
         $cadena .= '<table width="780" border="0" >';
         $cadena .= '<tr><td align="center">';
@@ -1180,16 +1184,16 @@ $cadena2.='</table>';
         $cadena .= '</td></tr>';
         foreach ($result as $fila) {
             $cadena .= '<tr><td align="left">Código: ' . $fila->str_id . '</td></tr>';
-            $cadena .= '<tr><td align="left">Sección Remitente: ' . $fila->uni_descripcion  . '</td></tr>';
-            $cadena .= '<tr><td align="left">Dirección y Teléfono: ' . $fila->ubi_direccion . "-" . $fila->ubi_descripcion  . " Tel. ".$fila->uni_tel . '</td></tr>';
+            $cadena .= '<tr><td align="left">Sección Remitente: ' . $fila->uni_descripcion . '</td></tr>';
+            $cadena .= '<tr><td align="left">Dirección y Teléfono: ' . $fila->ubi_direccion . "-" . $fila->ubi_descripcion . " Tel. " . $fila->uni_tel . '</td></tr>';
             //$cadena .= '<tr><td align="left"></td></tr>';
             $cadena .= '<tr><td align="left">Sección Destino: ' . $fila->unid_descripcion . '</td></tr>';
-            $cadena .= '<tr><td align="left">Dirección y Teléfono: ' . $fila->ubid_direccion . "-" . $fila->ubid_descripcion  . " Tel. ".$fila->unid_tel . '</td></tr>';
+            $cadena .= '<tr><td align="left">Dirección y Teléfono: ' . $fila->ubid_direccion . "-" . $fila->ubid_descripcion . " Tel. " . $fila->unid_tel . '</td></tr>';
             //$cadena .= '<tr><td align="left">Serie:' . $fila->str_id  . '</td></tr>';
             $cadena .= '</table>';
             break;
         }
-        
+
         // Header        
         $cadena .= '<table width="700" border="1">';
         $cadena .= '<tr>';
@@ -1204,15 +1208,15 @@ $cadena2.='</table>';
         foreach ($result as $fila) {
             $cadena .= '<tr>';
             $cadena .= '<td width="50"><div align="center">' . $numero . '</div></td>';
-            $cadena .= '<td width="100">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo .  '</td>';
+            $cadena .= '<td width="100">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . '</td>';
             $cadena .= '<td width="400">' . $fila->exp_titulo . '</td>';
             $cadena .= '<td width="100">' . $fila->exp_fecha_exi . " - " . $fila->exp_fecha_exf . '</td>';
             $cadena .= '<td width="100">' . $fila->exp_obs . '</td>';
             $cadena .= '</tr>';
             $numero++;
         }
-         $cadena .= '</table>';
-        
+        $cadena .= '</table>';
+
         // Footer        
         $cadena .= '<table width="780" border="0" >';
         foreach ($result as $fila) {
@@ -1221,18 +1225,17 @@ $cadena2.='</table>';
             $cadena .= '<tr><td align="left">Recibí conforme: ' . $fila->usud_nombres . '</td></tr>';
             $cadena .= '</table>';
             break;
-        }        
-        
-        
-       
+        }
+
+
+
         //echo ($cadena);
         $pdf->writeHTML($cadena, true, false, false, false, '');
 
         // -----------------------------------------------------------------------------
         //Close and output PDF document
         $pdf->Output('reporte_transferencia.pdf', 'I');
-    }    
-   
+    }
 
 }
 

@@ -70,9 +70,9 @@
             {name: 'Borrar', bclass: 'delete', onpress : test},{separator: true},
             {name: 'Borrar Todo', bclass: 'delete', onpress : test},{separator: true},
             {name: 'Marbetes', bclass: 'print', onpress : test},{separator: true},
-            {name: 'Cajas', bclass: 'print', onpress : test},{separator: true},
+            {name: 'Archivos', bclass: 'print', onpress : test},{separator: true},
             {name: 'Caratulas', bclass: 'print', onpress : test},{separator: true},            
-            {name: 'Folders', bclass: 'print', onpress : test}<?php echo ($PATH_B != '' ? ',' . $PATH_B : '') ?>
+            {name: 'Cajas', bclass: 'print', onpress : test}<?php echo ($PATH_B != '' ? ',' . $PATH_B : '') ?>
         ],
         searchitems : [
             {display: 'Id', name : 'exp_id'},
@@ -230,7 +230,7 @@
             }else{
                 alert("Seleccione un registro");
             }            
-        }else if (com=='Folders'){
+        }else if (com=='Archivos'){
             if($('.trSelected div',grid).html()){        
                 $('#tipo').val('folders');
                 $("#exp_id").val($('.trSelected div',grid).html());
