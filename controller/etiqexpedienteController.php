@@ -629,11 +629,13 @@ class etiqexpedienteController extends baseController {
 
         foreach ($result as $value) {
             $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo .  DELIMITER . $value->fil_codigo;        
-
+            $fil_id = str_pad($value->fil_id, 10, "0", STR_PAD_LEFT);
             //  BAR CODE
             // CODE 39 + CHECKSUM
-            $pdf->Cell(0, 0, $codigo, 0, 1);
-            $pdf->write1DBarcode($codigo, 'C39', '', '', '', 18, 0.4, $style, 'N');
+            $pdf->SetFont('helvetica', '', 23);
+            $pdf->Cell(0, 0, $codigo, 0, 1);            
+            $pdf->SetFont('helvetica', '', 11);
+            $pdf->write1DBarcode($fil_id, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
             
 //            // BAR CODE 2
