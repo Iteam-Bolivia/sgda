@@ -17,6 +17,8 @@
                     <option value="FECHA_EXI">FECHA EXTREMA INICIAL</option>
                     <option value="FECHA_EXF">FECHA EXTREMA FINAL</option>
                 </select>
+                <span class="error-requerid">*</span>
+            
             </td>
         </tr>
 

@@ -35,6 +35,8 @@ class rpteTransferenciaController Extends baseController {
 
     function verRpte() {
 
+        $tipo=$_REQUEST['tipo'];
+        
         $tipo_clasificado = $_REQUEST["tipo_clasificado"];
         if ($tipo_clasificado == "SERIE") {
             $this->verRpte_series();

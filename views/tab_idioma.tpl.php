@@ -18,7 +18,9 @@
                        type="text" 
                        title="código" 
                        value="<?php echo $idi_codigo; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td>Nombre:</td>
@@ -31,7 +33,9 @@
                        type="text" 
                        title="nombre"
                        value="<?php echo $idi_nombre; ?>" 
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td colspan="2" class="botones">

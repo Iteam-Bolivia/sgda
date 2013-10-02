@@ -33,6 +33,7 @@
                        title="Titulo del menu"
                        type="text"                       
                        value="<?php echo $men_tit; ?>" />
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -48,6 +49,7 @@
                        title="Enlace"
                        type="text"                       
                        value="<?php echo $men_enlace; ?>" />
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 

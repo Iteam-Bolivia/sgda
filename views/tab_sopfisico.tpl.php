@@ -20,7 +20,9 @@
                        type="text"
                        title="Codigo" 
                        value="<?php echo $sof_codigo; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -33,7 +35,9 @@
                        onkeyup="this.value=this.value.toUpperCase()"
                        title="Nombre" 
                        type="text"size="35"
-                       value="<?php echo $sof_nombre; ?>"  /></td>
+                       value="<?php echo $sof_nombre; ?>"  />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>

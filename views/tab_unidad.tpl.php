@@ -15,7 +15,9 @@
                         title="Fondo documental">
                     <option value="">(seleccionar)</option>
                     <?php echo $fon_id; ?>
-                </select></td>
+                </select>
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -23,7 +25,9 @@
             <td><input name="uni_codigo" type="hidden" id="uni_codigo"
                        value="<?php echo $uni_codigo; ?>" maxlength="8" size="15" 
                        onkeyup="this.value=this.value.toUpperCase()"
-                       autocomplete="off" title="C&oacute;digo" /></td>            
+                       autocomplete="off" title="C&oacute;digo" />
+            
+            </td>            
             
         </tr>        
         
@@ -35,6 +39,7 @@
                                    maxlength="200" size="80" autocomplete="off"
                                    onkeyup="this.value=this.value.toUpperCase()"
                                    class="required alphanum" title="Descripci&oacute;n" />
+            <span class="error-requerid">*</span>
             </td>            
         </tr>
         
@@ -55,7 +60,9 @@
                                     title="Fase de archivo">
                     <option value="">(seleccionar)</option>
                     <?php echo $tar_id; ?>
-                </select></td>
+                </select>
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
    
@@ -65,7 +72,9 @@
                         title="Edificio">
                     <option value="">(seleccionar)</option>
                     <?php echo $ubi_id; ?>
-                </select></td>
+                </select>
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -74,7 +83,9 @@
                         title="Piso">
                     <option value="">(seleccionar)</option>
                     <?php echo $uni_piso; ?>
-                </select></td>
+                </select>
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>

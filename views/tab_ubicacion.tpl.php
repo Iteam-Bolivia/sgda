@@ -15,6 +15,7 @@
                     <option value="">(Seleccionar)</option>
                     <?php echo $dep_id; ?>
                 </select>
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -25,6 +26,7 @@
                     <option value="">(Seleccionar)</option>
                     <?php echo $pro_id; ?>
                 </select>
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -35,6 +37,7 @@
                     <option value="">(Seleccionar)</option>
                     <?php echo $loc_id; ?>
                 </select>
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -53,6 +56,7 @@
                        value="<?php echo $ubi_codigo; ?>"
                        />
                 <!-- -->
+                <span class="error-requerid">*</span>
             </td>
         </tr>
         <tr>
@@ -67,7 +71,9 @@
                                    title="Descripci&oacute;n"
                                    size="50" 
                                    value="<?php echo $ubi_descripcion; ?>"
-                                   /></td>
+                                   />
+                <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td>Direcci&oacute;n:</td>

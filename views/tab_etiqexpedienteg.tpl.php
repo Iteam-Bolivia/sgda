@@ -201,9 +201,11 @@
                 alert("Seleccione un registro");
             }            
         }else if (com=='Cajas'){
+        
             if($('.trSelected div',grid).html()){ 
                 $('#tipo').val('cajas');
                 $("#exp_id").val($('.trSelected div',grid).html());
+                
                 $.ajax({                    
                     url: "<?php echo $PATH_DOMAIN ?>/etiqexpediente/getNroInicial/",
                     type: "POST",

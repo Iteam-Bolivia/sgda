@@ -5,7 +5,7 @@
 <div class="clear"></div>
 
 <form id="formA" name="formA" method="post" class="validable"
-      action="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/<?php echo $PATH_EVENT ?>/">
+      action="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/<?php echo $PATH_EVENT ?>/" enctype="multipart/form-data">
     <input name="exp_id" id="exp_id" type="hidden" value="<?php echo $exp_id; ?>" />
     <caption class="titulo"><?php echo $titulo ?> Expediente</caption>
 
@@ -35,7 +35,7 @@
                     <select name="ser_id" id="ser_id" class="required">
                         <option value="" selected="selected">(seleccionar)</option>
                         <?php echo $series; ?>
-                    </select> 
+                    </select> <span class="error-requerid">*</span>
                 </td>
             </tr>
 
@@ -43,8 +43,8 @@
                 <td>T&iacute;tulo:</td>
                 <td colspan="3"><input name="exp_titulo" type="text" id="exp_titulo"
                                        value="<?php echo $exp_titulo; ?>" size="120" autocomplete="off"                                       
-                                       maxlength="1024" class="required alphanum" title="Titulo del expediente" /></td>
-            </tr>           
+                                       maxlength="1024" class="required alphanum" title="Titulo del expediente" />   <span class="error-requerid">*</span></td>
+         </tr>           
             
             
             <tr>
@@ -268,7 +268,7 @@
                 <select name="idi_id" id="idi_id" class="required">
                     <option value="" selected="selected">(seleccionar)</option>
                     <?php echo $idi_id; ?>
-                </select> 
+                </select> <span class="error-requerid">*</span>
             </td>
         </tr>        
         
@@ -278,7 +278,8 @@
                 <select name="exp_carfis" id="exp_carfis" class="required">
                     <option value="" selected="selected">(seleccionar)</option>
                     <?php echo $exp_carfis; ?>
-                </select>                 
+                </select> 
+                <span class="error-requerid">*</span>
            </td>
         </tr>
            
@@ -556,6 +557,18 @@
             </td>
         </tr>                    
         
+        <tr>
+            <td width="166">DOCUMENTO DIGITAL:</td>
+            <td colspan="3">
+            </td>
+        </tr>
+        <tr>
+            <td width="166">Escoger documento:</td>
+            <td>
+                <input type="file" name="archivo" id="archivo" 
+                        <?php //echo $required_archivo; ?> 
+                        title="Seleccione un archivo"/></td>
+        </tr>
     </table>
 </div>
 </p>
@@ -759,8 +772,6 @@ exp_fot*/
         for(i=0;i<cantidad;i++){
           
             if(s[i]=="."){
-             document.getElementById("exp_descripcion").value+=";";
-            }else if(s[i]=="-"){
              document.getElementById("exp_descripcion").value+=";";
             }else if(s[i]==","){
              document.getElementById("exp_descripcion").value+=";";

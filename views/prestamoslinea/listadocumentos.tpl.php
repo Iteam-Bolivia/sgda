@@ -45,6 +45,7 @@
                     <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
                        <?php } ?>
                 </select>
+                   <span class="error-requerid">*</span>
             </td>
         </tr>
              <tr>
@@ -57,7 +58,7 @@
                    foreach($dato as $row){ ?>
                     <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
                        <?php } ?>
-                </select>
+                </select>   <span class="error-requerid">*</span>
             </td>
         </tr>
 

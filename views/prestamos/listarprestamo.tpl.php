@@ -36,6 +36,8 @@
             {name: 'Devolver', bclass: 'devolt', onpress : test},
             {separator: true},
             {name: 'Reporte', bclass: 'pdf', onpress : test},
+            {name: 'Excel', bclass: 'page_excel', onpress : test},{separator: true},
+           
         ],
         searchitems : [
          
@@ -122,24 +124,14 @@
                 $.msgbox("Seleccione un registro especifico");
             }
        }
-        else if (com=='Editar'){
+        else if (com=='Excel'){
             if($('.trSelected div',grid).html()){
                 $("#spr_id").val($('.trSelected div',grid).html());
                 
-                var id=$('.trSelected div',grid).html();
-                
-            var url="<?php echo $PATH_DOMAIN ?>/prestamos/editprestamo/"+id+"/";
-           
-           
-           
-     jQuery.lightbox(url,{
-        'width'       : 390,
-        'height'      : 290,
-        'autoresize'  : false,
-      }  
-	  );
-             // $(".pReload",".flexigrid").click();
-            }
+     var id=$('.trSelected div',grid).html();          
+    window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/verRpte_prestamo/"+id+"/1/";
+
+           }
             else{
                 $.msgbox("Seleccione un registro especifico");
             }

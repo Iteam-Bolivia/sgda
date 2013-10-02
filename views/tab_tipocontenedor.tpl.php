@@ -19,6 +19,7 @@
                                     title="Abreviaci&oacute;n"
                                     value="<?php echo $ctp_codigo; ?>"
                                     />
+                <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -33,7 +34,9 @@
                                    type="text"
                                    title="Abreviaci&oacute;n"
                                    value="<?php echo $ctp_descripcion; ?>"
-                                   /></td>
+                                   />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>        
 
         <tr>

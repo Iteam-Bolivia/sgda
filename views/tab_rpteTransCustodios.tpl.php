@@ -13,7 +13,9 @@
                     <option value="SERIE">SERIE</option>
                     <option value="UNIDAD">UNIDAD</option>
                     <option value="FUNCIONARIO">FUNCIONARIO</option>
-                </select></td>
+                </select>
+                <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td>Ordenado por:</td>
@@ -27,7 +29,7 @@
                     <option value="NOMBRE_EXPEDIENTE">NOMBRE EXPEDIENTE</option>
                     <option value="CODIGO_REFERENCIA">CODIGO DE REFERENCIA</option>
                     <option value="FECHA_TRANS">FECHA DE TRANSFERENCIA</option>
-                </select>
+                </select> <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -73,7 +75,16 @@
                 <input type="text" name="f_presthasta"  id='f_presthasta'/>
             </td>
         </tr>
-
+       <tr>
+            <td>Archivo: </td>
+            <td>
+                
+                <select name="tipo">
+                    <option value="1">Pdf</option>
+                    <option value="2">Excel</option>
+                </select>
+            </td>
+        </tr>
 
 
         <tr>

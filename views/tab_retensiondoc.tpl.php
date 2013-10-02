@@ -18,7 +18,9 @@
                        size="20"
                        type="text"
                        value="<?php echo $red_codigo; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         
         <tr>
@@ -32,7 +34,9 @@
                        type="text"
                        title="nombre"
                        value="<?php echo $red_series; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -46,7 +50,9 @@
                        type="text" 
                        title="nombre"
                        value="<?php echo $red_tipodoc; ?>" 
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         
         <tr>
@@ -61,7 +67,9 @@
                        title="nombre"
                        value="<?php echo $red_valdoc; ?>"
                         
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>     
         
         <tr>
@@ -75,7 +83,9 @@
                        title="nombre"
                        type="text"
                         value="<?php echo $red_prearc; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>         
         
         <tr>

@@ -7,7 +7,7 @@
  * @version $Id$ 2013
  * @access public
  */
-class rpteInventarioController Extends baseController {
+class rpteInventarioExpedientesController Extends baseController {
 
     function index() {
 

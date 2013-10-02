@@ -14,7 +14,9 @@
             <td><input name="fon_codigo" type="text" id="fon_codigo"
                        value="<?php echo $fon_codigo; ?>" size="15" autocomplete="off"
                        onkeyup="this.value=this.value.toUpperCase()"
-                       class="required alphanumeric" maxlength="8" title="Código de Fondo" /></td>
+                       class="required alphanumeric" maxlength="8" title="Código de Fondo" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -22,7 +24,9 @@
             <td><input name="fon_descripcion" type="text" id="fon_descripcion"
                        value="<?php echo $fon_descripcion; ?>" size="75" autocomplete="off"
                        onkeyup="this.value=this.value.toUpperCase()"
-                       class="required alphanum" maxlength="100" title="Nombre" /></td>
+                       class="required alphanum" maxlength="100" title="Nombre" />
+            <span class="error-requerid">*</span>
+            </td>
             <td>    </td>
             <td><input name="fon_cod" type="hidden" id="fon_cod"
                        value="<?php echo $fon_cod; ?>" size="15" autocomplete="off" readonly

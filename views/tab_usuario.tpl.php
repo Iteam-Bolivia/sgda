@@ -16,7 +16,7 @@
                         title="Sección del Usuario">
                     <option value="">(seleccionar)</option>
                     <?php echo $uni_id; ?>
-                </select>
+                </select><span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -29,7 +29,7 @@
                         title="Rol del Usuario">
                     <option value="">-Seleccionar-</option>
                     <?php echo $roles; ?>
-                </select></td>
+                </select><span class="error-requerid">*</span></td>
 
             <td>Leer Documento Privado:</td>
             <td><select autocomplete="off"
@@ -62,7 +62,7 @@
                        size="35"
                        type="text"
                        value="<?php echo $usu_apellidos; ?>"
-                       title="Apellido(s)" />
+                       title="Apellido(s)" /><span class="error-requerid">*</span>
             </td>
         </tr>
 

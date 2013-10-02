@@ -164,7 +164,7 @@
                 <select name="idi_id" id="idi_id" title="Lengua del documento" class="required">
                     <option value="">(seleccionar)</option>
                     <?php echo $idi_id ?>
-                </select>
+                </select>   <span class="error-requerid">*</span>
             </td>
         </tr>        
 
@@ -611,8 +611,6 @@
         for(i=0;i<cantidad;i++){
           
             if(s[i]=="."){
-             document.getElementById("fil_descripcion").value+=";";
-            }else if(s[i]=="-"){
              document.getElementById("fil_descripcion").value+=";";
             }else if(s[i]==","){
              document.getElementById("fil_descripcion").value+=";";

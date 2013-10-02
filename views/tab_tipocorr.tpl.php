@@ -17,7 +17,9 @@
                        type="text"
                        title="código"
                        value="<?php echo $tco_codigo; ?>"
-                        /></td>
+                        />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td>Nombre:</td>
@@ -30,7 +32,9 @@
                        title="nombre"
                        type="text" 
                        value="<?php echo $tco_nombre; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td colspan="2" class="botones">

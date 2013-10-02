@@ -37,6 +37,8 @@
             {name: 'Devolver', bclass: 'devolt', onpress : test},
             {separator: true},
             {name: 'Reporte', bclass: 'pdf', onpress : test},
+            {separator: true},  
+            {name: 'Excel', bclass: 'page_excel', onpress : test},
             {separator: true},
             {name: 'Prestar', bclass: 'accept', onpress : test},
             {separator: true},
@@ -166,6 +168,17 @@ var url2="<?php echo $PATH_DOMAIN ?>/prestamosLinea/editEstSolPrestamo/";
                 $.msgbox("Seleccione un registro especifico");
             }
         
+        }        else if (com=='Excel'){
+            if($('.trSelected div',grid).html()){
+                $("#spr_id").val($('.trSelected div',grid).html());
+                
+     var id=$('.trSelected div',grid).html();          
+    window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/verRpte_prestamo/"+id+"/1/";
+
+           }
+            else{
+                $.msgbox("Seleccione un registro especifico");
+            }
         }
         
         

@@ -77,6 +77,7 @@
                         <option value="">(seleccionar)</option>
                         <?php echo $trn_uni_destino ?>
                     </select>
+                       <span class="error-requerid">*</span>
                 </td>
         </tr>
          
@@ -87,6 +88,7 @@
                         <option value="">(seleccionar)</option>
                         <?php echo $trn_usuario_des ?>
                     </select>
+                       <span class="error-requerid">*</span>
                 </td>
         </tr>
          

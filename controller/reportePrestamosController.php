@@ -34,14 +34,14 @@ class reportePrestamosController Extends baseController {
     }
 
     function verRpte() {
-
+$tipo_archivo=$_REQUEST['tipo'];
 $fecha_inicial=$_REQUEST['f_prestdesde'];
 $fecha_final=$_REQUEST['f_presthasta'];
-            $this->verRpte_serie($fecha_inicial,$fecha_final);
+            $this->verRpte_serie($fecha_inicial,$fecha_final,$tipo_archivo);
     
     }
 
-    function verRpte_serie($fi,$ff) {
+    function verRpte_serie($fi,$ff,$tipo_archivo) {
 
            $sql="SELECT
 tab_solprestamo.spr_id,
@@ -99,9 +99,10 @@ tab_solprestamo.spr_fecent>='$fi' and  tab_solprestamo.spr_fecent<='$ff'";
 //        
 //        //echo ($sql); die ();
 //
-        $solprestamos=new Tab_solprestamo();
-
+       $solprestamos=new Tab_solprestamo();
         $todo=$solprestamos->dbSelectBySQL($sql);
+           if($tipo_archivo==1){
+
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
         $this->usuario = new usuario ();
@@ -137,6 +138,15 @@ tab_solprestamo.spr_fecent>='$fi' and  tab_solprestamo.spr_fecent<='$ff'";
 
 //        $pdf->SetXY(110, 200);
         $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
+           }
+           if($tipo_archivo==2){
+            
+            header("Content-type: application/vnd.ms-excel; name='excel'");
+            header("Content-Disposition: filename=reporteListadoPrestamos.xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+               
+           }
 $fec1=explode("-",$fi);
 $fech1=$fec1[2]."-".$fec1[1]."-".$fec1[0];
 $fec2=explode("-",$ff);
@@ -225,11 +235,15 @@ $cadena.='<table width="790" border="1" cellspacing="2">';
 $cadena.='</table>';
 $cadena.='<br><b>Se encontraron '.$i.' Resultados</b>';
         $cadena = $cadenah . $cadena;
+        if($tipo_archivo==1){
         $pdf->writeHTML($cadena, true, false, false, false, '');
 
         // -----------------------------------------------------------------------------
         //Close and output PDF document
         $pdf->Output('reporte_prestamos.pdf', 'I');
+        } if($tipo_archivo==2){
+            echo $cadena;
+        }
     }
 
 }

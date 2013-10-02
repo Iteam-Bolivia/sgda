@@ -1528,6 +1528,9 @@ a.linkCinco:hover {
 .flexigrid div.fbutton .fields {
 	background: url(flexigrid/images/fields.png) no-repeat center left;
 }
+.flexigrid div.fbutton .page_excel {
+	background: url(flexigrid/images/page_excel.png) no-repeat center left;
+}
 
 
 
@@ -1826,4 +1829,8 @@ background:-ms-radial-gradient(#F7F7F7 50px,#999 350px);
 color:#333333;
 box-shadow:0px 1px 5px #CCCCCC;border:1px solid #CCCCCC;
 
+}
+.error-requerid{
+    color: red;font-size: 16px;
+    
 }

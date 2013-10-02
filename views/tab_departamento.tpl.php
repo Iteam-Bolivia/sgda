@@ -17,7 +17,7 @@
                        title="código"
                        type="text" 
                        value="<?php echo $dep_codigo; ?>"                       
-                        />
+                        /><span class="error-requerid">*</span>
             </td>
         </tr>
         <tr>
@@ -34,7 +34,7 @@
                         
                        
                        
-                        />
+                        /><span class="error-requerid">*</span>
             </td>
         </tr>
         <tr>

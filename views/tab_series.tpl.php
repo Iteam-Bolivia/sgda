@@ -96,7 +96,9 @@
                                    id="ser_categoria" value="<?php echo $ser_categoria; ?>" size="100"
                                    autocomplete="off" class="required alphanum" maxlength="256"
                                    onkeyup="this.value=this.value.toUpperCase()"
-                                   title="Categor&iacute;a" /></td>
+                                   title="Categor&iacute;a" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         
         <tr>

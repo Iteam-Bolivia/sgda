@@ -19,7 +19,9 @@
                        type="text" 
                        title="Codigo" 
                        value="<?php echo $tar_codigo; ?>"
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -33,7 +35,9 @@
                        title="Nombre"
                        type="text"
                        value="<?php echo $tar_nombre; ?>" 
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
 
@@ -48,7 +52,9 @@
                        class="required alphanumeric"
                        maxlength="3" 
                        title="Nombre" 
-                       /></td>
+                       />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
         <tr>
             <td colspan="4" class="botones"> <input

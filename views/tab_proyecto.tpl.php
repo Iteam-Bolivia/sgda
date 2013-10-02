@@ -22,7 +22,9 @@
             <td><input name="pry_codigo" type="text" id="pry_codigo"
                        value="<?php echo $pry_codigo; ?>" size="35" autocomplete="off"
                        onkeyup="this.value=this.value.toUpperCase()"
-                       class="required alphanumeric" maxlength="70" title="Codigo" /></td>
+                       class="required alphanumeric" maxlength="70" title="Codigo" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -30,7 +32,9 @@
             <td><input name="pry_nombre" type="text" id="pry_codigo"
                        value="<?php echo $pry_nombre; ?>" size="150" autocomplete="off"
                        onkeyup="this.value=this.value.toUpperCase()"
-                       class="required alphanumeric" maxlength="128" title="Nombre" /></td>
+                       class="required alphanumeric" maxlength="128" title="Nombre" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -51,7 +55,9 @@
             <td>Fecha Inicio:</td>
             <td><input name="pry_fecini" type="text" id="pry_fecini"
                        value="<?php echo $pry_fecini; ?>" size="35" autocomplete="off"
-                       class="required" maxlength="70" title="IMP" /></td>
+                       class="required" maxlength="70" title="IMP" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>

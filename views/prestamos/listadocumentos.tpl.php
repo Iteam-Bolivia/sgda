@@ -45,6 +45,7 @@
                     <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
                        <?php } ?>
                 </select>
+                   <span class="error-requerid">*</span>
             </td>
         </tr>
         
@@ -58,7 +59,7 @@
                    foreach($dato as $row){ ?>
                     <option value="<?php echo $row->usu_id ?>"><?php echo $row->usu_nombres." ".$row->usu_apellidos ?></option>
                        <?php } ?>
-                </select>
+                </select>   <span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -320,7 +321,7 @@ $("#recarga").load(urlhack);
      window.location.href="<?php echo $PATH_DOMAIN ?>/prestamos/";
         
 }
-         
+       
         
         if (com=='Exportar'){
             if($('.fil_chk',grid).length > 0){
