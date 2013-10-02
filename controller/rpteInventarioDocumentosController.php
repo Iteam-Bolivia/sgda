@@ -9,7 +9,7 @@
  * @version $Id$ 2012
  * @access public
  */
-class rpteExpedientesController Extends baseController {
+class rpteInventarioDocumentosController Extends baseController {
 
     function index() {
 
@@ -29,7 +29,7 @@ class rpteExpedientesController Extends baseController {
         $liMenu = $this->menu->imprimirMenu("rpteExpedientes", $_SESSION['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
         $this->registry->template->show('headerF');
-        $this->registry->template->show('tab_rpteExpedientes.tpl');
+        $this->registry->template->show('tab_rpteInventarioDocumentos.tpl');
         $this->registry->template->show('footer');
     }
 
@@ -106,7 +106,7 @@ class rpteExpedientesController Extends baseController {
             $cadenah .= '</td></tr>';
             $cadenah .= '<tr><td align="center">';
             $cadenah .= '<span style="font-size: 30px;font-weight: bold;text-decoration: underline;">';
-            $cadenah .= 'REPORTE DE EXPEDIENTES';
+            $cadenah .= 'FORMULARIO DE INVENTARIO DE DOCUMENTOS';
             $cadenah .= '</span>';
             $cadenah .= '</td></tr>';
             $cadenah .= '</table>';

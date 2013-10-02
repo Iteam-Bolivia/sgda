@@ -51,13 +51,24 @@ class seriesController Extends baseController {
         $qtype = $_REQUEST['qtype'];
 
         $where = "";
+                
         if ($query) {
-            if ($qtype == 'ser_id')
-                $where = " AND $qtype = '$query' ";
-            else
-                $where = " AND $qtype LIKE '%$query%' ";
-        }
-
+            if ($qtype == 'ser_id') {
+                $where = " AND ts.ser_id = '$query' ";
+            } elseif ($qtype == 'fon_descripcion') {
+                $where = " AND tab_fondo.fon_id IN (SELECT fon_id from tab_fondo WHERE fon_descripcion like '%$query%') ";
+            } elseif ($qtype == 'uni_descripcion') {
+                $where = " AND tab_unidad.uni_id IN (SELECT uni_id from tab_unidad WHERE uni_descripcion like '%$query%') ";
+            } elseif ($qtype == 'ser_par') {
+                $where = " AND ts.ser_id IN (SELECT ser_id from tab_series WHERE ser_categoria like '%$query%') ";                                
+            } elseif ($qtype == 'red_codigo') {
+                $where = " AND tab_retensiondoc.red_id IN (SELECT red_id from tab_retensiondoc WHERE red_codigo like '%$query%') ";                
+            } else {
+                $where = " AND $qtype like '%$query%' ";
+            }
+        }        
+        
+        
         $select = "SELECT
                 ts.ser_id,
                 tab_fondo.fon_codigo,
@@ -71,6 +82,7 @@ class seriesController Extends baseController {
                 ts.ser_codigo,
                 ts.ser_categoria,
                 (SELECT ser_categoria from tab_series WHERE ser_id=ts.ser_par) AS ser_parent,
+                ts.ser_nivel,
                 tab_retensiondoc.red_codigo,
                 ts.ser_contador
                 FROM
@@ -80,7 +92,7 @@ class seriesController Extends baseController {
                 INNER JOIN tab_unidad ON tab_unidad.uni_id = ts.uni_id
                 INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
                 WHERE ts.ser_estado =  1 ";
-        $sql = "$select $sort $limit";
+        $sql = "$select $where $sort $limit";
         $result = $this->series->dbselectBySQL($sql);
         $sql_c = "SELECT COUNT(ts.ser_id) 
                 FROM
@@ -89,7 +101,7 @@ class seriesController Extends baseController {
                 INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = ts.tco_id
                 INNER JOIN tab_unidad ON tab_unidad.uni_id = ts.uni_id
                 INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id          
-                WHERE ts.ser_estado =  1";
+                WHERE ts.ser_estado = 1 " .  $where;
         $total = $this->series->countBySQL($sql_c);
         /* header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
           header("Cache-Control: no-cache, must-revalidate" );
@@ -102,33 +114,109 @@ class seriesController Extends baseController {
         $json .= "rows: [";
         $rc = false;
         $i = 0;
+        
+        
+        $uni_descripciona = "";
+        $uni_descripcionn = "";
+        
         foreach ($result as $un) {
             if ($rc)
                 $json .= ",";
-            $json .= "\n{";
-            $json .= "id:'" . $un->ser_id . "',";
-            $json .= "cell:['" . $un->ser_id . "'";
-            if ($un->ser_codigo == '') {
-                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";
-            } else {
-                $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo) . "'";
+            
+            
+            // New
+            $uni_descripcionn = $un->uni_descripcion;
+            if ($uni_descripcionn != $uni_descripciona){
+                
+                // List Seccion
+                $json .= "\n{";
+                $json .= "id:'" . $un->ser_id . "',";
+                $json .= "cell:['" . $un->ser_id . "'";
+
+                if ($un->ser_codigo == '') {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod) . "'";
+                } else {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod) . "'";
+                }
+
+                $json .= ",'" . addslashes("") . "'";                
+                $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
+                
+
+                $json .= ",'" . addslashes("") . "'";
+                $json .= ",'" . addslashes("") . "'";
+                $json .= ",'" . addslashes("") . "'";
+                $json .= ",'" . addslashes("") . "'";
+                $json .= ",'" . addslashes("") . "'";
+                $json .= "]}";
+                
+                // List Serie
+                $rc = true;
+                if ($rc)
+                    $json .= ",";
+                
+                $json .= "\n{";
+                $json .= "id:'" . $un->ser_id . "',";
+                $json .= "cell:['" . $un->ser_id . "'";
+
+                if ($un->ser_codigo == '') {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";
+                } else {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo) . "'";
+                }
+
+                $json .= ",'" . addslashes($un->tco_codigo) . "'";
+                if ($un->ser_par == '-1') {
+                    $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
+                } else {                    
+                    $series = new series();
+                    $spaces = $series->getSpaces($un->ser_nivel);                    
+                    $json .= ",'" . addslashes($spaces . " " . utf8_decode($un->ser_categoria)) . "'";
+                }            
+
+                $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->fon_descripcion)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->red_codigo)) . "'";
+                $json .= ",'" . addslashes($un->ser_contador) . "'";
+                $json .= "]}";
+                
+            
+            }else{
+                
+                $json .= "\n{";
+                $json .= "id:'" . $un->ser_id . "',";
+                $json .= "cell:['" . $un->ser_id . "'";
+
+                if ($un->ser_codigo == '') {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo) . "'";
+                } else {
+                    $json .= ",'" . addslashes($un->fon_cod . DELIMITER . $un->uni_cod . DELIMITER . $un->tco_codigo . DELIMITER . $un->ser_codigo) . "'";
+                }
+
+                $json .= ",'" . addslashes($un->tco_codigo) . "'";
+                if ($un->ser_par == '-1') {
+                    $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
+                } else {
+                    $series = new series();
+                    $spaces = $series->getSpaces($un->ser_nivel);                    
+                    $json .= ",'" . addslashes($spaces . " " . utf8_decode($un->ser_categoria)) . "'";
+                }            
+
+                $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->fon_descripcion)) . "'";
+                $json .= ",'" . addslashes(utf8_decode($un->red_codigo)) . "'";
+                $json .= ",'" . addslashes($un->ser_contador) . "'";
+                $json .= "]}";
             }
-            $json .= ",'" . addslashes($un->tco_codigo) . "'";
-            if ($un->ser_par == '-1') {
-                $json .= ",'" . addslashes(utf8_decode($un->ser_categoria)) . "'";
-            } else {
-                $json .= ",'" . addslashes("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . utf8_decode($un->ser_categoria)) . "'";
-                //$json .= ",'" . addslashes("----- " . utf8_encode($un->ser_categoria)) . "'";
-            }
-            $json .= ",'" . addslashes(utf8_decode($un->ser_parent)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->uni_descripcion)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->fon_descripcion)) . "'";
-            $json .= ",'" . addslashes(utf8_decode($un->red_codigo)) . "'";
-            $json .= ",'" . addslashes($un->ser_contador) . "'";
-            $json .= "]}";
+            
+            $uni_descripciona = $un->uni_descripcion;
             $rc = true;
             $i++;
         }
+        
+        
         $json .= "]\n";
         $json .= "}";
         echo $json;

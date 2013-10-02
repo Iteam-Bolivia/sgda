@@ -34,7 +34,7 @@
             total: 1, //total pages
             useRp: true, //use the results per page select box
             rp: 15, // results per page
-            rpOptions: [10,15,20,25,40],
+            rpOptions: [5,10,15,20,25,50,100,200,500],
             title: false,
             pagestat: 'Mostrando {from} a {to} de {total} registros',
             procmsg: 'Procesando, por favor espere ...',

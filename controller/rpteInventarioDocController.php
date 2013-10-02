@@ -23,13 +23,13 @@ class rpteInventarioDocController Extends baseController {
         $liMenu = $this->menu->imprimirMenu("rpteInventarioDoc", $_SESSION['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
         $this->registry->template->show('headerF');
-        $this->registry->template->show('tab_rpteInventario.tpl');
+        $this->registry->template->show('tab_rpteInventarioExpedientes.tpl');
         $this->registry->template->show('footer');
     }
 
     function verRpte() {
 
-        $filtro_expediente = $_REQUEST["exp_id"];
+        $filtro_expediente = 24;
         $filtro_serie = $_REQUEST["ser_id"];
         $where = "";
 

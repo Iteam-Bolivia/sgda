@@ -35,7 +35,7 @@
         usepager: true,
         title: 'LISTA DE SECCIONES O SUBSECCIONES',
         useRp: true,
-        rp: 40,
+        rp: 50,
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",

@@ -2,7 +2,7 @@
 
     <table width="100%" border="0">
         <caption class="titulo">
-            Reporte de Prestamos
+            LISTADO DE PRESTAMOS POR ESTADO
         </caption>
 
         <tr>

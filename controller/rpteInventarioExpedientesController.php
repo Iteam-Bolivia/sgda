@@ -23,7 +23,7 @@ class rpteInventarioExpedientesController Extends baseController {
         $liMenu = $this->menu->imprimirMenu("rpteInventario", $_SESSION['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
         $this->registry->template->show('headerF');
-        $this->registry->template->show('tab_rpteInventario.tpl');
+        $this->registry->template->show('tab_rpteInventarioExpedientes.tpl');
         $this->registry->template->show('footer');
     }
 

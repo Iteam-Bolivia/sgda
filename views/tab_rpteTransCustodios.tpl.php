@@ -2,7 +2,7 @@
 
     <table width="100%" border="0">
         <caption class="titulo">
-            Reportes de Transferencia entre Custodios
+            LISTADO DE TRANSFERENCIAS
         </caption>
 
         <tr>

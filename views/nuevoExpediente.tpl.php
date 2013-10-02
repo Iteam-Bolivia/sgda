@@ -121,17 +121,26 @@
             </tr>            
 
             <tr>
+                <td>Lugar del expediente:</td>
+                <td colspan="3"><input name="exp_lugar" type="text" id="exp_lugar"
+                                       value="<?php echo $exp_lugar; ?>" size="120" autocomplete="off"                                       
+                                       maxlength="1024" class="required alphanum" title="Lugar del expediente" /></td>
+            </tr>              
+
+            <tr>
                 <td>Volumen y soporte de la Unidad de Descripci&oacute;n:</td>
                 <td colspan="3"><input name="exp_volsop" type="text" id="exp_volsop"
                                        value="<?php echo $exp_volsop; ?>" size="120" autocomplete="off"
                                        maxlength="64" class="alphanum" title="Volumen y soporte de la Unidad de Descripcion" /></td>
             </tr>    
             
-            <td><b>Datos adicionales:</b></td>
-            <td>
-            </td>            
-            <?php echo $expcampo; ?>  
             
+            <tr>
+                <td><b>Datos adicionales:</b></td>
+                <td>
+                </td>            
+                <?php echo $expcampo; ?>  
+            </tr>    
             
     </table>              
 </div>        
@@ -150,10 +159,19 @@
         <tr>
             <td>Nombre del o de los Productores(Procedencia):</td>                
                 <td colspan="3">
-                    <select name="exp_nomprod" id="exp_nomprod" class="required">
+                    <input name="exp_nomprod" type="text" id="exp_nomprod"
+                                       value="<?php echo $exp_nomprod; ?>" size="120" autocomplete="off"                                       
+                                       maxlength="1024" class="required alphanum" title="Nombre del o de los Productores" />
+                </td>
+                    
+                    
+<!--                    <select name="exp_nomprod" id="exp_nomprod" class="required">
                         <option value="" selected="selected">(seleccionar)</option>
-                        <?php echo $exp_nomprod; ?>
-                    </select>                 
+                        <?php //echo $exp_nomprod; ?>
+                    </select>                 -->
+                
+                
+                
                </td>                
         </tr>        
         
@@ -432,8 +450,8 @@
         <tr>
             <td width="166">Nro. de Fojas:</td>
             <td colspan="3"><input name="exp_nrofoj" type="text"
-                                   id="exp_nrofoj" maxlength="8" value="<?php echo $exp_nrofoj; ?>" size="40" autocomplete="off"
-                                   class="alphanumeric" title="Nro de fojas" /></td>
+                                   id="exp_nrofoj" maxlength="128" value="<?php echo $exp_nrofoj; ?>" size="40" autocomplete="off"
+                                   class="" title="Nro de fojas" /></td>
         </tr>
 
         <tr>
@@ -551,7 +569,7 @@
         <tr>
             <td width="166">Observaciones:</td>
             <td colspan="3">
-                <textarea name="exp_obs"  cols="55" id="exp_obs" autocomplete="off" class="alphanumeric" maxlength="100" title="Observaciones del registro de expediente"  ><?php echo $exp_obs; ?></textarea>
+                <textarea name="exp_obs"  rows="4" cols="120" id="exp_obs" autocomplete="off" class="alphanumeric" maxlength="20024" title="Observaciones del registro de expediente"  ><?php echo $exp_obs; ?></textarea>
       
             
             </td>

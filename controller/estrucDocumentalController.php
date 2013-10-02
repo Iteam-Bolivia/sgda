@@ -63,12 +63,13 @@ class estrucDocumentalController extends baseController {
         $query = $_REQUEST ['query'];
         $qtype = $_REQUEST ['qtype'];
         $_SESSION ["SER_ID"] = $ser_id;
+        
         $where = "";
         if ($query != "") {
             if ($qtype == 'exp_id')
                 $where .= " and exp.exp_id LIKE '$query' ";
-            elseif ($qtype == 'ser_categoria')
-                $where .= " and ser_categoria LIKE '%$query%' ";
+            elseif ($qtype == 'exp_titulo')
+                $where .= " and tab_expisadg.exp_titulo LIKE '%$query%' ";
             elseif ($qtype == 'custodio') {
                 $nomArray = explode(" ", $query);
                 foreach ($nomArray as $nom) {
@@ -94,7 +95,10 @@ class estrucDocumentalController extends baseController {
             tab_usuario.usu_apellidos,
             tab_expisadg.exp_titulo,
             tab_expisadg.exp_fecha_exi,
-            tab_expisadg.exp_fecha_exf,
+            (tab_expisadg.exp_fecha_exi + 
+                (SELECT tab_retensiondoc.red_prearc * INTERVAL '1 year' 
+                FROM tab_retensiondoc 
+                WHERE tab_retensiondoc.red_id = tab_series.red_id)) ::DATE AS exp_fecha_exf,
             tab_expfondo.fon_id,
             tab_series.ser_id,
             tab_usu_serie.usu_id
@@ -185,8 +189,6 @@ class estrucDocumentalController extends baseController {
                 $where .= " and s.ser_id = '$query' ";
             elseif ($qtype == 'ser_categoria')
                 $where .= " and s.ser_categoria LIKE '%$query%' ";
-            elseif ($qtype == 'ser_codigo')
-                $where .= " and s.ser_codigo LIKE '%$query%' ";
             else
                 $where .= " and $qtype LIKE '%$query%' ";
         }
@@ -201,18 +203,18 @@ class estrucDocumentalController extends baseController {
                     tab_fondo.fon_cod,
                     tab_unidad.uni_cod,
                     tab_tipocorr.tco_codigo,
-                    tab_series.ser_id,
-                    tab_series.ser_codigo,
-                    tab_series.ser_categoria
+                    s.ser_id,
+                    s.ser_codigo,
+                    s.ser_categoria
                     FROM
                     tab_usu_serie
-                    INNER JOIN tab_series ON tab_usu_serie.ser_id = tab_series.ser_id
-                    INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
+                    INNER JOIN tab_series s ON tab_usu_serie.ser_id = s.ser_id
+                    INNER JOIN tab_unidad ON tab_unidad.uni_id = s.uni_id
                     INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
-                    INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                    INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = s.tco_id
                     WHERE
                     tab_usu_serie.use_estado = '1' 
-                    AND tab_series.ser_estado = '1' and tab_usu_serie.usu_id=$usu_id 
+                    AND s.ser_estado = '1' and tab_usu_serie.usu_id=$usu_id 
                     $where $sort $limit ";
             $series = new series ();
             $total = $series->countSer($where, $usu_id);
@@ -222,18 +224,18 @@ class estrucDocumentalController extends baseController {
                     tab_fondo.fon_cod,
                     tab_unidad.uni_cod,
                     tab_tipocorr.tco_codigo,
-                    tab_series.ser_id,
-                    tab_series.ser_codigo,
-                    tab_series.ser_categoria
+                    s.ser_id,
+                    s.ser_codigo,
+                    s.ser_categoria
                     FROM
                     tab_usu_serie
-                    INNER JOIN tab_series ON tab_usu_serie.ser_id = tab_series.ser_id
-                    INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
+                    INNER JOIN tab_series s ON tab_usu_serie.ser_id = s.ser_id
+                    INNER JOIN tab_unidad ON tab_unidad.uni_id = s.uni_id
                     INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
-                    INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                    INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = s.tco_id
                     WHERE
                     tab_usu_serie.use_estado = '1' 
-                    AND tab_series.ser_estado = '1' $where $sort $limit ";
+                    AND s.ser_estado = '1' $where $sort $limit ";
 
             $series = new series ();
             $total = $series->countSer($where);

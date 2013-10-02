@@ -14,7 +14,7 @@ class buscarArchivoController extends baseController {
     function index() {
         $tseries = new series();
         $series = "";
-        if ($_SESSION["ROL_COD"] == "SUBF" || $_SESSION["ROL_COD"] == "ACEN" || $_SESSION["ROL_COD"] == "ADM") {
+        if ($_SESSION["ROL_COD"] == "AA" || $_SESSION["ROL_COD"] == "AC" || $_SESSION["ROL_COD"] == "AI") {
             $series = $tseries->obtenerSelectTodas();
         } else {
             $series = $tseries->obtenerSelectSeries();
@@ -130,7 +130,9 @@ class buscarArchivoController extends baseController {
         }         
       
         if (isset($_REQUEST["fil_tipoarch"])) {
-            $result['fil_tipoarch'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_tipoarch"])), ENT_QUOTES);
+            // MODIFICAR ESTE PARAMETRO POR EL MOMENTO ESTA RECIBIENDO VACIO
+            //$result['fil_tipoarch'] = html_entity_decode(trim(strtoupper($_REQUEST["fil_tipoarch"])), ENT_QUOTES);
+            $result['fil_tipoarch'] = html_entity_decode(trim(strtoupper("")), ENT_QUOTES);
         }         
 
         

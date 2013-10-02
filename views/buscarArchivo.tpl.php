@@ -7,8 +7,6 @@
     <table width="100%" border="0">
         <caption class="titulo">BUSQUEDA DE EXPEDIENTES Y DOCUMENTOS</caption>        
         
-
-        
         <tr>
             <td>Palabra de búsqueda:</td>
             <td colspan="3">
@@ -18,11 +16,6 @@
             </td>
         </tr>
         
-
-
-        
-
-            
         <tr>
             <td>NUR/NURI:</td>
             <td><input name="fil_nur" type="text" id="fil_nur"
@@ -120,27 +113,27 @@
             </tr>  
             
             <tr>
-                <td>Procedencia(Empresa):</td>
+                <td>Productor:</td>
                 <td><input name="fil_proc" type="text" id="fil_proc"
                            value="" size="150" autocomplete="off" maxlength="20"
                            class="alphanum" title="Empresa que elaboro el documento" /></td>
             </tr>             
             
             <tr>
-                <td>Firma:</td>
+                <td>Responsable:</td>
                 <td><input name="fil_firma" type="text" id="fil_firma"
                            value="" size="150" autocomplete="off" maxlength="20"
                            class="alphanum" title="Firma o persona que elabora el documento" /></td>
             </tr>     
             <tr>
-                <td>Cargo:</td>
+                <td>Cargo Responsable:</td>
                 <td><input name="fil_cargo" type="text" id="fil_cargo"
                            value="" size="150" autocomplete="off" maxlength="20"
                            class="alphanum" title="Cargo de la persona que elabora el documento" /></td>
             </tr>   
                      
             
-        <tr>
+<!--        <tr>
             <td width="166">Tipo de Documento:</td>
             <td colspan="3">
                 <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="ADM" 
@@ -152,7 +145,7 @@
                 <input type="radio" name="fil_tipoarch" id="fil_tipoarch" value="TEC" 
                     title="Sólo los documentos originales propios del proceso administrativo institucional, tecnico tiene valor legal intrínseco"/>T&eacute;cnico
             </td>
-        </tr>         
+        </tr>         -->
         
         <tr>
             <td>Palabras Clave (separadas por <?php echo SEPARATOR_SEARCH; ?> ):</td>
@@ -191,57 +184,69 @@
         colModel : [
             {display: '', name : 'chk_id', width : 20, sortable : true, align: 'center'},
             {display: 'Ver', name : 'view', width : 30, sortable : true, align: 'center'},   
-            {display: 'Abrir', name : 'view', width : 30, sortable : true, align: 'center'},   
-            {display: 'Cod. Documento', name : 'fil_codigo', width : 140, sortable : true, align: 'left'},
-            //{display: 'Id', name : 'fil_id', width : 40, sortable : true, align: 'center'},
+            {display: 'Abrir', name : 'view', width : 30, sortable : true, align: 'center'},
+            
+            {display: 'Id', name : 'fil_id', width : 40, sortable : true, align: 'center'},
+            {display: 'Cod. Documento', name : 'fil_codigo', width : 140, sortable : true, align: 'left'},            
+            
             //{display: 'Fondo', name : 'fon_descripcion', width : 50, sortable : true, align: 'left'},
+            
             {display: 'Seccion', name : 'uni_descripcion', width : 250, sortable : true, align: 'left'},
-            //{display: 'Serie', name : 'ser_categoria', width : 150, sortable : true, align: 'left'},
-            {display: 'Expediente', name : 'exp_titulo', width : 250, sortable : true, align: 'left'},
-            //{display: 'Tipo Doc.', name : 'cue_descripcion', width : 150, sortable : true, align: 'left'},            
-            {display: 'T&iacute;tulo Documento', name : 'fil_titulo', width : 300, sortable : true, align: 'left'},
-            {display: 'Procedencia', name : 'fil_proc', width : 100, sortable : true, align: 'left'},
-            //{display: 'Firma', name : 'fil_firma', width : 100, sortable : true, align: 'left'},
-            //{display: 'Cargo', name : 'fil_cargo', width : 100, sortable : true, align: 'left'},
-            //{display: 'Nro.Foj', name : 'fil_nrofoj', width : 40, sortable : true, align: 'center'},
-            //{display: 'Nro.Caja', name : 'fil_nrocaj', width : 40, sortable : true, align: 'center'},
-            //{display: 'Sala', name : 'fil_sala', width : 40, sortable : true, align: 'center'},
-            //{display: 'Estante', name : 'fil_estante', width : 40, sortable : true, align: 'center'},
-            //{display: 'Cuerpo', name : 'fil_cuerpo', width : 40, sortable : true, align: 'center'},
-            //{display: 'Balda', name : 'fil_balda', width : 40, sortable : true, align: 'center'},
-            //{display: 'Tipo', name : 'fil_tipoarch', width : 40, sortable : true, align: 'center'},
-            //{display: 'Estado', name : 'fil_mrb', width : 40, sortable : true, align: 'center'},
-            //{display: 'Nro.Ori', name : 'fil_ori', width : 40, sortable : true, align: 'center'},
-            //{display: 'Nro.Cop', name : 'fil_cop', width : 40, sortable : true, align: 'center'},
-            //{display: 'Nro.Fot', name : 'fil_fot', width : 40, sortable : true, align: 'center'},
             
-            {display: 'NUR/NURI', name : 'fil_nur', width : 60, sortable : true, align: 'left'},
-            //{display: 'Asunto/Ref.', name : 'fil_asunto', width : 100, sortable : true, align: 'left'},
+            //{display: 'Serie', name : 'ser_categoria', width : 250, sortable : true, align: 'left'},
             
+            {display: 'Expediente', name : 'exp_titulo', width : 450, sortable : true, align: 'left'},
+            
+            //{display: 'Tipo Doc.', name : 'cue_descripcion', width : 250, sortable : true, align: 'left'},            
+            
+            {display: 'T&iacute;tulo Documento', name : 'fil_titulo', width : 650, sortable : true, align: 'left'},
+            {display: 'Tomo/Vol.', name : 'fil_tomovol', width : 60, sortable : true, align: 'left'},
+            {display: 'Productor', name : 'fil_proc', width : 250, sortable : true, align: 'left'},
+            {display: 'Responsable', name : 'fil_firma', width : 100, sortable : true, align: 'left'},
+            {display: 'Cargo Responsable', name : 'fil_cargo', width : 100, sortable : true, align: 'left'},
+            {display: 'Nro.Fojas', name : 'fil_nrofoj', width : 100, sortable : true, align: 'left'},
+            {display: 'Nro.Caja', name : 'fil_nrocaj', width : 40, sortable : true, align: 'right'},
+            {display: 'Sala', name : 'fil_sala', width : 40, sortable : true, align: 'left'},
+            {display: 'Estante', name : 'fil_estante', width : 40, sortable : true, align: 'left'},
+            {display: 'Cuerpo', name : 'fil_cuerpo', width : 40, sortable : true, align: 'left'},
+            {display: 'Balda', name : 'fil_balda', width : 40, sortable : true, align: 'left'},
+            {display: 'Tipo', name : 'fil_tipoarch', width : 40, sortable : true, align: 'left'},
+            {display: 'Estado', name : 'fil_mrb', width : 40, sortable : true, align: 'left'},
+            {display: 'Nro.Ori', name : 'fil_ori', width : 40, sortable : true, align: 'right'},
+            {display: 'Nro.Cop', name : 'fil_cop', width : 40, sortable : true, align: 'right'},
+            {display: 'Nro.Fot', name : 'fil_fot', width : 40, sortable : true, align: 'right'},
+
+            {display: 'Palabras clave', name : 'fil_palclave', width : 800, sortable : true, align: 'left'},
+            {display: 'Obs', name : 'fil_obs', width : 1000, sortable : true, align: 'left'},
+            
+            // SIACO            
+            {display: 'NUR/NURI', name : 'fil_nur', width : 100, sortable : true, align: 'left'},
+            {display: 'Asunto/Ref.', name : 'fil_asunto', width : 100, sortable : true, align: 'left'},
+            
+            // DIGITAL
             //{display: 'Disponibilidad', name : 'disponibilidad', width : 60, sortable : true, align: 'center'},
-            //{display: 'Doc.Digital', name : 'fil_nomoriginal', width : 300, sortable : true, align: 'left'},
-            //{display: 'Tamaño (MB)', name : 'fil_tamano', width : 60, sortable : true, align: 'center'},            
-            //{display: 'Obs', name : 'fil_obs', width : 150, sortable : true, align: 'left'},
+            {display: 'Doc.Digital', name : 'fil_nomoriginal', width : 300, sortable : true, align: 'left'},
+            {display: 'Tamaño (MB)', name : 'fil_tamano', width : 80, sortable : true, align: 'right'},            
+            
+
+            
         ],
         buttons : [
             {name: 'Imprimir', bclass: 'print', onpress : test},{separator: true},
         ],
         searchitems : [
             {display: 'Id', name : 'fil_id', isdefault: true},
-//            {display: 'T&iacute;tulo', name : 'rol_titulo'},
-//            {display: 'Descripci&oacute;n', name : 'rol_descripcion'},
-//            {display: 'C&oacute;digo', name : 'rol_cod'}
         ],
         sortname: "fil_id",
         sortorder: "asc",
         usepager: true,
         title: 'LISTA DE DOCUMENTOS BUSCADOS',
         useRp: true,
-        rp: 40,
+        rp: 50,
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 180,
+        height: 1200,
         palabra: "",
         fon_id: "",
         uni_id: "",
@@ -353,19 +358,20 @@
             $(".pReload",".flexigrid").click();
         });
         $("#btnClear").click(function(){
+            $("#palabra").val('');
+            $("#fil_nur").val('');
+            
             $("#uni_id").find("option").remove();
             $("#ser_id").find("option").remove();
             $("#tra_id").find("option").remove();
             $("#cue_id").find("option").remove();
             $("#exp_titulo").val('');
-            $("#fil_nur").val('');
-            $("#fil_titulo").val('');    
-            $("#fil_descripcion").val('');   
-            
+            $("#fil_titulo").val('');
             $("#fil_subtitulo").val('');    
             $("#fil_proc").val('');    
             $("#fil_firma").val('');    
             $("#fil_cargo").val('');    
+            $("#pac_nombre").val('');
             
             $(".pReload",".flexigrid").click();
         });

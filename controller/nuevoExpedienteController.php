@@ -57,6 +57,8 @@ class nuevoExpedienteController Extends baseController {
         $sopfisico = new sopfisico();
         $this->registry->template->sof_id = $sopfisico->obtenerSelect();        
         
+        $this->registry->template->exp_lugar = "";
+        
         $this->registry->template->exp_nrofoj = "";
         $this->registry->template->exp_tomovol = "";
         $this->registry->template->exp_nroejem = "";
@@ -89,7 +91,9 @@ class nuevoExpedienteController Extends baseController {
         
         $this->registry->template->exp_nivdes = $expediente->obtenerSelectNivelDescripcion();
         $this->registry->template->exp_volsop = "";
-        $this->registry->template->exp_nomprod = $expediente->obtenerSelectProductor();
+        //$this->registry->template->exp_nomprod = $expediente->obtenerSelectProductor();
+        $this->registry->template->exp_nomprod = "";
+        
         
         $this->registry->template->exp_hisins = "Historia Institucional de la ABC";
         $this->registry->template->exp_hisarc = "";
@@ -158,7 +162,9 @@ class nuevoExpedienteController Extends baseController {
         $this->expediente->setRequest2Object($_REQUEST);
         $this->expediente->setExp_id($_REQUEST['exp_id']);
         $this->expediente->setSer_id($_REQUEST['ser_id']);
-        $this->expediente->setExp_codigo($expediente->generaCodigo($_REQUEST['ser_id']));           
+        $this->expediente->setExp_codigo($expediente->generaCodigo($_REQUEST['ser_id']));     
+        $this->expediente->setExp_lugar(strtoupper($_REQUEST['exp_lugar']));        
+        
         $this->expediente->setSof_id($_REQUEST['sof_id']);
         $this->expediente->setExp_nrofoj(strtoupper($_REQUEST['exp_nrofoj']));        
         $this->expediente->setExp_tomovol(strtoupper($_REQUEST['exp_tomovol']));
@@ -380,6 +386,7 @@ class nuevoExpedienteController Extends baseController {
         $sopfisico = new sopfisico();
         $this->registry->template->sof_id = $sopfisico->obtenerSelect($row->sof_id);        
         
+        $this->registry->template->exp_lugar = $row->exp_lugar;
         $this->registry->template->exp_nrofoj = $row->exp_nrofoj;
         $this->registry->template->exp_tomovol = $row->exp_tomovol;
         $this->registry->template->exp_nroejem = $row->exp_nroejem;
@@ -419,7 +426,8 @@ class nuevoExpedienteController Extends baseController {
         $this->registry->template->exp_nivdes = $expediente->obtenerSelectNivelDescripcion($rows2->exp_nivdes);
         $this->registry->template->exp_volsop = $rows2->exp_volsop;
         
-        $this->registry->template->exp_nomprod = $expediente->obtenerSelectProductor($rows2->exp_nomprod);        
+        //$this->registry->template->exp_nomprod = $expediente->obtenerSelectProductor($rows2->exp_nomprod);        
+        $this->registry->template->exp_nomprod = $rows2->exp_nomprod;
         
         $this->registry->template->exp_hisins = $rows2->exp_hisins;
         $this->registry->template->exp_hisarc = $rows2->exp_hisarc;
@@ -479,9 +487,13 @@ class nuevoExpedienteController Extends baseController {
         $this->expediente = $rows[0];
         $id = $this->expediente->exp_id;
         $exp_id = $this->expediente->exp_id;
+        
+        
+        
         $this->expediente->setExp_id($_REQUEST['exp_id']);
         $this->expediente->setSer_id($_REQUEST['ser_id']);
         $this->expediente->setExp_codigo($_REQUEST['exp_codigo']);
+        $this->expediente->setExp_lugar(strtoupper($_REQUEST['exp_lugar'])); 
         $this->expediente->setSof_id($_REQUEST['sof_id']);
         $this->expediente->setExp_nrofoj(strtoupper($_REQUEST['exp_nrofoj']));        
         $this->expediente->setExp_tomovol(strtoupper($_REQUEST['exp_tomovol']));

@@ -22,8 +22,8 @@
         dataType: 'json',
         colModel : [
             {display: 'Id', name : 'ser_id', width : 40, sortable : true, align: 'center'},
-            {display: 'C&oacute;digo', name : 'ser_codigo', width : 110, sortable : true, align: 'left'},
-            {display: 'Serie', name : 'ser_categoria', width : 500, sortable : true, align: 'left'}
+            {display: 'C&oacute;digo', name : 'ser_codigo', width : 120, sortable : true, align: 'left'},
+            {display: 'Serie Documental', name : 'ser_categoria', width : 600, sortable : true, align: 'left'}
         ],
         buttons : [
             //{name: 'Adicionar Expediente', bclass: 'add', onpress : test},{separator: true},
@@ -31,20 +31,19 @@
             {name: 'Imprimir inventario de expedientes', bclass: 'print', onpress : test}
         ],
         searchitems : [
-            {display: 'Id', name : 'ser_id'},
-            {display: 'C&oacute;digo', name : 'ser_codigo', isdefault: true},
-            {display: 'Serie', name : 'ser_categoria'}
+            {display: 'Id', name : 'ser_id',  isdefault: true},
+            {display: 'Serie Documental', name : 'ser_categoria'}
         ],
         sortname: "ser_id",
         sortorder: "asc",
         usepager: true,
         title:"LISTA DE SERIES",
         useRp: true,
-        rp: 10,
+        rp: 5,
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 150,
+        height: 120,
         autoload: true
     });
 
@@ -54,14 +53,11 @@
         url: '<?php echo $PATH_DOMAIN ?>/estrucDocumental/load/<?php echo $ser_id; ?>/',
         dataType: 'json',
         colModel : [
-            {display: 'ID', name : 'exp_id', width : 40, sortable : true, align: 'center'},
+            {display: 'Id', name : 'exp_id', width : 40, sortable : true, align: 'center'},
             {display: 'Codigo', name : 'exp_codigo', width : 120, sortable : true, align: 'left'},
-            {display: 'Nombre', name : 'exp_titulo', width : 500, sortable : true, align: 'left'},
-            {display: 'Fecha Inicio', name : 'exf_fecha_exi', width : 60, sortable : true, align: 'left'},
-            {display: 'Fecha Final', name : 'exf_fecha_exf', width : 60, sortable : true, align: 'left'},            
-//            {display: 'Soporte Fisico', name : 'sof_nombre', width : 50, sortable : true, align: 'left'},
-//            {display: 'Nro.Ejem.', name : 'exp_nroejem', width : 50, sortable : true, align: 'left'},
-//            {display: 'Tomo Vol.', name : 'exp_tomovol', width : 50, sortable : true, align: 'left'},
+            {display: 'Expediente', name : 'exp_titulo', width : 600, sortable : true, align: 'left'},
+            {display: 'Fecha Inicio', name : 'exf_fecha_exi', width : 100, sortable : true, align: 'left'},
+            {display: 'Fecha Final', name : 'exf_fecha_exf', width : 100, sortable : true, align: 'left'},            
             {display: 'Custodio', name : 'custodios', width : 100, sortable : true, align: 'left'}
         ],
         buttons : [
@@ -74,19 +70,15 @@
             {name: 'Imprimir inventario documentos', bclass: 'print', onpress : test2}            
         ],
         searchitems : [
-            {display: 'Id', name : 'exp_id'},
-            {display: 'Codigo', name : 'exp_codigo', isdefault: true},
-            {display: 'Nombre', name : 'exp_titulo'},
+            {display: 'Id', name : 'exp_id', isdefault: true},
+            {display: 'Expediente', name : 'exp_titulo'},
             {display: 'Fecha Inicio', name : 'exf_fecha_exi'},
-//            {display: 'Soporte Fisico', name : 'sof_nombre'},
-//            {display: 'Nro.Ejem', name : 'exp_nroejem'},
-//            {display: 'Tomo Vol.', name : 'exp_tomovol'},
             {display: 'Custodio', name : 'custodios'}
         ],
         sortname: "exp_id",
         sortorder: "asc",
         usepager: true,
-        title: 'REGISTRO DE EXPEDIENTES',
+        title: 'LISTA DE EXPEDIENTES',
         useRp: true,
         rp: 20,
         minimize: <?php echo $GRID_SW ?>,

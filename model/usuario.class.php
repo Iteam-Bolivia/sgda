@@ -487,14 +487,6 @@ $usuario=$_SESSION ['USU_ID'];
 
     function allSeries() {
         $liMenu = "";
-//        $sql = "SELECT 
-//                uni_id,
-//                uni_cod,
-//                uni_descripcion 
-//                FROM tab_unidad
-//                WHERE uni_estado =  '1' 
-//                ORDER by uni_cod ";
-        
         $sql = "SELECT
                 tab_unidad.uni_id,
                 tab_fondo.fon_cod,
@@ -504,20 +496,28 @@ $usuario=$_SESSION ['USU_ID'];
                 tab_unidad
                 INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
                 WHERE uni_estado = '1' 
-                ORDER by uni_cod "; 
+                ORDER by uni_id "; 
         
         $rows = $this->usuario->dbselectBySQL($sql);
         $row1 = 1;
         $i = 0;
         foreach ($rows as $menus) {
+            
             //$liMenu .= "		<tr class='erow' id='" . $menus->uni_id . "'>";
             $liMenu .= "		<tr class='erow evenw' id='" . $menus->uni_id . "'>";
+
+            $liMenu .= "			<td align='left' class='sorted'>";
+            $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menus->ser_id . "</div>";
+            $liMenu .= "			</td>";
+                        
             $liMenu .= "			<td align='left' class='sorted'>";
             $liMenu .= "			<div style='text-align: left; width: 80px;'>&nbsp;Secci&oacute;n</div>";
             $liMenu .= "			</td>";
+            
             $liMenu .= "			<td align='center' class='sorted'>";
             $liMenu .= "			<div style='text-align: left; width: 120px;'>" . $menus->fon_cod . DELIMITER. $menus->uni_cod . "</div>";
             $liMenu .= "			</td>";
+            
             $liMenu .= "			<td align='left' class='sorted'>";
             $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $menus->uni_descripcion . "</div>";
             $liMenu .= "			</td>";
@@ -538,7 +538,8 @@ $usuario=$_SESSION ['USU_ID'];
                     tab_tipocorr.tco_codigo,
                     tab_series.ser_id,
                     tab_series.ser_codigo,
-                    tab_series.ser_categoria
+                    tab_series.ser_categoria,
+                    tab_series.ser_nivel
                     FROM
                     tab_series
                     INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
@@ -546,24 +547,35 @@ $usuario=$_SESSION ['USU_ID'];
                     INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
                     WHERE tab_unidad.uni_id = '" . $menus->uni_id . "' 
                     AND tab_series.ser_estado =  '1' 
-                    ORDER BY tab_series.ser_codigo, 
-                    tab_series.ser_categoria";
+                    ORDER BY tab_series.ser_id ";
             
             $rowsb = $this->usuario->dbselectBySQL($sql2);
             $row1 = 1;
 
             foreach ($rowsb as $menusb) {
+                
+                $series = new series();
+                $spaces = $series->getSpaces($menusb->ser_nivel); 
+
+                
                 //$liMenu .= "		<tr " . ($row1 % 2 ? "" : "class='erow'") . ">";
                 $liMenu .= "		<tr " . ($row1 % 2 ? "class='" . $menus->uni_id . "z'" : "class='erow " . $menus->uni_id . "z'") . " >";
+
+                $liMenu .= "			<td align='left'>";
+                $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menusb->ser_id . "</div>";
+                $liMenu .= "			</td>";
+                
                 $liMenu .= "			<td align='left'>";
                 $liMenu .= "			<div style='text-align: center; width: 80px;'><input name='lista_serie[$i]' type='checkbox' value='" . $menusb->ser_id . "'></div>";
                 $liMenu .= "			</td>";
+                
                 $liMenu .= "			<input type='hidden' name='id_menu[$i]' value='" . $menusb->ser_id . "'>";
                 $liMenu .= "			<td align='center' class='sorted'>";
                 $liMenu .= "			<div style='text-align: left; width: 120px;'>" . $menusb->fon_cod. DELIMITER. $menusb->uni_cod . DELIMITER . $menusb->tco_codigo . DELIMITER . $menusb->ser_codigo . "</div>";
                 $liMenu .= "			</td>";
+                
                 $liMenu .= "			<td align='left'>";
-                $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $menusb->ser_categoria . "</div>";
+                $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $spaces . $menusb->ser_categoria . "</div>";
                 $liMenu .= "			</td>";
                 $liMenu .= "		</tr>";
                 $row1++;
@@ -591,7 +603,7 @@ $usuario=$_SESSION ['USU_ID'];
                 tab_unidad
                 INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
                 WHERE uni_estado = '1' 
-                ORDER by uni_cod ";        
+                ORDER by uni_id ";        
         
         $rows = $this->usuario->dbselectBySQL($sql);
         
@@ -599,13 +611,20 @@ $usuario=$_SESSION ['USU_ID'];
         $i = 0;
         foreach ($rows as $menus) {
             $liMenu .= "		<tr class='erow evenw' id='" . $menus->uni_id . "'>";
-            $liMenu .= "			<td align='left' class='sorted'>";
+            
+            $liMenu .= "			<td align='right' class='sorted'>";
+            $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menus->ser_id . "</div>";
+            $liMenu .= "			</td>";
+            
+            $liMenu .= "			<td align='left'>";
             $liMenu .= "			<div style='text-align: center; width: 80px;'>&nbsp;Secci&oacute;n</div>";
             $liMenu .= "			</td>";
-            $liMenu .= "			<td align='center' class='sorted'>";
+            
+            $liMenu .= "			<td align='center'>";
             $liMenu .= "			<div style='text-align: left; width: 120px;'>" . $menus->fon_cod . DELIMITER . $menus->uni_cod . "</div>";
             $liMenu .= "			</td>";
-            $liMenu .= "			<td align='left' class='sorted'>";
+            
+            $liMenu .= "			<td align='left'>";
             $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $menus->uni_descripcion . "</div>";
             $liMenu .= "			</td>";
             $liMenu .= "		</tr>";
@@ -616,7 +635,8 @@ $usuario=$_SESSION ['USU_ID'];
                     tab_tipocorr.tco_codigo,
                     tab_series.ser_id,
                     tab_series.ser_codigo,
-                    tab_series.ser_categoria
+                    tab_series.ser_categoria,
+                    tab_series.ser_nivel
                     FROM
                     tab_series
                     INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
@@ -624,20 +644,24 @@ $usuario=$_SESSION ['USU_ID'];
                     INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
                     WHERE tab_unidad.uni_id = '" . $menus->uni_id . "' 
                     AND tab_series.ser_estado = '1' 
-                    ORDER BY tab_series.ser_codigo, 
-                    tab_series.ser_categoria ";
+                    ORDER BY tab_series.ser_id ";
             $rowsb = $this->usuario->dbselectBySQL($sql2);
 
             $row1 = 1;
 
             foreach ($rowsb as $key => $menusb) {
+                
+                $series = new series();
+                $spaces = $series->getSpaces($menusb->ser_nivel);                
+                
                 $sql3 = "SELECT 
                         tab_usu_serie.usu_id, 
                         tab_usu_serie.ser_id
                         FROM tab_usu_serie
                         WHERE tab_usu_serie.usu_id = '" . $idUsuario . "' 
                         AND tab_usu_serie.ser_id = '" . $menusb->ser_id . "' 
-                        AND tab_usu_serie.use_estado=1 ";
+                        AND tab_usu_serie.use_estado=1 
+                        ORDER BY tab_usu_serie.use_id ";
                 $chek1 = "";
                 $rowChek = $this->usuario->dbselectBySQL($sql3);
 
@@ -652,15 +676,22 @@ $usuario=$_SESSION ['USU_ID'];
                     $liMenu .= "		<tr " . ($row1 % 2 ? "class='" . $menus->uni_id . "z'" : "class='erow " . $menus->uni_id . "z'") . " >";
                 }
                 
+                
+                $liMenu .= "			<td align='right' class='sorted' >";
+                $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menusb->ser_id . "</div>";
+                $liMenu .= "			</td>";
+                
                 $liMenu .= "			<td align='left'>";
                 $liMenu .= "			<div style='text-align: center; width: 80px;'><input name='lista_serie[$i]' type='checkbox' value='" . $menusb->ser_id . "' " . $chek1 . "></div>";
                 $liMenu .= "			</td>";
+                
                 $liMenu .= "			<input type='hidden' name='id_menu[$i]' value='" . $menusb->ser_id . "'>";
-                $liMenu .= "			<td align='center' class='sorted'>";
+                $liMenu .= "			<td align='center'>";
                 $liMenu .= "			<div style='text-align: left; width: 120px;'>" . $menusb->fon_cod. DELIMITER. $menusb->uni_cod . DELIMITER . $menusb->tco_codigo . DELIMITER . $menusb->ser_codigo . "</div>";
                 $liMenu .= "			</td>";
+                
                 $liMenu .= "			<td align='left'>";
-                $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $menusb->ser_categoria . "</div>";
+                $liMenu .= "			<div style='text-align: left; width: 600px;'>" . $spaces . $menusb->ser_categoria . "</div>";
                 $liMenu .= "			</td>";
                 $liMenu .= "		</tr>";
                 $row1++;

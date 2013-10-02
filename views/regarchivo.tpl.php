@@ -136,6 +136,13 @@
         </tr>
         
         <tr>
+            <td width="166">Tomos (Vols):</td>
+            <td colspan="3"><input name="fil_tomovol" type="text"
+                                   id="fil_tomovol" maxlength="32" value="<?php echo $fil_tomovol; ?>" size="40" autocomplete="off"
+                                   class="alphanumeric" title="Nro de tomos" /></td>
+        </tr>        
+        
+        <tr>
             <td></td>
             <td colspan="3"><input name="fil_fecha"
                                    type="hidden" id="fil_fecha" value="<?php echo $fil_fecha; ?>"
@@ -157,6 +164,8 @@
                 </select>                    
             </td>
         </tr>        
+        
+        
         
         <tr>
             <td>Lengua:</td>
@@ -207,16 +216,11 @@
         <tr>
             <td width="166">Nro. de Fojas:</td>
             <td colspan="3"><input name="fil_nrofoj" type="text"
-                                   id="fil_nrofoj" maxlength="8" value="<?php echo $fil_nrofoj; ?>" size="40" autocomplete="off"
-                                   class="alphanumeric" title="Nro de fojas" /></td>
+                                   id="fil_nrofoj" maxlength="128" value="<?php echo $fil_nrofoj; ?>" size="40" autocomplete="off"
+                                   class="" title="Nro de fojas" /></td>
         </tr>
 
-        <tr>
-            <td width="166">Tomos (Vols):</td>
-            <td colspan="3"><input name="fil_tomovol" type="text"
-                                   id="fil_tomovol" maxlength="32" value="<?php echo $fil_tomovol; ?>" size="40" autocomplete="off"
-                                   class="alphanumeric" title="Nro de tomos" /></td>
-        </tr>
+
 
         <tr>
             <td width="166">Nro.Ejemplares:</td>
@@ -388,10 +392,9 @@
 
         <tr>
             <td width="166">Observaciones:</td>
-            <td colspan="3"><input name="fil_obs" type="text"
-                                   id="fil_obs" maxlength="100" value="<?php echo $fil_obs; ?>" size="120" autocomplete="off"
-                                   class="alphanum"
-                                   title="Observaciones" /></td>
+            <td colspan="3">                
+                <textarea name="fil_obs"  rows="4" cols="120" id="fil_obs" autocomplete="off" class="alphanumeric" maxlength="20024" title="Observaciones del registro de documentos"  ><?php echo $fil_obs; ?></textarea>                
+            </td>
         </tr>
 
         <tr>

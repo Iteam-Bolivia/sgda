@@ -1,9 +1,11 @@
 <form id="formA" name="formA" method="post" class="validable"
-      action="<?php echo $PATH_DOMAIN ?>/rpteExpedientes/<?php echo $PATH_EVENT ?>/"
+      action="<?php echo $PATH_DOMAIN ?>/rpteInventarioDocumentos/<?php echo $PATH_EVENT ?>/"
       target="_blank">
 
     <table width="100%" border="0">
-        <caption class="titulo">Reportes de Expedientes</caption>
+        <caption class="titulo">
+            LISTADO INVENTARIO DE DOCUMENTOS
+        </caption>
         <tr>
             <td width="238"></td>
             <td width="711">

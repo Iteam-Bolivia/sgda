@@ -31,6 +31,7 @@ class Tab_expediente extends db {
     var $exp_fotn;
     var $exp_obs;
     var $exp_estado;  
+    VAR $exp_lugar;
     
 
     function __construct() {
@@ -171,6 +172,13 @@ class Tab_expediente extends db {
     }
     
     
+    function getExp_lugar() {
+        return $this->exp_lugar;
+    }
+
+    function setExp_lugar($exp_lugar) {
+        $this->exp_lugar = $exp_lugar;
+    }    
     
     
 }

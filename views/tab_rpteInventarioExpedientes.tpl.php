@@ -1,8 +1,9 @@
-<form id="formA" name="formA" method="post" class="validable" action="<?php echo $PATH_DOMAIN ?>/rpteInventario/<?php echo $PATH_EVENT ?>/" target="_blank">
+<form id="formA" name="formA" method="post" 
+      class="validable" action="<?php echo $PATH_DOMAIN ?>/rpteInventarioExpedientes/<?php echo $PATH_EVENT ?>/" target="_blank">
 
     <table width="100%" border="0">
         <caption class="titulo">
-            Reportes de Inventario
+            LISTADO INVENTARIO DE EXPEDIENTES
         </caption>
 
         <tr>

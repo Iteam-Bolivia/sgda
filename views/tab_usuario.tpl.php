@@ -154,19 +154,22 @@
     <div class="hDiv">
         <div class="hDivBox">
             <table cellspacing="0" cellpadding="0">
-                <thead>
+                <thead>                    
                     <tr>
+                        <th align="center" abbr="ser_id" axis="col4">
+                            <div style="text-align: center; width: 60px;">Id</div>
+                        </th>
+                        
                         <th align="center" abbr="exp_fecha_exi" axis="col4">
-                <div style="text-align: center; width: 80px;">Ver</div>
-                </th>
-                <th align="center" abbr="exp_id" axis="col0" class="">
-                <div class="sasc" style="text-align: center; width: 120px;">C&oacute;digo</div>
-                </th>
-                <th align="left" abbr="ser_id" axis="col1" class="">
-                <div style="text-align: left; width: 600px;" class="">Serie</div>
-                </th>
-
-                </tr>
+                            <div style="text-align: center; width: 80px;">Ver</div>
+                        </th>
+                        <th align="center" abbr="exp_id" axis="col0" class="">
+                            <div class="sasc" style="text-align: center; width: 120px;">C&oacute;digo</div>
+                        </th>
+                        <th align="left" abbr="ser_id" axis="col1" class="">
+                            <div style="text-align: left; width: 600px;" class="">Serie</div>
+                       </th>
+                    </tr>
                 </thead>
             </table>
         </div>

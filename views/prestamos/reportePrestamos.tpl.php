@@ -5,7 +5,7 @@
 
     <table width="100%" border="0" style="padding-bottom: 20px">
         <caption class="titulo">
-            Reporte de Prestamos
+            LISTADO DE PRESTAMOS
         </caption>
         
         <tr>

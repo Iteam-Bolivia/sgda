@@ -381,7 +381,7 @@ tab_expediente.exp_id  = $id";
         $this->usuario = $row_usu [0];
         $row = $this->expediente->dbselectByField("exp_id", $exp_id);
         if (is_null($row)) {
-            $tree .= "<li><a href='#' onclick='return false;' class='suboptActx'>No existe tramites en esta SERIE</a></li>";
+            $tree .= "<li><a href='#' onclick='return false;' class='suboptActx'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
         } else {
             $row = $row [0];
             $ser_id = $row->ser_id;
@@ -428,6 +428,7 @@ tab_expediente.exp_id  = $id";
                             usu.usu_id,
                             fil.fil_id,
                             fil.fil_titulo,
+                            fil.fil_subtitulo,
                             fil.fil_confidencialidad,
                             tab_archivo_digital.fil_nomoriginal,
                             tab_archivo_digital.fil_extension
@@ -464,9 +465,24 @@ tab_expediente.exp_id  = $id";
 
 //                                        if ($una->usu_id == $_SESSION ['USU_ID']) {
 //                                            $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
-//                                        }                                        
-                                        $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+//                                        } 
+                                        if ($una->fil_subtitulo){
+                                            if ($una->fil_nomoriginal){
+                                                $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            }else{
+                                                $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . '</a></li>';
+                                            }
+                                        }else{
+                                            if ($una->fil_nomoriginal){
+                                                $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            }else{
+                                                $verarch .= $una->fil_titulo . '</a></li>';
+                                            }
+                                        }
+                                        
                                         break;
+                                        
+                                        
                                     case '2' :
                                         if ($una->uni_id == $_SESSION ['UNI_ID']) {
                                             //$verarch = '<li><a class="suboptActBockA" href="#" onclick="return false">';
@@ -480,13 +496,43 @@ tab_expediente.exp_id  = $id";
 //                                            if ($una->usu_id == $_SESSION ['USU_ID']) {
 //                                                $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";
 //                                            }
-                                            $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            if ($una->fil_subtitulo){
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . '</a></li>';
+                                                }
+                                            }else{
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . '</a></li>';
+                                                }
+                                            }
+
+                                            
+                                            
+                                            
                                         } else {
                                             //$verarch = '<li><a class="suboptActBockA" href="#" onclick="return false">';
                                             $verarch = '<li><a href="#" onclick="return false">';
-                                            $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            if ($una->fil_subtitulo){
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . '</a></li>';
+                                                }
+                                            }else{
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . '</a></li>';
+                                                }
+                                            }
+                                            
                                         }
                                         break;
+                                        
                                     case '3' :
                                         if ($this->usuario->usu_leer_doc == '1' && $una->uni_id == $_SESSION ['UNI_ID']) {
                                             //$verarch = '<li><a class="suboptActBockB" class="linkPass" valueId="' . $una->fil_id . '" href="#" onclick="return false">' ;
@@ -497,14 +543,43 @@ tab_expediente.exp_id  = $id";
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/b_view.png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='view icon' title='Ver Datos Documento'   />";
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-". $una->fil_extension .".png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='viewFile icon' title='Ver Documento'/>";
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-view.png' file='$una->fil_id' class='viewFicha icon' title='Ver Ficha del Documento'/>";
-                                            $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            
+                                            if ($una->fil_subtitulo){
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . '</a></li>';
+                                                }
+                                            }else{
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . '</a></li>';
+                                                }
+                                            }
+
+                                            
                                         } else {
                                             //$verarch = '<li><a class="suboptActBockA" href="#" onclick="return false">';
                                             $verarch = '<li><a href="#" onclick="return false">';
                                             if ($una->usu_id == $_SESSION ['USU_ID']) {
                                                 $verarch .="<img src='" . PATH_DOMAIN . "/web/lib/32/delete-file-icon.png' file='$una->fil_id' class='deleteFile icon' />";
                                             }
-                                            $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                            
+                                            if ($una->fil_subtitulo){
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . " - " . $una->fil_subtitulo . '</a></li>';
+                                                }
+                                            }else{
+                                                if ($una->fil_nomoriginal){
+                                                    $verarch .= $una->fil_titulo . " (" . $una->fil_nomoriginal .")". '</a></li>';
+                                                }else{
+                                                    $verarch .= $una->fil_titulo . '</a></li>';
+                                                }
+                                            }
+                                            
                                         }
                                         break;
                                 }
@@ -518,7 +593,7 @@ tab_expediente.exp_id  = $id";
                     }
                 }
             } else {
-                $tree .= "<li><a href='#' class='pagAct' onclick='return false'>No existe tramites en esta SERIE</a></li>";
+                $tree .= "<li><a href='#' class='pagAct' onclick='return false'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
             }
         }
         return $tree;
@@ -534,7 +609,7 @@ tab_expediente.exp_id  = $id";
         $this->usuario = $row_usu [0];
         $row = $this->expediente->dbselectByField("exp_id", $exp_id);
         if (is_null($row)) {
-            $tree .= "<li><a href='#' onclick='return false;' class='suboptActx'>No existe tramites en esta SERIE</a></li>";
+            $tree .= "<li><a href='#' onclick='return false;' class='suboptActx'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
         } else {
             $row = $row [0];
             $ser_id = $row->ser_id;
@@ -640,7 +715,7 @@ tab_expediente.exp_id  = $id";
                     }
                 }
             } else {
-                $tree .= "<li><a href='#' onclick='return false' class='pagAct'>No existe tramites en esta SERIE</a></li>";
+                $tree .= "<li><a href='#' onclick='return false' class='pagAct'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
             }
         }
         return $tree;
