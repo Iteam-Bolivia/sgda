@@ -35,7 +35,7 @@ class rpteInventarioDocController Extends baseController {
 
         //PARA LA ORDENACION SOLO SE ESCOJE UNA OPCION
         $order_by = "";
-        $order_by.=" ORDER BY tab_archivo.fil_codigo, tab_archivo.fil_titulo ASC ";
+        $order_by.=" ORDER BY tab_tramite.tra_orden, tab_archivo.fil_codigo ASC ";
         //PARA LOS FILTROS
         if ($filtro_expediente != '') {
             $where.=" AND tab_expediente.exp_id = '$filtro_expediente' ";
@@ -214,8 +214,57 @@ class rpteInventarioDocController Extends baseController {
                         INNER JOIN tab_localidad ON tab_ubicacion.loc_id = tab_localidad.loc_id
                         INNER JOIN tab_provincia ON tab_localidad.pro_id = tab_provincia.pro_id
                         INNER JOIN tab_departamento ON tab_provincia.dep_id = tab_departamento.dep_id
-                        WHERE tab_expusuario.eus_estado = 1 " . $where . $order_by;                     
-//        
+                        WHERE tab_expusuario.eus_estado = 1 " . $where . $order_by; 
+        
+        
+        $sql = "SELECT
+            tab_archivo.fil_nrocaj,
+            tab_archivo.fil_nroejem,
+            tab_fondo.fon_cod,
+            tab_unidad.uni_cod,
+            tab_tipocorr.tco_codigo,
+            tab_series.ser_codigo,
+            tab_expediente.exp_codigo,
+            tab_cuerpos.cue_codigo,
+            tab_archivo.fil_codigo,
+            tab_departamento.dep_nombre,
+            tab_archivo.fil_titulo,
+            tab_archivo.fil_subtitulo,
+            tab_archivo.fil_proc,
+            tab_archivo.fil_firma,
+            tab_expisadg.exp_fecha_exi,
+            tab_expisadg.exp_fecha_exf,
+            tab_archivo.fil_tomovol,
+            tab_archivo.fil_nrofoj,
+            (SELECT tab_sopfisico.sof_codigo
+                                                     FROM tab_sopfisico 
+                                                    WHERE tab_sopfisico.sof_id = tab_archivo.sof_id ) AS sof_codigo,
+            tab_archivo.fil_mrb,
+            tab_archivo.fil_sala,
+            tab_archivo.fil_estante,
+            tab_archivo.fil_cuerpo,
+            tab_archivo.fil_balda,
+            tab_archivo.fil_obs,
+            tab_tramite.tra_descripcion
+            FROM
+            tab_expediente
+            INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+            INNER JOIN tab_series ON tab_expediente.ser_id = tab_series.ser_id
+            INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+            INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
+            INNER JOIN tab_usuario ON tab_expusuario.usu_id = tab_usuario.usu_id
+            INNER JOIN tab_unidad ON tab_series.uni_id = tab_unidad.uni_id
+            INNER JOIN tab_fondo ON tab_unidad.fon_id = tab_fondo.fon_id
+            INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+            INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+            INNER JOIN tab_ubicacion ON tab_unidad.ubi_id = tab_ubicacion.ubi_id
+            INNER JOIN tab_localidad ON tab_ubicacion.loc_id = tab_localidad.loc_id
+            INNER JOIN tab_provincia ON tab_localidad.pro_id = tab_provincia.pro_id
+            INNER JOIN tab_departamento ON tab_provincia.dep_id = tab_departamento.dep_id
+            INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
+            INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_exparchivo.tra_id
+            WHERE tab_expusuario.eus_estado = 1 " . $where . $order_by; 
+//    
 //        //echo ($sql); die ();
 //
         $expediente = new Tab_expediente();
@@ -289,31 +338,70 @@ class rpteInventarioDocController Extends baseController {
         $cadena .= '<td width="25" align="center"><span style="font-size: 11px ;font-weight: bold;">Balda</span></td>';
         $cadena .= '</tr>';
         $numero = 1;
-        foreach ($result as $fila) {
-            $cadena .= '<tr>';
-            $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nrocaj . '</span></td>';
-            $cadena .= '<td  width="25"><span style="font-size: 11px;"></span></td>';
-            $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nroejem . '</span></td>';
-            $cadena .= '<td  width="25"><span style="font-size: 11px;">0,32</span></td>';
-            $cadena .= '<td  width="60"><span style="font-size: 11px;">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->fil_codigo .'</span></td>';
-            $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->dep_nombre . '</span></td>';
+        $tra_descripciona = "";
+        $tra_descripcionn = "";
+        foreach ($result as $fila) {            
+            // New           
+            $tra_descripcionn = $fila->tra_descripcion;
+            if ($tra_descripcionn != $tra_descripciona){
+                $cadena .= '<tr>';
+                $cadena .= '<td width="100%" colspan="20"><span style="font-size: 11px;">' . $fila->tra_descripcion .  '</span></td>';
+                $cadena .= '</tr>'; 
+                
+                //
+                $cadena .= '<tr>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nrocaj . '</span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;"></span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nroejem . '</span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">0,32</span></td>';
+                $cadena .= '<td  width="60"><span style="font-size: 11px;">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->cue_codigo . DELIMITER . $fila->fil_codigo .'</span></td>';
+                $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->dep_nombre . '</span></td>';
+
+                $cadena .= '<td width="90"><span style="font-size: 11px;">' . $fila->fil_titulo .  '</span></td>';
+                $cadena .= '<td width="70"><span style="font-size: 11px;">' . $fila->fil_subtitulo . '</span></td>';
+                $cadena .= '<td width="45"><span style="font-size: 11px;">' . $fila->fil_proc . '</span></td>';
+                $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->fil_firma . '</span></td>';
+                $cadena .= '<td width="35"><span style="font-size: 11px;">' .  $fila->exp_fecha_exi . ' - ' . $fila->exp_fecha_exf . '</span></td>';
+                $cadena .= '<td width="35"><span style="font-size: 11px;">' . $fila->fil_tomovol . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_nrofoj . '</span></td>';
+                $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->sof_codigo . '</span></td>';
+                $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->fil_mrb . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_sala . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_estante . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_cuerpo . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_balda . '</span></td>';
+                $cadena .= '<td width="60"><span style="font-size: 11px;">' . $fila->fil_obs . '</span></td>';
+                $cadena .= '</tr>';            
+                
+            }else{
+                $cadena .= '<tr>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nrocaj . '</span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;"></span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">' . $fila->fil_nroejem . '</span></td>';
+                $cadena .= '<td  width="25"><span style="font-size: 11px;">0,32</span></td>';
+                $cadena .= '<td  width="60"><span style="font-size: 11px;">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->cue_codigo . DELIMITER . $fila->fil_codigo .'</span></td>';
+                $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->dep_nombre . '</span></td>';
+
+                $cadena .= '<td width="90"><span style="font-size: 11px;">' . $fila->fil_titulo .  '</span></td>';
+                $cadena .= '<td width="70"><span style="font-size: 11px;">' . $fila->fil_subtitulo . '</span></td>';
+                $cadena .= '<td width="45"><span style="font-size: 11px;">' . $fila->fil_proc . '</span></td>';
+                $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->fil_firma . '</span></td>';
+                $cadena .= '<td width="35"><span style="font-size: 11px;">' .  $fila->exp_fecha_exi . ' - ' . $fila->exp_fecha_exf . '</span></td>';
+                $cadena .= '<td width="35"><span style="font-size: 11px;">' . $fila->fil_tomovol . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_nrofoj . '</span></td>';
+                $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->sof_codigo . '</span></td>';
+                $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->fil_mrb . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_sala . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_estante . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_cuerpo . '</span></td>';
+                $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_balda . '</span></td>';
+                $cadena .= '<td width="60"><span style="font-size: 11px;">' . $fila->fil_obs . '</span></td>';
+                $cadena .= '</tr>';            
+            }
             
-            $cadena .= '<td width="90"><span style="font-size: 11px;">' . $fila->fil_titulo .  '</span></td>';
-            $cadena .= '<td width="70"><span style="font-size: 11px;">' . $fila->fil_subtitulo . '</span></td>';
-            $cadena .= '<td width="45"><span style="font-size: 11px;">' . $fila->fil_proc . '</span></td>';
-            $cadena .= '<td width="40"><span style="font-size: 11px;">' . $fila->fil_firma . '</span></td>';
-            $cadena .= '<td width="35"><span style="font-size: 11px;">' .  $fila->exp_fecha_exi . ' - ' . $fila->exp_fecha_exf . '</span></td>';
-            $cadena .= '<td width="35"><span style="font-size: 11px;">' . $fila->fil_tomovol . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_nrofoj . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->sof_codigo . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->fil_mrb . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_sala . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_estante . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_cuerpo . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->fil_balda . '</span></td>';
-            $cadena .= '<td width="60"><span style="font-size: 11px;">' . $fila->fil_obs . '</span></td>';
-            $cadena .= '</tr>';
             $numero++;
+            $tra_descripciona = $fila->tra_descripcion;
+            
         }
         //obtenerSelectCamposRepC
         $cadena .= '</table>';
