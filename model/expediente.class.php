@@ -381,7 +381,7 @@ tab_expediente.exp_id  = $id";
         $this->usuario = $row_usu [0];
         $row = $this->expediente->dbselectByField("exp_id", $exp_id);
         if (is_null($row)) {
-            $tree .= "<li><a href='#' onclick='return false;' class='suboptActx'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
+            $tree .= "<li><a href='javascript:void(0)' onclick='return false;' class='suboptActx'>NO EXISTEN TIPOS DOCUMENTALES PARA EL EXPEDIENTE</a></li>";
         } else {
             $row = $row [0];
             $ser_id = $row->ser_id;
@@ -420,10 +420,11 @@ tab_expediente.exp_id  = $id";
                         $tree .= "<ul di='" . $un->tra_id . "aa'>";
                         foreach ($rowc as $unc) {
                             $tree .= "        <li>"
-                                    ."<a href='#' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "' >"
+                                    ."<a href='javascript:void(0)' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "' ><span id='des$unc->cue_id'>"
+                                    . "<img src='" . PATH_DOMAIN . "/web/lib/32/arrow-down.png' tra='$un->tra_id' cue='$unc->cue_id' title='Desplegar' border='0' width='30' onclick='desple($unc->cue_id)'/></span>"
                                     . "<img src='" . PATH_DOMAIN . "/web/lib/32/document-add.png' tra='$un->tra_id' cue='$unc->cue_id' class='addFile icon' title='Adicionar documento'/>"
                                     . $unc->cue_descripcion . "</a>";
-                            $tree .= "<ul id='" . $unc->cue_id . "-" . $un->tra_id . "x'>";
+                            $tree .= "<div style='display:none' id='grupo$unc->cue_id'><ul id='" . $unc->cue_id . "-" . $un->tra_id . "x'>";
                             $sql = "SELECT
                             usu.uni_id,
                             usu.usu_id,
@@ -587,7 +588,7 @@ tab_expediente.exp_id  = $id";
                                 }
                                 $tree .= $verarch;
                             }
-                            $tree .= "</ul>";
+                            $tree .= "</ul></div>";
                             $tree .= "</li>";
                         }
                         $tree .= "</ul>";

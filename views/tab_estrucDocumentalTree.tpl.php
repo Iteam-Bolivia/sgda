@@ -1,5 +1,6 @@
 <div align="left"><a href="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
 </div>
+
 <div id="dialog" title="Necesita password para poder ver el archivo">
     <p id="validateTips"></p>
     <form id="formAA" name="formA" method="post" action="<?php echo $PATH_DOMAIN ?>/archivo/download/" target="_blank">
@@ -144,4 +145,17 @@
     });
 
 
+</script>
+<script languaje="javascript">
+function desple(str){ 
+    $("#grupo"+str).slideDown("fast");
+   // $("#des"+str).html("<b>a</b>");
+   document.getElementById("des"+str).innerHTML="<img src='<?php echo PATH_DOMAIN ?>/web/lib/32/arrow-up.png' title='Cerrar' border='0' width='30' onclick='cerrar("+str+")'/>";
+}
+function cerrar(str2){
+ alert(str2)
+    $("#grupo"+str2).slideUp("fast");
+   document.getElementById("des"+str2).innerHTML="<img src='<?php echo PATH_DOMAIN ?>/web/lib/32/arrow-down.png' cue='"+str2+"' title='Desplegar' border='0' width='30' onclick='desple("+str2+")'/>";
+
+}
 </script>
