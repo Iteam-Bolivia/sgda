@@ -507,7 +507,7 @@ $usuario=$_SESSION ['USU_ID'];
             $liMenu .= "		<tr class='erow evenw' id='" . $menus->uni_id . "'>";
 
             $liMenu .= "			<td align='left' class='sorted'>";
-            $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menus->ser_id . "</div>";
+            //$liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menus->ser_id . "</div>";
             $liMenu .= "			</td>";
                         
             $liMenu .= "			<td align='left' class='sorted'>";
@@ -613,7 +613,7 @@ $usuario=$_SESSION ['USU_ID'];
             $liMenu .= "		<tr class='erow evenw' id='" . $menus->uni_id . "'>";
             
             $liMenu .= "			<td align='right' class='sorted'>";
-            $liMenu .= "			<div style='text-align: left; width: 60px;'>" . $menus->ser_id . "</div>";
+            $liMenu .= "			<div style='text-align: left; width: 60px;'>" . "" . "</div>";
             $liMenu .= "			</td>";
             
             $liMenu .= "			<td align='left'>";

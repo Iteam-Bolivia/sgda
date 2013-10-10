@@ -315,13 +315,13 @@
             <td width="166">Estado Documento :</td>
             <td colspan="3">
                 <input type="radio" name="fil_mrb" value="Bueno" <?php if ($fil_mrb == 'Bueno') {
-                        echo "checked";
+                        echo "checked='checked'";
                     } ?>/>Bueno
                 <input type="radio" name="fil_mrb" value="Regular" <?php if ($fil_mrb == 'Regular') {
-                        echo "checked";
+                        echo "checked='checked'";
                     } ?>/>Regular
                 <input type="radio" name="fil_mrb" value="Malo" <?php if ($fil_mrb == 'Malo') {
-                        echo "checked";
+                        echo "checked='checked'";
                     } ?>/>Malo
             </td>
         </tr>
@@ -459,14 +459,14 @@
         $("#cancelar").click(function(){
             location.href="<?php echo $PATH_DOMAIN ?>/estrucDocumental/viewTree/<?php echo $exp_id; ?>/<?php echo $fil_id; ?>/";
         });
-        $("#btnCargar").click(function(){
+       /* $("#btnCargar").click(function(){
             $("#accion").val('cargar');
-            $("#formA").submit();
+          $("#formA").submit();
         });
         $("#btnSub2").click(function(){
             $("#accion").val('cargarnuevo');
             $("#formA").submit();
-        });        
+        });  */     
         $("#btnDigitalizar").click(function(){
             $("#accion").val('digitalizar');
             $("#formA").submit();
@@ -582,7 +582,7 @@
         var  original;
         var  copia;
         var  foto;
-        $("#fil_obs,#accion,#palabra,#fil_descripcion").click(function(){
+        $("#fil_obs,#accion,#palabra,#fil_descripcion,#btnSub2,#btnCargar").click(function(){
     
               totalejemp=Number($("#fil_nroejem").val());
               copia=Number($("#fil_cop").val());
@@ -600,6 +600,7 @@
                 $("#error").html("");
                 $("#fil_nroejem").css("border","1px solid #E3E2E2");
                 $("#fil_nroejem").css("background","#ffffff");
+             
               }
               
         })

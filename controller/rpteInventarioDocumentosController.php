@@ -14,7 +14,7 @@ class rpteInventarioDocumentosController Extends baseController {
     function index() {
 
         $series = new series();
-        $this->registry->template->optSerie = $series->obtenerSelectSeries();
+        $this->registry->template->optSerie = $series->obtenerSelectTodas();
 //        $unidad = new unidad();
 //        $this->registry->template->optUnidad = $unidad->obtenerSelect();
 //        $usuario = new usuario();
@@ -35,35 +35,34 @@ class rpteInventarioDocumentosController Extends baseController {
 
     function verRpte() {
 
-        $tipo_clasificado = $_REQUEST["tipo_clasificado"];
-        if ($tipo_clasificado == "SERIE") {
             $this->verRpte_serie();
-        }
+        
     }
 
     function verRpte_serie() {
 
-        $tipo_orden = $_REQUEST["tipo_orden"];
+        
         $filtro_series = $_REQUEST["filtro_series"];
-
+        if(isset( $_REQUEST["filtro_expedientes"])){
+        $filtro_expedientes = $_REQUEST["filtro_expedientes"];
+        }else{
+            $filtro_expedientes="";
+        }
 
         $where = "";
         $where .= " AND tab_usuario.usu_id=" . $_SESSION["USU_ID"];
 
         $order_by = "";
 
-        if ($tipo_orden == 'NOMBRE_EXPEDIENTE') {
-            $order_by.=" ORDER BY tab_series.ser_id ASC, tab_expisadg.exp_titulo ASC";
-        }
-        if ($tipo_orden == 'CODIGO_REFERENCIA') {
-            $order_by.=" ORDER BY tab_series.ser_id ASC, tab_expediente.exp_codigo ASC";
-        }
+   
 
         //PARA LOS FILTROS
         if ($filtro_series != '') {
             $where.=" AND tab_series.ser_id =  '$filtro_series' ";
         }
-
+        if ($filtro_expedientes != '') {
+            $where.=" AND tab_expediente.exp_id =  '$filtro_expedientes' ";
+        }
         $sqlh = "SELECT
                     fonp.fon_descripcion as fondes,
                     tab_fondo.fon_descripcion,
@@ -87,6 +86,7 @@ class rpteInventarioDocumentosController Extends baseController {
                     INNER JOIN tab_usuario ON tab_usuario.usu_id = tab_usu_serie.usu_id
                     INNER JOIN tab_rol ON tab_usuario.rol_id = tab_rol.rol_id
                     INNER JOIN tab_expusuario ON tab_expusuario.usu_id = tab_usuario.usu_id
+                    INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
                     WHERE tab_expusuario.eus_estado = 1 " . $where;
 
         $expedienteh = new Tab_expediente();
@@ -114,16 +114,16 @@ class rpteInventarioDocumentosController Extends baseController {
 
             $cadenah .= '<table width="760" border="1" cellpadding="2">';
             $cadenah .= '<tr>';
-            $cadenah .= '<td width="100" bgcolor="#CCCCCC"><span style="font-size: 14px;font-weight: bold;"> FONDO:</span></td>';
-            $cadenah .= '<td width="350"><span style="font-size: 14px;">' . $resulth[0]->fondes . '</span></td>';
-            $cadenah .= '<td width="90" bgcolor="#CCCCCC"><span style="font-size: 14px;font-weight: bold;">INSTRUMENTO DE CONSULTA:</span></td>';
-            $cadenah .= '<td width="220"><span style="font-size: 14px;">INVENTARIO DE EXPEDIENTES</span></td>';
+            $cadenah .= '<td width="100" bgcolor="#CCCCCC"><span style="font-size: 20px;font-weight: bold;"> FONDO:</span></td>';
+            $cadenah .= '<td width="350"><span style="font-size: 20px;">' . $resulth[0]->fondes . '</span></td>';
+            $cadenah .= '<td width="90" bgcolor="#CCCCCC"><span style="font-size: 20px;font-weight: bold;">INSTRUMENTO DE CONSULTA:</span></td>';
+            $cadenah .= '<td width="220"><span style="font-size: 20px;">INVENTARIO DE EXPEDIENTES</span></td>';
             $cadenah .= '</tr>';
             $cadenah .= '<tr>';
-            $cadenah .= '<td width="100" bgcolor="#CCCCCC"><span style="font-size: 14px;font-weight: bold;">SUB-FONDO:</span></td>';
-            $cadenah .= '<td width="350"><span style="font-size: 14px;">' . $resulth[0]->fon_descripcion . '</span></td>';
-            $cadenah .= '<td width="90" bgcolor="#CCCCCC"><span style="font-size: 14px;font-weight: bold;">SECCIÓN:</span></td>';
-            $cadenah .= '<td width="220" ><span style="font-size: 14px;">' . $resulth[0]->uni_descripcion . '</span></td>';
+            $cadenah .= '<td width="100" bgcolor="#CCCCCC"><span style="font-size: 20px;font-weight: bold;">SUB-FONDO:</span></td>';
+            $cadenah .= '<td width="350"><span style="font-size: 20px;">' . $resulth[0]->fon_descripcion . '</span></td>';
+            $cadenah .= '<td width="90" bgcolor="#CCCCCC"><span style="font-size: 20px;font-weight: bold;">SECCIÓN:</span></td>';
+            $cadenah .= '<td width="220" ><span style="font-size: 20px;">' . $resulth[0]->uni_descripcion . '</span></td>';
             $cadenah .= '</tr>';
             $cadenah .= '</table>';
         }
@@ -207,8 +207,8 @@ class rpteInventarioDocumentosController Extends baseController {
         $cadena = "";
         $cadena .= '<table width="760" border="1" cellpadding="2">';
         $cadena .= '<tr bgcolor="#CCCCCC">';
-        $cadena .= '<td colspan="14" align="center" width="650"><span style="font-size: 12px;font-weight: bolder;">ÁREA DE IDENTIFICACIÓN</span></td>';
-        $cadena .= '<td width="110" align="center"><span style="font-size: 12px;font-weight: bolder;">ÁREA DE NOTAS</span></td>';
+        $cadena .= '<td colspan="14" align="center" width="650"><span style="font-size: 20px;font-weight: bolder;">ÁREA DE IDENTIFICACIÓN</span></td>';
+        $cadena .= '<td width="110" align="center"><span style="font-size: 20px;font-weight: bolder;">ÁREA DE NOTAS</span></td>';
 
 //        $camposh = new expcampo;
 //        $resultdh = $camposh->obtenerSelectCamposRepH($filtro_series);
@@ -217,26 +217,26 @@ class rpteInventarioDocumentosController Extends baseController {
 
         $cadena .= '</tr>';
         $cadena .= '<tr bgcolor="#CCCCCC">';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">Unidad de Instalación</span></td>';
-        $cadena .= '<td width="80" colspan="3" align="center"><span style="font-size: 11px ;font-weight: bold;">Volumen</span></td>';
-        $cadena .= '<td width="30" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">N de Orden doc.</span></td>';
-        $cadena .= '<td width="50" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Código de Expediente</span></td>';
-        $cadena .= '<td width="260" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Nombre de Expediente</span></td>';
-        $cadena .= '<td width="30" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Fecha</span></td>';
-        $cadena .= '<td width="25" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Tomo/Volumen</span></td>';
-        $cadena .= '<td width="25" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Soporte Físico</span></td>';
-        $cadena .= '<td width="120" colspan="4" align="center"><span style="font-size: 11px ;font-weight: bold;">Ubicación Topografica</span></td>';
-        $cadena .= '<td width="110" rowspan="2" align="center" valign="middle"><span style="font-size: 11px ;font-weight: bold;">Observaciones</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Unidad de Instalación</span></td>';
+        $cadena .= '<td width="100" colspan="3" align="center"><span style="font-size: 20px ;font-weight: bold;">Volumen</span></td>';
+        $cadena .= '<td width="30" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">N de Orden doc.</span></td>';
+        $cadena .= '<td width="50" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Código de Expediente</span></td>';
+        $cadena .= '<td width="240" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Nombre de Expediente</span></td>';
+        $cadena .= '<td width="30" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Fecha</span></td>';
+        $cadena .= '<td width="25" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Tomo/Volumen</span></td>';
+        $cadena .= '<td width="25" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Soporte Físico</span></td>';
+        $cadena .= '<td width="120" colspan="4" align="center"><span style="font-size: 20px ;font-weight: bold;">Ubicación Topografica</span></td>';
+        $cadena .= '<td width="110" rowspan="2" align="center" valign="middle"><span style="font-size: 20px ;font-weight: bold;">Observaciones</span></td>';
         $cadena .= '</tr>';
         $cadena .= '<tr bgcolor="#CCCCCC">';
-        $cadena .= '<td width="30" align="center" valign="middle"><span style="font-size: 11px; font-weight: bold;">N de Caja</span></td>';
-        $cadena .= '<td width="20" align="center"><span style="font-size: 11px ;font-weight: bold;">Total piezas/cajas</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">N ejem.</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px; font-weight: bold;">ML</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">Sala</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">Estante</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">Cuerpo</span></td>';
-        $cadena .= '<td width="30" align="center"><span style="font-size: 11px ;font-weight: bold;">Balda</span></td>';
+        $cadena .= '<td width="30" align="center" valign="middle"><span style="font-size: 20px; font-weight: bold;">N de Caja</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Total piezas/cajas</span></td>';
+        $cadena .= '<td width="35" align="center"><span style="font-size: 20px ;font-weight: bold;">N ejem.</span></td>';
+        $cadena .= '<td width="35" align="center"><span style="font-size: 20px; font-weight: bold;">ML</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Sala</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Estante</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Cuerpo</span></td>';
+        $cadena .= '<td width="30" align="center"><span style="font-size: 20px ;font-weight: bold;">Balda</span></td>';
         $cadena .= '</tr>';
         $aux = "";
         $numero = 1;
@@ -251,21 +251,21 @@ class rpteInventarioDocumentosController Extends baseController {
                 $aux = $ser_id;
             }
             $cadena .= '<tr>';
-            $cadena .= '<td  width="30"><span style="font-size: 11px;">' . $fila->exp_nrocaj . '</span></td>';
-            $cadena .= '<td  width="20"><span style="font-size: 11px;"></span></td>';
-            $cadena .= '<td  width="30"><span style="font-size: 11px;">' . $fila->exp_nroejem . '</span></td>';
-            $cadena .= '<td  width="30"><span style="font-size: 11px;">0,32</span></td>';
-            $cadena .= '<td  width="30"><span style="font-size: 11px;">' . $numero . '</span></td>';
-            $cadena .= '<td width="50"><span style="font-size: 11px;">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . '</span></td>';
-            $cadena .= '<td width="260"><span style="font-size: 11px;">' . $fila->exp_titulo . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->exp_fecha_exi . ' - ' . $fila->exp_fecha_exf . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->exp_tomovol . '</span></td>';
-            $cadena .= '<td width="25"><span style="font-size: 11px;">' . $fila->sof_codigo . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->exp_sala . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->exp_estante . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->exp_cuerpo . '</span></td>';
-            $cadena .= '<td width="30"><span style="font-size: 11px;">' . $fila->exp_balda . '</span></td>';
-            $cadena .= '<td width="110"><span style="font-size: 11px;">' . $fila->exp_obs . '</span></td>';
+            $cadena .= '<td  width="30"><span style="font-size: 20px;">' . $fila->exp_nrocaj . '</span></td>';
+            $cadena .= '<td  width="20"><span style="font-size: 20px;"></span></td>';
+            $cadena .= '<td  width="30"><span style="font-size: 20px;">' . $fila->exp_nroejem . '</span></td>';
+            $cadena .= '<td  width="30"><span style="font-size: 20px;">0,32</span></td>';
+            $cadena .= '<td  width="30"><span style="font-size: 20px;">' . $numero . '</span></td>';
+            $cadena .= '<td width="50"><span style="font-size: 20px;">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . '</span></td>';
+            $cadena .= '<td width="260"><span style="font-size: 20px;">' . $fila->exp_titulo . '</span></td>';
+            $cadena .= '<td width="30"><span style="font-size: 20px;">' . $fila->exp_fecha_exi . ' - ' . $fila->exp_fecha_exf . '</span></td>';
+            $cadena .= '<td width="25"><span style="font-size: 20px;">' . $fila->exp_tomovol . '</span></td>';
+            $cadena .= '<td width="25"><span style="font-size: 20px;">' . $fila->sof_codigo . '</span></td>';
+            $cadena .= '<td width="30"><span style="font-size: 20px;">' . $fila->exp_sala . '</span></td>';
+            $cadena .= '<td width="30"><span style="font-size: 20px;">' . $fila->exp_estante . '</span></td>';
+            $cadena .= '<td width="30"><span style="font-size: 20px;">' . $fila->exp_cuerpo . '</span></td>';
+            $cadena .= '<td width="30"><span style="font-size: 20px;">' . $fila->exp_balda . '</span></td>';
+            $cadena .= '<td width="110"><span style="font-size: 20px;">' . $fila->exp_obs . '</span></td>';
             /////
             //consulta para campos adicionales
 
@@ -287,6 +287,26 @@ class rpteInventarioDocumentosController Extends baseController {
         // -----------------------------------------------------------------------------
         //Close and output PDF document
         $pdf->Output('reporte_inventario.pdf', 'I');
+    }
+    function ajaxExp(){
+       $ser_id=$_REQUEST['valor'];
+        $sql="SELECT
+tab_expediente.exp_id,
+tab_expisadg.exp_titulo
+FROM
+tab_series
+INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
+INNER JOIN tab_expisadg ON tab_expisadg.exp_id = tab_expediente.exp_id
+where tab_series.ser_id = $ser_id ORDER BY tab_expediente.exp_id";
+    $series=new Tab_series();
+    $result=$series->dbSelectBySQL($sql);
+     echo '<select name="filtro_expedientes" style="width: auto;"
+                        id="filtro_funcionario" size="5" style="height: 250px">';
+                   echo '<option value="">(seleccionar)</option>';
+        foreach($result as $list){
+            echo "<option value='".$list->exp_id."'>".$list->exp_titulo."</option>";
+        }
+        echo "</select>";
     }
 
 }

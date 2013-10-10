@@ -32,80 +32,121 @@ class rptePerCustodioController Extends baseController {
 
     function verRpte_serie() {
 
-        $tipo_orden = $_REQUEST["tipo_orden"];
-        $filtro_series = $_REQUEST["filtro_series"];
-        $order_by = "";
-        if ($tipo_orden == 'SERIE') {
-            $order_by.=" ORDER BY ts.ser_categoria ASC";
-        }
-        if ($tipo_orden == 'NOMBRE_EXPEDIENTE') {
-            $order_by.=" ORDER BY te.exp_nombre ASC";
-        }
-        if ($tipo_orden == 'CODIGO_REFERENCIA') {
-            $order_by.=" ORDER BY te.exp_codigo ASC";
-        }
-        if ($tipo_orden == 'FECHA_EXI') {
-            $order_by.=" ORDER BY tef.exf_fecha_exi ASC";
-        }
-        if ($tipo_orden == 'FECHA_EXF') {
-            $order_by.=" ORDER BY tef.exf_fecha_exf ASC";
-        }
-
-        //para el where
-        $where = "";
-        $where .= "  AND teu.usu_id  =  '" . $_SESSION["USU_ID"] . "' ";
-
-
-        //filtros
-        if ($filtro_series != '') {
-            $where.=" AND te.ser_id =  '$filtro_series' ";
-        }
-
-        //para la fecha de la cabezera
-        $fecha_actual = date("d/m/Y");
-        $sql = "SELECT
-                te.exp_nombre,
-                te.exp_codigo,
-                te.ser_id,
-                ts.ser_categoria,
-                teu.usu_id,
-                tef.exf_fecha_exi,
-                tef.exf_fecha_exf,
-                stc.con_codigo,
-                sttc.ctp_codigo
-                FROM
-                tab_expediente AS te
-                Inner Join tab_series AS ts ON ts.ser_id = te.ser_id
-                Inner Join tab_expusuario AS teu ON te.exp_id = teu.exp_id
-                Inner Join tab_expfondo AS tef ON te.exp_id = tef.exp_id
-                INNER JOIN tab_expcontenedor AS stec ON stec.exp_id = te.exp_id
-                INNER JOIN tab_subcontenedor sub ON sub.suc_id = stec.suc_id
-                INNER JOIN tab_contenedor AS stc ON stc.con_id = sub.con_id
-                INNER JOIN tab_tipocontenedor AS sttc ON sttc.ctp_id = stc.ctp_id
+      $archivo = new prestamoslinea();
+        $tarchivo = new tab_archivo ();
+        $tarchivo->setRequest2Object($_REQUEST);
+        $where = ""; 
+        
+//        if (isset($_REQUEST ['fon_id'])) {
+//            $where .= " AND tab_fondo.fon_id='$_REQUEST ['fon_id']' ";            
+//        }
+//        if (isset($_REQUEST ['uni_id'])) {
+//            $where .= " AND tab_unidad.uni_id='$_REQUEST ['uni_id']' ";            
+//        }
+//        if (isset($_REQUEST ['ser_id'])) {
+//            $where .= " AND tab_series.ser_id='$ser_id' ";           
+//        }
+//        if (!is_null($_REQUEST ['tra_id'])) {
+//            $where .= " AND tab_tramite.tra_id='$tra_id' ";            
+//        }
+//        if (!is_null($_REQUEST ['cue_id'])) {
+//            $where .= " AND tab_cuerpos.cue_id='$cue_id' ";            
+//        }
+//        if (!is_null($_REQUEST ['exp_titulo'])) {
+//            $where .= " AND tab_expisadg.exp_titulo='$exp_titulo' ";            
+//        }
+//        if (!is_null($_REQUEST ['exf_fecha_exi'])) {
+//            $where .= " AND tab_expisadg.exp_fecha_exi='$exf_fecha_exi' ";            
+//        }
+//        if (!is_null($_REQUEST ['exf_fecha_exf'])) {
+//            $where .= " AND tab_expisadg.exf_fecha_exf='$exf_fecha_exi' ";            
+//        }        
+        
+        $usu_id = $_SESSION['USU_ID'];
+        
+        $select = "SELECT
+                tab_archivo.fil_id,
+                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
+                tab_unidad.uni_descripcion,
+                tab_series.ser_categoria,
+                tab_expisadg.exp_titulo,
+                f.fon_cod,
+                tab_unidad.uni_cod,
+                tab_tipocorr.tco_codigo,
+                tab_series.ser_codigo,
+                tab_expediente.exp_id,
+                tab_expediente.exp_codigo,
+                tab_cuerpos.cue_codigo,
+                tab_archivo.fil_codigo,
+                tab_cuerpos.cue_descripcion,
+                tab_archivo.fil_titulo,
+                tab_archivo.fil_proc,
+                tab_archivo.fil_firma,
+                tab_archivo.fil_cargo,
+                tab_archivo.fil_nrofoj,
+                tab_archivo.fil_tomovol,
+                tab_archivo.fil_nroejem,
+                tab_archivo.fil_nrocaj,
+                tab_archivo.fil_sala,
+                tab_archivo.fil_estante,
+                tab_archivo.fil_cuerpo,
+                tab_archivo.fil_balda,
+                tab_archivo.fil_tipoarch,
+                tab_archivo.fil_mrb,
+                tab_archivo.fil_ori,
+                tab_archivo.fil_cop,
+                tab_archivo.fil_fot,
+                (CASE tab_exparchivo.exa_condicion 
+                                    WHEN '1' THEN 'DISPONIBLE' 
+                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
+                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
+                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
+                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
+                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
+                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
+                tab_archivo.fil_obs";
+        $from = " FROM
+                tab_fondo as f
+                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
+                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
+                INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
+                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
+                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
+                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
                 WHERE
-                te.exp_estado =  '1' AND
-                teu.eus_estado =  '1' AND
-                tef.fon_id =  '1' AND
-                tef.exf_estado =  '1'
-                AND stec.exc_estado =  '1'" . $where . $order_by;
-
-        //echo ($sql); die ();
-        $expediente = new Tab_expediente();
-        $result = $expediente->dbselectBySQL($sql);
-
+                f.fon_estado = 1 AND
+                tab_unidad.uni_estado = 1 AND
+                tab_tipocorr.tco_estado = 1 AND
+                tab_series.ser_estado = 1 AND
+                tab_expediente.exp_estado = 1 AND
+                tab_archivo.fil_estado = 1 AND
+                tab_exparchivo.exa_estado = 1 AND
+                tab_expusuario.eus_estado = 1 AND
+                tab_expusuario.usu_id=$usu_id ";
+             
+        
+        $sql =$select.$from;
+        $result = $tarchivo->dbSelectBySQL($sql);         
+        $this->usuario = new usuario ();
+        
+        // PDF
+        // Landscape
         require_once ('tcpdf/config/lang/eng.php');
         require_once ('tcpdf/tcpdf.php');
-        $this->usuario = new usuario ();
-        // create new PDF document
-        $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->setFontSubsetting(FALSE);
         $pdf->SetAuthor($this->usuario->obtenerNombre($_SESSION['USU_ID']));
-        $pdf->SetTitle('Reporte de Expedientes');
-        $pdf->SetSubject('Reporte de Expedientes');
+        $pdf->SetTitle('Reporte de Buscar Archivo ');
+        $pdf->SetSubject('Reporte de Buscar Archivo ');
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 //        aumentado
-        $pdf->SetKeywords('Iteam, TEAM DIGITAL');
+        $pdf->SetKeywords('Iteam, Sistema de Archivo Digital');
         // set default header data
         $pdf->SetHeaderData('logo_abc.png', 20, 'ABC', 'Administradora Boliviana de Carreteras');
         // set header and footer fonts
@@ -119,68 +160,101 @@ class rptePerCustodioController Extends baseController {
         //set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 15);
 //        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        $pdf->SetFont('helvetica', '', 8);
+        $pdf->SetFont('helvetica', '', 6);
         // add a page
         $pdf->AddPage();
-        $cadena = "<br/><br/><br/>";
-        $cadena .= '<table width="500" border="0" >';
-//        $cadena .= '<tr><td>MINISTERIO DE PLANIFICACION DEL DESARROLO </td></tr>';
-//        $inst = $_SESSION["INS_ID"];
-//        $institucion = new Tab_institucion();
-//        $institucion = $institucion->dbselectById($inst);
-//
-//        $cadena .= '<tr><td>' . $institucion->ins_nombre . '</td></tr>';
+        // Report
+        $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
+$cadena="";
+        $cadena = "<br/><br/><br/><br/><br/><br/>";
+        $cadena .= '<table width="780" border="0" >';
         $cadena .= '<tr><td align="center">';
         $cadena .= '<span style="font-size: 30px;font-weight: bold;">';
-        $cadena .= 'REPORTE DE EXPEDIENTES REGISTRADOS POR FUNCIONARIO';
+        $cadena .= 'Reporte de Búsqueda de Documentos';
         $cadena .= '</span>';
         $cadena .= '</td></tr>';
-        $cadena .= '<tr><td align="left">Fecha de Elaboracion: ' . $fecha_actual . '</td></tr>';
-
-        $usu = $_SESSION['USU_ID'];
-        $this->usuario = new usuario ();
-        $cadena .= '<tr><td align="left"> Funcionario: ' . $this->usuario->obtenerNombre($usu) . ' </td></tr>';
-        //revisar porq no devuelve unidad
-        $unidad = new unidad();
-        $result1 = $unidad->obtenerUnidadUsuario($usu);
-        //echo ($usu); die ();
-        foreach ($result1 as $fila1) {
-            $cadena .= '<tr><td align="left"> Unidad: ' . $fila1->uni_descripcion . ' <br/></td></tr>';
-        }
-        $cadena .= '</table>';
-        $cadena .= '<table width="500" border="1" cellpadding="2">';
+      
+            $cadena .= '<tr><td align="left">Código: ' . "" . '</td></tr>';
+            $cadena .= '<tr><td align="left">Sección Remitente: ' . ""  . '</td></tr>';
+            $cadena .= '<tr><td align="left">Dirección y Teléfono: ' . "" . '</td></tr>';
+            $cadena .= '</table>';
+        
+        // Header
+        $cadena .= '<table width="700" border="1">';
         $cadena .= '<tr>';
-        $cadena .= '<td width="20"><div align="center"><strong>Nro</strong></div></td>';
-        $cadena .= '<td width="70"><div align="center"><strong>Código de Referencia</strong></div></td>';
-        $cadena .= '<td width="90"><div align="center"><strong>Serie</strong></div></td>';
-        $cadena .='<td width="120"><div align="center"><strong>Título</strong></div></td>';
-        $cadena .='<td width="60"><div align="center"><strong>Fecha Extrema Inicial</strong></div></td>';
-        $cadena .='<td width="60"><div align="center"><strong>Fecha Extrema Final</strong></div></td>';
-        $cadena .='<td width="70"><div align="center"><strong>Unidad de Instalación</strong></div></td>';
-        $cadena .='</tr>';
-
+        $cadena .= '<td width="20"><div align="center"><strong>Nro.</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Fondo</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Sección</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Serie</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Expediente</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Tipo Doc.</strong></div></td>';
+        $cadena .= '<td width="80"><div align="center"><strong>Cod.Doc.</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Titulo</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Proc.</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Firma</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Cargo</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Nro.Foj.</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Nro.Caja</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Sala</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Estante</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Cuerpo</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Balda</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Tipo</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Estado</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Nro.Ori</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Nro.Cop</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Nro.Fot</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>NUR/NURI</strong></div></td>';
+        $cadena .= '<td width="30"><div align="center"><strong>Asunto/Ref.</strong></div></td>';
+        $cadena .= '<td width="40"><div align="center"><strong>Disponibilidad</strong></div></td>';
+        $cadena .= '<td width="50"><div align="center"><strong>Doc.Digital</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Tamaño</strong></div></td>';
+        $cadena .= '<td width="20"><div align="center"><strong>Obs.</strong></div></td>';
+        
+        
+        
+        $cadena .= '</tr>';
         $numero = 1;
         foreach ($result as $fila) {
-
-            $cadena .='<tr>';
-            $cadena .='<td width="20"><div align="center">' . $numero . '</div></td>';
-            $cadena .='<td width="70">' . $fila->exp_codigo . '</td>';
-            $cadena .='<td width="90">' . $fila->ser_categoria . '</td>';
-            $cadena .='<td width="120">' . $fila->exp_nombre . '</td>';
-            $cadena .='<td width="60"><div align="center">' . $fila->exf_fecha_exi . '</div></td>';
-            $cadena .='<td width="60"><div align="center">' . $fila->exf_fecha_exf . '</div></td>';
-            $cadena .='<td width="70">' . $fila->con_codigo . ' ' . $fila->ctp_codigo . '</td>';
-            $cadena .='</tr>';
+            $cadena .= '<tr>';
+            $cadena .= '<td width="20"><div align="center">' . $numero . '</div></td>';
+            $cadena .= '<td width="20">' . $fila->fon_codigo .  '</td>';
+            $cadena .= '<td width="50">' . $fila->uni_descripcion .  '</td>';
+            $cadena .= '<td width="50">' . $fila->ser_categoria .  '</td>';
+            $cadena .= '<td width="50">' . $fila->exp_titulo .  '</td>';
+            $cadena .= '<td width="50">' . $fila->cue_descripcion .  '</td>';
+            $cadena .= '<td width="80">' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->cue_codigo .  DELIMITER . $fila->fil_codigo .  '</td>';
+            $cadena .= '<td width="50">' . $fila->fil_titulo . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_proc .  '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_firma . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_cargo . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_nrofoj . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_nrocaj . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_sala . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_estante . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_cuerpo . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_balda . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_tipoarch . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_mrb . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_ori . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_cop . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_fot . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_nur . '</td>';
+            $cadena .= '<td width="30">' . $fila->fil_asunto . '</td>';
+            $cadena .= '<td width="40">' . $fila->disponibilidad . '</td>';
+            $cadena .= '<td width="50">' . $fila->fil_nomoriginal . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_tamano . '</td>';
+            $cadena .= '<td width="20">' . $fila->fil_obs . '</td>';
+            $cadena .= '</tr>';
             $numero++;
-        }
-
-        $cadena .='</table>';
-        //echo ($cadena);
-
+        }            
+        
+        $cadena .= '</table>';
         $pdf->writeHTML($cadena, true, false, false, false, '');
+
         // -----------------------------------------------------------------------------
         //Close and output PDF document
-        $pdf->Output('reporte_expediente.pdf', 'I');
+        $pdf->Output('reporte_buscar_archivo.pdf', 'I');
     }
 
 }

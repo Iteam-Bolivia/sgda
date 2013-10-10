@@ -28,6 +28,17 @@
                 </select>
             </td>
         </tr>
+           <tr>
+            <th><br>Estado:</th>
+            <td><br>
+                <select name="estadorpt">
+                    <option value="">Todos</option>
+                    <option value="0">Devuelto</option>
+                    <option value="2">Prestado</option>
+                    <option value="1">En Proceso</option>
+                </select>
+            </td>
+        </tr>
         </tr>
 
         <tr>

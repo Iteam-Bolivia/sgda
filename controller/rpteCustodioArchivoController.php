@@ -33,7 +33,11 @@ class rpteCustodioArchivoController Extends baseController {
 
 //        $tipo_orden = $_REQUEST["tipo_orden"];
         $filtro_series = $_REQUEST["filtro_series"];
+        if(isset($_REQUEST["filtro_expediente"])){
         $filtro_expediente = $_REQUEST["filtro_expediente"];
+        }else{
+          $filtro_expediente="";  
+        }
 //        $order_by = "";
 //        if ($tipo_orden == 'SERIE') {
 //            $order_by.=" ORDER BY ts.ser_categoria ASC";
@@ -56,9 +60,7 @@ class rpteCustodioArchivoController Extends baseController {
 
 
         //filtros
-        if ($filtro_series != '') {
-            $where.=" AND tab_expediente.ser_id =  '$filtro_series' ";
-        }
+   
         if ($filtro_expediente != '') {
             $where.=" AND tab_expediente.exp_id =  '$filtro_expediente' ";
         }
@@ -68,35 +70,60 @@ class rpteCustodioArchivoController Extends baseController {
         $fecha_actual = date("d/m/Y");
 
         $sql = "SELECT
-                tab_expediente.exp_id,
-                tab_unidad.uni_descripcion,
-                tab_usuario.usu_nombres || ' ' || tab_usuario.usu_apellidos AS usu_nombre,
-                tab_expediente.exp_nombre || ' - ' || tab_series.ser_codigo || ' (' || tab_subcontenedor.suc_codigo || '-' || tab_contenedor.con_codigo || ')'  AS expediente,
-                tab_archivo.fil_nomoriginal,
-                tab_archivo.fil_descripcion,
-                tab_archivo.fil_caracteristica,
-                tab_archivo.fil_nur,
-                tab_archivo.fil_nroejem,
-                tab_archivo.fil_tomovol,
-                tab_tramite.tra_descripcion,
-                tab_cuerpos.cue_descripcion,
-                tab_sopfisico.sof_nombre
-                FROM
-                tab_unidad
-                INNER JOIN tab_usuario ON tab_unidad.uni_id = tab_usuario.uni_id
-                INNER JOIN tab_expusuario ON tab_usuario.usu_id = tab_expusuario.usu_id
-                INNER JOIN tab_expediente ON tab_expusuario.exp_id = tab_expediente.exp_id
-		INNER JOIN tab_series ON tab_expediente.ser_id = tab_series.ser_id
-                INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
-                INNER JOIN tab_archivo ON tab_exparchivo.fil_id = tab_archivo.fil_id
-                INNER JOIN tab_cuerpos ON tab_exparchivo.cue_id = tab_cuerpos.cue_id
-                INNER JOIN tab_tramite ON tab_exparchivo.tra_id = tab_tramite.tra_id
-                INNER JOIN tab_sopfisico ON tab_archivo.sof_id = tab_sopfisico.sof_id
-                INNER JOIN tab_expcontenedor ON tab_expediente.exp_id = tab_expcontenedor.exp_id
-                INNER JOIN tab_subcontenedor ON tab_subcontenedor.suc_id = tab_expcontenedor.suc_id
-                INNER JOIN tab_contenedor ON tab_subcontenedor.con_id = tab_contenedor.con_id
-                INNER JOIN tab_tipocontenedor ON tab_contenedor.ctp_id = tab_tipocontenedor.ctp_id
-                WHERE tab_expediente.exp_estado = 1 AND tab_archivo.fil_estado= 1 AND tab_expusuario.eus_estado = 1 " . $where . " ORDER BY tab_expediente.exp_id";
+tab_solprestamo.spr_id,
+tab_fondo.fon_cod,
+tab_unidad.uni_codigo,
+tab_series.ser_codigo,
+tab_expediente.exp_codigo,
+tab_archivo.fil_codigo,
+tab_solprestamo.spr_fecha,
+tab_solprestamo.uni_id,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usu_id AND usu_estado = '1') AS usu_solicitante,
+tab_solprestamo.spr_solicitante,
+tab_solprestamo.spr_email,
+tab_solprestamo.spr_tel,
+tab_solprestamo.spr_fecent,
+tab_solprestamo.spr_fecren,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usua_id AND usu_estado = '1') AS usu_autoriza,
+(SELECT usu_nombres || ' ' || usu_apellidos FROM tab_usuario WHERE usu_id = tab_solprestamo.usur_id AND usu_estado = '1') AS usu_registrado,
+tab_solprestamo.spr_fecdev,
+tab_solprestamo.spr_obs,
+tab_solprestamo.spr_estado,
+tab_docprestamo.fil_id,
+tab_docprestamo.dpr_orden,
+tab_docprestamo.dpr_obs,
+tab_archivo.fil_titulo,
+tab_archivo.fil_proc,
+tab_archivo.fil_tomovol,
+tab_archivo.fil_ori,
+tab_archivo.fil_cop,
+tab_archivo.fil_fot,
+tab_archivo.fil_sala,
+tab_archivo.fil_estante,
+tab_archivo.fil_cuerpo,
+tab_archivo.fil_balda,
+tab_archivo.fil_nrocaj,
+tab_archivo.fil_obs,
+tab_expisadg.exp_fecha_exi,
+tab_expisadg.exp_fecha_exf,
+tab_sopfisico.sof_codigo,
+tab_unidad.uni_descripcion,
+tab_expisadg.exp_titulo,
+tab_series.ser_id,
+tab_expediente.exp_id
+FROM
+tab_solprestamo
+INNER JOIN tab_docprestamo ON tab_solprestamo.spr_id = tab_docprestamo.spr_id
+INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_docprestamo.fil_id
+INNER JOIN tab_exparchivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
+INNER JOIN tab_expediente ON tab_expediente.exp_id = tab_exparchivo.exp_id
+INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+INNER JOIN tab_series ON tab_series.ser_id = tab_expediente.ser_id
+INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
+INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
+WHERE
+tab_series.ser_id = $filtro_series $where ORDER BY tab_expediente.exp_id";
 
         //echo ($sql); die ();
         $expediente = new Tab_expediente();
@@ -226,6 +253,26 @@ class rpteCustodioArchivoController Extends baseController {
             $res[$row->exp_id] = $row->exp_nombre;
         }
         echo json_encode($res);
+    }
+        function ajaxExp(){
+       $ser_id=$_REQUEST['valor'];
+        $sql="SELECT
+tab_expediente.exp_id,
+tab_expisadg.exp_titulo
+FROM
+tab_series
+INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
+INNER JOIN tab_expisadg ON tab_expisadg.exp_id = tab_expediente.exp_id
+where tab_series.ser_id = $ser_id ORDER BY tab_expediente.exp_id";
+    $series=new Tab_series();
+    $result=$series->dbSelectBySQL($sql);
+     echo '<select name="filtro_expediente" style="width: auto;"
+                        id="filtro_funcionario" size="5" style="height: 250px">';
+                   echo '<option value="">(seleccionar)</option>';
+        foreach($result as $list){
+            echo "<option value='".$list->exp_id."'>".$list->exp_titulo."</option>";
+        }
+        echo "</select>";
     }
 
 }

@@ -1,3 +1,5 @@
+<div align="left"><a href="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/"><img src="<?php echo $PATH_WEB ?>/img/back.png"></a>
+</div>
 <div id="dialog" title="Necesita password para poder ver el archivo">
     <p id="validateTips"></p>
     <form id="formAA" name="formA" method="post" action="<?php echo $PATH_DOMAIN ?>/archivo/download/" target="_blank">
@@ -10,6 +12,7 @@
 
     </form>
 </div>
+
 <strong style="color: red" align="left"><?php echo $msm ?></strong>
 <form id="formA" name="formExpcontenedor" method="post" action="<?php echo $PATH_DOMAIN ?>/archivo/<?php echo $PATH_EVENT ?>/" target="_blank">
     <ul id="menuarch">

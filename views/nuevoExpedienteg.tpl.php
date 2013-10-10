@@ -1,3 +1,6 @@
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
+
 <div class="clear"></div>
 
 <p><table id="flex1" style="display:none"></table></p>
@@ -109,7 +112,7 @@
         {
             $.post("<?php echo $PATH_DOMAIN ?>/nuevoExpediente/verifSeries/", {rand:Math.random()}, function(data){
                 if(data != 'OK'){
-                    alert("No puede adicionar expedientes porque no tiene permiso para ninguna Serie.");
+                    $.msgbox("No puede adicionar expedientes porque no tiene permiso para ninguna Serie.");
                 }else{
                     window.location="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/add/";
                 }
@@ -124,8 +127,9 @@
                             $('.pReload',grid.pDiv).click();
                         }
                 });
-            }else{
-                alert("Seleccione un registro");
+            }else
+            {
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -136,7 +140,7 @@
                 $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/estrucDocumental/searchTree/");
                 document.getElementById('formA').submit();
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -146,7 +150,7 @@
                 $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/nuevoExpediente/edit/");
                 document.getElementById('formA').submit();
             }	else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -160,7 +164,7 @@
                         }
                 });
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -170,7 +174,7 @@
                 $("#formB").attr("action","<?php echo $PATH_DOMAIN ?>/rpteInventarioDoc/verRpte/");
                 document.getElementById('formB').submit();
             }	else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -188,7 +192,7 @@
                 $("#formA").attr("action","<?php echo $PATH_DOMAIN ?>/nuevoExpediente/");
                 document.getElementById('formA').submit();                
             }	else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         
@@ -198,7 +202,7 @@
                 $("#formB").attr("action","<?php echo $PATH_DOMAIN ?>/rpteInventario/verRpte/");
                 document.getElementById('formB').submit();
             }	else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }
         

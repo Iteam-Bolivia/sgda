@@ -326,22 +326,38 @@ class series extends tab_series {
     function obtenerSelectTodas($default = null) {
         $sql = "SELECT
                 ts.ser_id,
+                tab_fondo.fon_codigo,
+                tab_fondo.fon_cod,
+                tab_fondo.fon_descripcion,
+                tab_unidad.uni_cod,
+                tab_unidad.uni_descripcion,
+                tab_tipocorr.tco_codigo,
+                tab_tipocorr.tco_nombre, 
+                ts.ser_par,
                 ts.ser_codigo,
-                ts.ser_categoria
+                ts.ser_categoria,
+                (SELECT ser_categoria from tab_series WHERE ser_id=ts.ser_par) AS ser_parent,
+                ts.ser_nivel,
+                tab_retensiondoc.red_codigo,
+                ts.ser_contador
                 FROM
-                tab_series ts
-                WHERE
-                ts.ser_estado =  '1'
-                ORDER BY ts.ser_codigo ASC";
+                tab_series AS ts
+                INNER JOIN tab_retensiondoc ON tab_retensiondoc.red_id = ts.red_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = ts.tco_id
+                INNER JOIN tab_unidad ON tab_unidad.uni_id = ts.uni_id
+                INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
+                WHERE ts.ser_estado =  1  ORDER BY ser_id";
         $rows = $this->series->dbSelectBySQL($sql);
-        $option = '';
+        $option = '';  
+                     
         if (count($rows) > 0) {
             foreach ($rows as $val) {
+                 $spaces = $this->getSpaces($val->ser_nivel); 
                 if ($default == $val->ser_id)
                     $selected = "selected";
                 else
                     $selected = "";
-                $option .="<option value='" . $val->ser_id . "' $selected>" . $val->ser_categoria . "</option>";
+                $option .="<option value='" . $val->ser_id . "' $selected>" .$spaces.$val->ser_categoria . "</option>";
             }
         }
         return $option;

@@ -19,25 +19,23 @@
 </select>
 </td>
 </tr>-->
-
-        <tr>
-            <td>FILTROS :</td>
-        </tr>
-        <tr>
-            <td>Serie: </td>
-            <td>
-                <select name="filtro_series" style="width:300px;" id="filtro_series" >
-                    <option value="">(TODO)</option>
+  <tr>
+            <td>Serie:</td>
+            <td><select name="filtro_series" style="width: 300px;"
+                        id="filtro_series" onchange="iniciarBusqueda(this.value)">
+                   
                     <?php echo ($optSerie) ?>
-                </select>
-            </td>
+                </select></td>
         </tr>
         <tr>
-            <td>Expediente: </td>
-            <td>
-                <select name="filtro_expediente" style="width:300px;" id="filtro_expediente" >
-                    <option value="">(TODO)</option>
-                </select>
+            <td>Expedientes:</td>
+            <td> <div id="cargarExp">
+                <select name="filtro_expediente" style="width: auto;"
+                        id="filtro_funcionario" size="5" style="height: 250px">
+                    <option value="">(seleccionar)</option>
+                   
+                    
+                </select></div>
             </td>
         </tr>
 
@@ -81,4 +79,14 @@
             }
         });
     });
+</script>
+<script languaje="javascript">
+
+function iniciarBusqueda(str){
+  //  alert(str)
+
+    var url="<?php echo $PATH_DOMAIN ?>/rpteCustodioArchivo/ajaxExp/";
+   $("#cargarExp").load(url,{valor:str});
+    
+}
 </script>

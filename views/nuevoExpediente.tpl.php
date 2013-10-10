@@ -1,3 +1,6 @@
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
+
 <div class="clear"></div>
 <p>
 <table id="flex1" style="display: none"></table>
@@ -161,7 +164,7 @@
                 <td colspan="3">
                     <input name="exp_nomprod" type="text" id="exp_nomprod"
                                        value="<?php echo $exp_nomprod; ?>" size="120" autocomplete="off"                                       
-                                       maxlength="1024" class="required alphanum" title="Nombre del o de los Productores" />
+                                       maxlength="1024" class="alphanum" title="Nombre del o de los Productores" />
                 </td>
                     
                     

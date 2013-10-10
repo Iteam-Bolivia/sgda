@@ -1,41 +1,10 @@
-<form id="formA" name="formA" method="post" class="validable" action="<?php echo $PATH_DOMAIN ?>/rpteTransCustodios/<?php echo $PATH_EVENT ?>/" target="_blank">
+<form id="formA" name="formA" method="post" class="validable" action="<?php echo $PATH_DOMAIN ?>/rpteTransferencia/<?php echo $PATH_EVENT ?>/" target="_blank">
 
     <table width="100%" border="0">
         <caption class="titulo">
             LISTADO DE TRANSFERENCIAS
         </caption>
 
-        <tr>
-            <td width="238">Clasificado por:</td>
-            <td width="711">
-                <select name="tipo_clasificado" style="width:300px;" id="tipo_clasificado" class="required">
-                    <option value="" selected="selected">(seleccionar)</option>
-                    <option value="SERIE">SERIE</option>
-                    <option value="UNIDAD">UNIDAD</option>
-                    <option value="FUNCIONARIO">FUNCIONARIO</option>
-                </select>
-                <span class="error-requerid">*</span>
-            </td>
-        </tr>
-        <tr>
-            <td>Ordenado por:</td>
-            <td>
-
-                <select name="tipo_orden" style="width:300px;" id="tipo_orden" class="required">
-                    <option value="" selected>(seleccionar)</option>
-                    <option value="SERIE">SERIE</option>
-                    <option value="UNIDAD_ORIGEN">UNIDAD DE ORIGEN</option>
-                    <option value="FUNC_ORIGEN">FUNCIONARIO ORIGEN</option>
-                    <option value="NOMBRE_EXPEDIENTE">NOMBRE EXPEDIENTE</option>
-                    <option value="CODIGO_REFERENCIA">CODIGO DE REFERENCIA</option>
-                    <option value="FECHA_TRANS">FECHA DE TRANSFERENCIA</option>
-                </select> <span class="error-requerid">*</span>
-            </td>
-        </tr>
-
-        <tr>
-            <td>Filtros:</td>
-        </tr>
         <tr>
             <td>Serie: </td>
             <td>
@@ -75,7 +44,7 @@
                 <input type="text" name="f_presthasta"  id='f_presthasta'/>
             </td>
         </tr>
-       <tr>
+       <!--<tr>
             <td>Archivo: </td>
             <td>
                 
@@ -85,7 +54,7 @@
                 </select>
             </td>
         </tr>
-
+-->
 
         <tr>
             <td class="botones" colspan="2"><input id="btnSub" type="submit" value="Reporte" class="button"/>

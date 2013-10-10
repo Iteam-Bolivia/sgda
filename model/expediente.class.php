@@ -404,7 +404,8 @@ tab_expediente.exp_id  = $id";
                                                             tc.trc_id,
                                                             cc.cue_id,
                                                             cc.cue_codigo,
-                                                            cc.cue_descripcion
+                                                            cc.cue_descripcion,
+                                                            cc.cue_orden
                                                             FROM
                                                             tab_tramitecuerpos tc
                                                             Inner Join tab_cuerpos cc ON tc.cue_id = cc.cue_id
@@ -419,7 +420,7 @@ tab_expediente.exp_id  = $id";
                         $tree .= "<ul di='" . $un->tra_id . "aa'>";
                         foreach ($rowc as $unc) {
                             $tree .= "        <li>"
-                                    . "<a href='#' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "' >"
+                                    ."<a href='#' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "' >"
                                     . "<img src='" . PATH_DOMAIN . "/web/lib/32/document-add.png' tra='$un->tra_id' cue='$unc->cue_id' class='addFile icon' title='Adicionar documento'/>"
                                     . $unc->cue_descripcion . "</a>";
                             $tree .= "<ul id='" . $unc->cue_id . "-" . $un->tra_id . "x'>";
@@ -431,7 +432,8 @@ tab_expediente.exp_id  = $id";
                             fil.fil_subtitulo,
                             fil.fil_confidencialidad,
                             tab_archivo_digital.fil_nomoriginal,
-                            tab_archivo_digital.fil_extension
+                            tab_archivo_digital.fil_extension,
+                            fil.fil_nro
                             FROM
                             tab_exparchivo AS exa
                             INNER JOIN tab_archivo AS fil ON exa.fil_id = fil.fil_id
@@ -444,14 +446,14 @@ tab_expediente.exp_id  = $id";
                             AND eus.eus_estado = 1 
                             AND fil.fil_estado = 1 
                             AND usu.usu_estado = 1 
-                            AND exa.exa_estado=1";
+                            AND exa.exa_estado=1 ORDER BY fil.fil_nro";
 
                             $rowa = $this->cuerpos->dbSelectBySQL($sql);
                             foreach ($rowa as $una) {
                                 $verarch = "";
                                 switch ($una->fil_confidencialidad) {
                                     case '1' :
-                                        $verarch = '<li><a href="#" onclick="return false">';
+                                        $verarch = '<li><a href="#" onclick="return false">'.$una->fil_nro;
                                         $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-add.png' tra='$un->tra_id' cue='$unc->cue_id' class='addFile icon' title='Adicionar documento'/>";
                                         if ($una->usu_id == $_SESSION ['USU_ID']) {
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-edit.png' file='$una->fil_id' class='updateFile icon' title='Editar Descripción del Documento'/>";

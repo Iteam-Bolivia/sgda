@@ -22,7 +22,7 @@ class rpteTransferenciaController Extends baseController {
 
         $this->registry->template->PATH_WEB = PATH_WEB;
         $this->registry->template->PATH_DOMAIN = PATH_DOMAIN;
-        $this->registry->template->PATH_EVENT = "verRpte";
+        $this->registry->template->PATH_EVENT = "VerRTransferencia";
         $this->registry->template->GRID_SW = "true";
         $this->registry->template->PATH_J = "jquery-1.4.1";
         $this->menu = new menu();
@@ -669,6 +669,243 @@ class rpteTransferenciaController Extends baseController {
         // -----------------------------------------------------------------------------
         //Close and output PDF document
         $pdf->Output('reporte_prestamo.pdf', 'I');
+    }
+     function VerRTransferencia(){
+         
+$filtro_serie=$_REQUEST['filtro_serie'];
+$filtro_unidad=$_REQUEST['filtro_unidad'];
+$filtro_funcionario=$_REQUEST['filtro_funcionario'];
+$f_prestdesde=$_REQUEST['f_prestdesde'];
+$f_presthasta=$_REQUEST['f_presthasta'];
+        
+        $where="";
+   
+    $tab_extransferencia=new tab_exptransferencia();
+    $result=$tab_extransferencia->dbSelectBySQL("select DISTINCT(exp_id) from tab_exptransferencia");
+    $cantidad=count($result);
+    $valor3="";
+    $t=1;
+    foreach($result as $row){
+           $valor3.="tab_expediente.exp_id=$row->exp_id";
+					if($t<$cantidad){
+                                        $valor3.=" or ";}
+				$t++;
+    }      
+        
+       $where.= " AND $valor3 ";     
+if($filtro_serie!=""){
+    $where.= " AND tab_series.ser_id=".$filtro_serie;
+}
+if($filtro_unidad!=""){
+    $where.= " AND tab_soltransferencia.uni_id=".$filtro_unidad;
+}if($filtro_funcionario!=""){
+    $where.= " AND tab_soltransferencia.usu_id=".$filtro_funcionario;
+}
+
+       
+        $sql="SELECT
+tab_fondo.fon_codigo,
+tab_expediente.exp_codigo,
+tab_soltransferencia.str_id,
+tab_soltransferencia.str_fecha,
+tab_soltransferencia.uni_id,
+tab_soltransferencia.unid_id,
+tab_soltransferencia.str_nrocajas,
+tab_soltransferencia.str_totpzas,
+tab_soltransferencia.str_totml,
+tab_soltransferencia.str_nroreg,
+tab_soltransferencia.str_fecini,
+tab_soltransferencia.str_fecfin,
+tab_soltransferencia.str_estado,
+tab_soltransferencia.usu_id,
+tab_soltransferencia.usud_id,
+tab_soltransferencia.str_direccion,
+tab_soltransferencia.str_telefono,
+tab_expisadg.exp_fecha_exi,
+tab_expisadg.exp_fecha_exf,
+tab_series.ser_codigo,
+tab_unidad.uni_codigo,
+tab_fondo.fon_cod,
+tab_series.ser_categoria,
+tab_expisadg.exp_titulo,
+tab_expediente.exp_obs,
+tab_series.ser_id,
+tab_series.ser_par,
+tab_expediente.exp_id
+FROM
+tab_unidad
+INNER JOIN tab_fondo ON tab_unidad.fon_id = tab_fondo.fon_id
+INNER JOIN tab_series ON tab_series.uni_id = tab_unidad.uni_id
+INNER JOIN tab_expediente ON tab_expediente.ser_id = tab_series.ser_id
+INNER JOIN tab_expisadg ON tab_expisadg.exp_id = tab_expediente.exp_id
+INNER JOIN tab_exptransferencia ON tab_expediente.exp_id = tab_exptransferencia.exp_id
+INNER JOIN tab_soltransferencia ON tab_soltransferencia.str_id = tab_exptransferencia.str_id
+WHERE
+tab_soltransferencia.str_estado = 2 AND
+tab_expediente.exp_estado = 1 ".$where." ORDER BY tab_soltransferencia.str_id";
+        
+   $usua= new usuario();    
+   $subfondo=new fondo();    
+   $seccion=new unidad();
+   $expedientes=new expediente();
+        $archivo=new tab_archivo();
+        $archivo2=new tab_archivo();
+      
+   $query=$archivo->dbSelectBySQL($sql); 
+   $query2=$archivo2->dbSelectBySQL($sql);  
+   $query2=$query2[0];
+   $usuarioOrigen=$usua->obtenerNombre($query2->usu_id);
+   $usuarioDestino=$usua->obtenerNombre($query2->usud_id);
+   $fond=$subfondo->obtenerfon($query2->usu_id);
+ 
+   
+   $cadena="";  
+   $cadena="<br/><br/><br/><br/><br/><br/><br/>";
+  
+$cadena.='<b>Cuadro 8. Formulario Normalizado de Transferencias</b>';
+$cadena.='<br/><br/>';
+
+$cadena.='<table width="740" border="1">';
+  $cadena.='<tr>';
+    $cadena.='<td colspan="10" align="center"><b>ADMINISTRADORA BOLIVIANA DE CARRETERAS</b><br />';
+    $cadena.='Formulario de Relacion de Transferencias<br /></td>';
+  $cadena.='</tr></table>';  $i=1;
+    foreach($query as $row){  $tabserie=new tab_series();
+  $cadena.='<table border="1" width="740"><tr>';
+    $cadena.='<td colspan="5"><blockquote>';
+      $cadena.='<b>Subfondo:</b> '.$fond.'<br />';
+        $cadena.='<b>Sección:</b> ';
+          $ob_seccion=$seccion->obtenerSeccion($row->usu_id);
+        if($ob_seccion->tab_sec==""){
+               $cadena.=$ob_seccion->uni_descripcion.'<br />';
+        }else{
+        $cadena.=$ob_seccion->tab_sec.'<br />';
+        }
+        $cadena.='<b>Subsección:</b> ';
+        if($ob_seccion->tab_sec<>""){
+             $cadena.=$ob_seccion->uni_descripcion; 
+        }
+    $cadena.='</blockquote></td>';
+    $cadena.='<td colspan="5"  ><blockquote><b>Nº de transferencia:</b> '.$row->str_id;
+    $cadena.='<br /><b>Dirección  y Teléfono:</b> '.$row->str_direccion.' '.$row->str_telefono.'</blockquote></td>';
+  $cadena.='</tr>';
+   $cadena.='<tr>';
+     $cadena.='<td width="20" rowspan="2" align="center"><strong>Nº</strong></td>';
+     $cadena.='<td width="140" rowspan="2"><strong>Serie</strong></td>';
+     $cadena.='<td width="120" rowspan="2"><strong>Subserie</strong></td>';
+     $cadena.='<td width="80" rowspan="2"><strong>Codigo de Referencia</strong></td>';
+     $cadena.='<td colspan="2" width="130"><strong>Fechas extremas</strong></td>';
+     $cadena.='<td width="30" rowspan="2"><strong>Nº Piezas Docum.</strong></td>';
+     $cadena.='<td width="30" rowspan="2"><strong>Cajas</strong></td>';
+     $cadena.='<td width="30" rowspan="2"><strong>M.L.</strong></td>';
+     $cadena.='<td width="160" rowspan="2"><p><strong>Observ.</strong></p></td>';
+   $cadena.='</tr>';
+   $cadena.='<tr>';
+     $cadena.='<td width="65"><strong>Inicio</strong></td>';
+     $cadena.='<td width="65"><strong>Final</strong></td>';
+   $cadena.='</tr>';
+
+  $sum=0;$sum2=0;
+
+  
+
+      if($row->exp_fecha_exi==""){ 
+          $fei="";
+      }else{
+        $fechainicial=explode("-",$row->exp_fecha_exi);
+      $fei=$fechainicial[2]."/".$fechainicial[1]."/".$fechainicial[0];}
+      if($row->exp_fecha_exf==""){ 
+          $fef="";
+      }else{
+     $fechafinal=explode("-",$row->exp_fecha_exf);
+     $fef=$fechafinal[2]."/".$fechafinal[1]."/".$fechafinal[0];
+      }
+      if($row->ser_par==""){$ser_id=0;}else{$ser_id=$row->ser_par;}
+      $obtenerSubserie=$tabserie->dbselectByField("ser_id",$ser_id);
+   
+      $u=0;
+      foreach($obtenerSubserie as $ver){
+          $u++;
+          $cte=$ver->ser_categoria;
+      }
+  $cadena.='<tr>';
+    $cadena.='<td align="center">'.$i.'</td>';
+    $cadena.='<td>';
+    if($u==0){
+        $cadena.=$row->ser_categoria;
+    }else{
+        $cadena.=$cte;
+    }
+    
+    
+    $cadena.='</td>';
+    $cadena.='<td>';
+     if($u<>0){
+        $cadena.=$row->ser_categoria;
+     }
+     $sum=$sum+$expedientes->cantidadExpedientes($row->exp_id);
+     $sum2=$sum2+$row->str_nrocajas;
+    $cadena.='</td>';
+    $cadena.='<td align="center">'.$row->fon_codigo. DELIMITER . $row->uni_codigo. DELIMITER . $row->ser_codigo. DELIMITER . $row->exp_codigo.'</td>';
+    $cadena.='<td align="center">'.$fei.'</td>';
+    $cadena.='<td align="center">'.$fef.'</td>';
+    $cadena.='<td align="center">'.$expedientes->cantidadExpedientes($row->exp_id).'</td>';
+    $cadena.='<td align="center">'.$row->str_nrocajas.'</td>';
+    $cadena.='<td align="center">'.$row->str_totml.'</td>';
+    $cadena.='<td>'.$row->exp_obs.'</td>';
+  $cadena.='</tr>';
+  $i++;
+$cadena.='</table><br><br>';
+  }
+
+
+
+
+
+        require_once ('tcpdf/config/lang/eng.php');
+        require_once ('tcpdf/tcpdf.php');
+        $pdf = new TCPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->setFontSubsetting(FALSE);
+         $pdf->SetAuthor("ITEAM");
+        $pdf->SetTitle('Reporte de Transferencia');
+        $pdf->SetSubject('Reporte de Transferencia');
+//        aumentado
+        $pdf->SetKeywords('Iteam, TEAM DIGITAL');
+        // set default header data
+        $pdf->SetHeaderData('logo_abc_comp.png', 20, 'ABC', 'ADMINISTRADORA BOLIVIANA DE CARRETERAS (ABC)');
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+//        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+//
+
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(5, 30, 10);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+//        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 14);
+//        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+        $pdf->SetFont('helvetica', '', 10);
+        // add a page
+        $pdf->AddPage();
+
+//        $pdf->SetXY(110, 200);
+        $pdf->Image(PATH_ROOT . '/web/img/iso.png', '255', '8', 15, 15, 'PNG', '', 'T', false, 300, '', false, false, 1, false, false, false);
+
+        
+        
+        $cadena = $cadena;
+        $pdf->writeHTML($cadena, true, false, false, false, '');
+
+        // -----------------------------------------------------------------------------
+        //Close and output PDF document
+     //   $pdf->Output('reporte_transferencia.pdf', 'D');
+          $pdf->Output('reporte_transferencia.pdf', 'I');
+     
     }
 
 }

@@ -935,63 +935,58 @@ class etiqexpedienteController extends baseController {
         $pdf->SetFont('helvetica', '', 8);
         $st = "";
         // -----------------------------------------------------------------------------
-
+                
+   $id_exp=$_REQUEST['exp_id'];
+                
         for ($i = $ini; $i <= $fin; $i++) {
 
 
-            foreach ($rows as $value) {
-                $expediente = new expediente();
+              foreach ($rows as $value) {
+               
+               $expediente = new expediente();
                 $obteneCaja = $expediente->obtenerCaja($i, $_REQUEST['exp_id']);
                 $cantMin = strlen($obteneCaja->minimo);
                 $cantMax = strlen($obteneCaja->maximo);
 
-                switch ($cantMin) {
-                    case 1:$cero = "0000";
-                        break;
-                    case 2:$cero = "000";
-                        break;
-                    case 3:$cero = "00";
-                        break;
-                    case 4:$cero = "0";
-                        break;
-                    case 5:$cero = "";
-                        break;
+                
+              
+                $exptransferencia=new tab_exptransferencia();
+                
+$sql="SELECT
+tab_soltransferencia.str_fecha,
+tab_soltransferencia.str_id
+FROM
+tab_exptransferencia
+INNER JOIN tab_soltransferencia ON tab_soltransferencia.str_id = tab_exptransferencia.str_id
+WHERE
+tab_exptransferencia.exp_id =$id_exp";
+                
+                $datos=$exptransferencia->dbSelectBySQL($sql);
+                $strfecha="";$strid="";
+                foreach($datos as $listr){
+                    $strfecha=$listr->str_fecha;
+                    $strid=$listr->str_id;
                 }
-                switch ($cantMax) {
-                    case 1:$cero2 = "0000";
-                        break;
-                    case 2:$cero2 = "000";
-                        break;
-                    case 3:$cero2 = "00";
-                        break;
-                    case 4:$cero2 = "0";
-                        break;
-                    case 5:$cero2 = "";
-                        break;
-                }
+                $st.='<br><br><br><br>';
                 $st.='<table border="1" style="width: 100%">';
 
                 $st.='<tr>';
-                $st.='<td>';
+                $st.='<td style="border-right:2px solid white;">';
                 $st.='<img src="' . PATH_ROOT . '/web/img/escudo.png" width="50" height="50" border="0" />';
-                //$st.='<img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" align="right" />';
+                $st.='</td><td align="right"><img src="' . PATH_ROOT . '/web/img/iso.png" width="50" height="50" border="0" />';
                 $st.='</td>';
                 $st.='</tr>';
 
                 $st.='<tr>';
-                $st.='<td>';
+                $st.='<td colspan="2">';
 
                 $st.='<table border="1" style="width: 100%; text-align: center">';
-                $st.='<tr>';
-                $st.='<td colspan="11" height="20"  bgcolor="#CCCCCC"><b>CÓDIGO DE PROCEDENCIA ADMINISTRATIVA</b></td>';
-                $st.='</tr>';
+            
                 $st.='<tr>';
                 //$st.='<td colspan="11">'.$value->fon_cod . "-" . $value->uni_cod. '</td>';
                 $st.='<td colspan="11" height="20">' . $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . '</td>';
                 $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>GERENCIA / UNIDAD</b></td>';
-                $st.='</tr>';
+           
                 if ($value->uni_par_cod) {
                     $st.='<tr>';
                     $st.='<td colspan="11" height="20">' . $value->uni_par_cod . '</td>';
@@ -1001,46 +996,67 @@ class etiqexpedienteController extends baseController {
                     $st.='<td colspan="11" height="20">' . $value->uni_descripcion . '</td>';
                     $st.='</tr>';
                 }
-                $st.='<tr>';
-                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>SECCIÓN</b></td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11" height="20">' . $value->uni_descripcion . '</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td colspan="11" height="20" bgcolor="#CCCCCC"><b>DESCRIPCIÓN DEL CONTENIDO</b></td>';
-                $st.='</tr>';
+        
+ 
                 $st.='<tr>';
                 $st.='<td colspan="11" height="20" style="font-size:50px">' . $value->exp_titulo . '</td>';
                 $st.='</tr>';
 
-                $fechaextrema = explode("-", $value->exp_fecha_exf);
-                $fechE = $fechaextrema[2] . "-" . $fechaextrema[1] . "-" . $fechaextrema[0];
+                $fechaextrema = explode("-", $value->exp_fecha_exi);
+                $fechE =$fechaextrema[0];
+                $fechaextrema2 = explode("-", $value->exp_fecha_exf);
+                $fechE2 =$fechaextrema2[0];
                 $pdf->SetFont('helvetica', '', 8);
                 $st.='<tr>';
-                $st.='<td colspan="2" height="20" bgcolor="#CCCCCC">FECHAS EXTREMAS</td>';
-                $st.='<td colspan="9" bgcolor="#CCCCCC" >NRO. DE ORDEN</td>';
+                $st.='<td colspan="2" height="20" bgcolor="#CCCCCC" style="font-size:40px" width="232">FECHAS EXTREMAS</td>';
+                $st.='<td colspan="9" bgcolor="#CCCCCC" width="420" style="font-size:40px">NRO. DE ORDEN</td>';
                 $st.='</tr>';
                 $st.='<tr>';
-                $st.='<td colspan="2" height="20">' . $fechE . '</td>';
-                $st.='<td colspan="4" bgcolor="#CCCCCC">DEL</td>';
-                $st.='<td>' . $cero . $obteneCaja->minimo . '</td>';
-                $st.='<td colspan="3" bgcolor="#CCCCCC">AL&nbsp;</td>';
-                $st.='<td>' . $cero2 . $obteneCaja->maximo . '</td>';
+                $st.='<td colspan="2" height="20" style="font-size:45px">' . $fechE. "-" .$fechE2. '</td>';
+                $st.='<td colspan="4" bgcolor="#CCCCCC"   width="50">DEL</td>';
+                $st.='<td style="font-size:40px" width="160">'.$obteneCaja->minimo . '</td>';
+                $st.='<td colspan="3" bgcolor="#CCCCCC"  width="50">AL&nbsp;</td>';
+                $st.='<td style="font-size:40px" width="160">'. $obteneCaja->maximo . '</td>';
+                $st.='</tr>';
+                $cant=($obteneCaja->maximo-$obteneCaja->minimo)+1;
+                $st.='<tr>';
+                $st.='<td colspan="4" height="20" bgcolor="#CCCCCC" width="232">NRO. DE CAJA</td>';
+                $st.='<td colspan="5" bgcolor="#CCCCCC">ML</td>';
+                $st.='<td colspan="2" bgcolor="#CCCCCC" width="201"> NRO. DE PIEZAS</td>';
+                $st.='</tr>';
+                
+                $st.='<tr>';
+                $st.='<td height="20" colspan="4" rowspan="5" style="font-size:300px">'. $i .'</td>';
+                $st.='<td colspan="5" height="20">'.$value->exp_nroejem.'</td>';
+                $st.='<td colspan="2">'.$cant.'</td>';
                 $st.='</tr>';
                 $st.='<tr>';
-                $st.='<td colspan="4" height="20" bgcolor="#CCCCCC">UBICACIÓN TOPOGRÁFICA</td>';
-                $st.='<td colspan="5"></td>';
+                $st.='<td colspan="5" bgcolor="#CCCCCC" height="20">FECHA DE TRANSFERENCIA DOCUMENTAL</td>';
+                $st.='<td colspan="2" bgcolor="#CCCCCC">Nº DE TRANSFERENCIA</td>';
+                $st.='</tr>';
+                $st.='<tr>';
+                if($strfecha==""){
+                $st.='<td colspan="5" height="20"></td>';
+                }else{
+                $fechastr=explode("-",$strfecha);
+                $st.='<td colspan="5">'.$fechastr[2].'-'.$fechastr[1].'-'.$fechastr[0].'</td>';    
+                }
+                  if($strid==""){
                 $st.='<td colspan="2"></td>';
+                  }else{
+                $st.='<td colspan="2">'.$strid.'</td>';
+                  }
                 $st.='</tr>';
-                $st.='<tr>';
-                $st.='<td height="20" bgcolor="#CCCCCC">SALA:</td>';
-                $st.='<td bgcolor="#CCCCCC">ESTANTE:</td>';
-                $st.='<td bgcolor="#CCCCCC">CUERPO:</td>';
-                $st.='<td bgcolor="#CCCCCC">BALDA:</td>';
-                $st.='<td colspan="5" bgcolor="#CCCCCC">FECHA DE TRANSFERENCIA</td>';
-                $st.='<td colspan="2" bgcolor="#CCCCCC">NRO. DE TRANSFERENCIA</td>';
+                     $st.='<tr>';
+                $st.='<td colspan="5" bgcolor="#CCCCCC" height="20">OBSERVACIONES:</td>';
+                $st.='<td colspan="2" bgcolor="#CCCCCC">ELABORADO POR:</td>';
                 $st.='</tr>';
+                     $st.='<tr>';
+                $st.='<td colspan="5">'.$value->exp_obs.'</td>';
+                $st.='<td colspan="2">'.$usuario->obtenerNombre($_SESSION['USU_ID']) .'</td>';
+                $st.='</tr>';
+                
+                /*
                 $st.='<tr>';
                 $st.='<td height="20">' . $value->exp_sala . '</td>';
                 $st.='<td>' . $value->exp_estante . '</td>';
@@ -1049,23 +1065,10 @@ class etiqexpedienteController extends baseController {
                 $st.='<td colspan="5"></td>';
                 $st.='<td colspan="2"></td>';
                 $st.='</tr>';
+                */
                 $st.='</table>';
 
-                $st.='<table border="1" style="width: 100%; text-align: center;">';
-                $st.='<tr>';
-                $st.='<td height="20" bgcolor="#CCCCCC">NRO. DE CAJA:</td>';
-                $st.='<td bgcolor="#CCCCCC">ML:</td>';
-                $st.='<td bgcolor="#CCCCCC">NRO. DE PIEZAS</td>';
-                $st.='<td bgcolor="#CCCCCC">ELABORADO POR:</td>';
-                $st.='</tr>';
-                $st.='<tr>';
-                //$st.='<td>' . $value->exp_nrocaj . '</td>';
-                $st.='<td height="20">' . $i . '</td>';
-                $st.='<td>' . $value->exp_nroejem . '</td>';
-                $st.='<td>' . $value->exp_tomovol . '</td>';
-                $st.='<td>' . $usuario->obtenerNombre($_SESSION['USU_ID']) . '</td>';
-                $st.='</tr>';
-                $st.='</table>';
+             
 
                 $st.='</td>';
                 $st.='</tr>';

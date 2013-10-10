@@ -1,3 +1,6 @@
+<link href="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.css" rel="stylesheet" type="text/css" />
+<script languaje="javascript" type="text/javascript" src="<?php echo $PATH_WEB ?>/js/javascript/msgbox/jquery.msgbox.js"></script>
+
 <div class="titulo">ETIQUETADO DE EXPEDIENTES</div>
 <p><table id="flex1" style="display:none"></table></p>
 <p><table id="flex2" style="display:none"></table></p>
@@ -5,12 +8,12 @@
 <form id="formImprimir" name="formImprimir" method="post" target="_blank" 
       action="<?php echo $PATH_DOMAIN ?>/etiqexpediente/<?php echo $PATH_EVENT ?>/">
     <input name="ete_id" id="ete_id" type="hidden" value="<?php echo $ete_id; ?>" />
-    <input name="exp_id" id="exp_id" type="text" value="<?php echo $exp_id; ?>" />
+    <input name="exp_id" id="exp_id" type="hidden" value="<?php echo $exp_id; ?>" />
     <input name="serie" id="idcom" type="hidden" value="" />
     <input name="exp_ids" id="exp_ids" type="hidden" value="" />
     <input name="tipo" id="tipo" type="hidden" value="" />
-    <input name="nro_inicial" id="nro_inicial" type="text" value="" />
-    <input name="nro_final" id="nro_final" type="text" value="0" />
+    <input name="nro_inicial" id="nro_inicial" type="hidden" value="" />
+    <input name="nro_final" id="nro_final" type="hidden" value="0" />
 </form>
 
 <script type="text/javascript">
@@ -138,7 +141,7 @@
                     }
                 });
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }
         }else if (com=='Borrar'){
             if($('.trSelected div',grid).html()){
@@ -157,7 +160,7 @@
                     }
                 });
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }            
         }else if (com=='Borrar Todo'){
             if($('.trSelected div',grid).html()){        
@@ -176,7 +179,7 @@
                     });
                 }
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }             
         }else if (com=='Marbetes'){
             if($('.trSelected div',grid).html()){ 
@@ -198,31 +201,37 @@
                     }
                 });
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }            
         }else if (com=='Cajas'){
         
             if($('.trSelected div',grid).html()){ 
+                
                 $('#tipo').val('cajas');
                 $("#exp_id").val($('.trSelected div',grid).html());
-                
+               
+               
+               
                 $.ajax({                    
                     url: "<?php echo $PATH_DOMAIN ?>/etiqexpediente/getNroInicial/",
                     type: "POST",
-                    data: 'tipo=CAJA&Exp_id='+$('#exp_id').val(),
+                   data: 'Tipo='+$('#tipo').val()+ '&Exp_id='+$('#exp_id').val(),
                     dataType: "json",
                     success: function(datos){
+             
                         if(datos!=''){
                             jQuery.each(datos, function(i,item){
                                 $('#nro_ini').val(datos.nro_inicial);
                                 $('#nro_fin').val(datos.nro_final);                                					    	   
                             });                            
                         }
-                        $('#dialogNro').dialog('open');
+                        
                     }
                 });
+                
+                $('#dialogNro').dialog('open');
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }  
         }else if (com=='Caratulas'){
             if($('.trSelected div',grid).html()){ 
@@ -230,7 +239,7 @@
                 //$('#formImprimir').submit();                
                 window.location.href="<?php echo $PATH_DOMAIN ?>/etiqexpediente/viewCaratulas2/"+$('.trSelected div',grid).html()+"/";
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }            
         }else if (com=='Archivos'){
             if($('.trSelected div',grid).html()){        
@@ -253,7 +262,7 @@
                     }
                 });
             }else{
-                alert("Seleccione un registro");
+                $.msgbox("Seleccione un registro");
             }            
         }else{
             $('#idcom').val(com);
@@ -311,7 +320,7 @@
                         if($('#nro_fin0').val()){
                             $('#nro_final').val($('#nro_fin0').val());
                             if($('#nro_fin0').val()<$('#nro_ini0').val()){
-                                alert("El número final no puede ser menor que el inicial");
+                                $.msgbox("El número final no puede ser menor que el inicial");
                             }else{
                                 $('#formImprimir').submit();
                                 $(this).dialog('close');
@@ -322,7 +331,7 @@
                         }
                     
                      }else{
-                        alert("Ingrese el numero correlativo...");
+                        $.msgbox("Ingrese el numero correlativo...");
                     }
                 }
             },
@@ -343,7 +352,7 @@
                         if($('#nro_fin').val()){
                             $('#nro_final').val($('#nro_fin').val());
                             if($('#nro_fin').val()<$('#nro_ini').val()){
-                                alert("El número final no puede ser menor que el inicial");
+                                $.msgbox("El número final no puede ser menor que el inicial");
                             }else{
                                 $('#formImprimir').submit();
                                 $(this).dialog('close');
@@ -353,7 +362,7 @@
                           $(this).dialog('close');
                         }                    
                      }else{
-                        alert("Ingrese el numero correlativo...");
+                        $.msgbox("Ingrese el numero correlativo...");
                     }
                 }
             },
@@ -374,7 +383,7 @@
                     $('#formImprimir').submit();
                     $(this).dialog('close');
                     }else{
-                        alert("Ingrese el numero correlativo...");
+                        $.msgbox("Ingrese el numero correlativo...");
                     }
                     
                 }

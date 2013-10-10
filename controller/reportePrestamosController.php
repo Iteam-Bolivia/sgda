@@ -35,14 +35,24 @@ class reportePrestamosController Extends baseController {
 
     function verRpte() {
 $tipo_archivo=$_REQUEST['tipo'];
+
+    $estado=$_REQUEST['estadorpt'];
+
 $fecha_inicial=$_REQUEST['f_prestdesde'];
 $fecha_final=$_REQUEST['f_presthasta'];
-            $this->verRpte_serie($fecha_inicial,$fecha_final,$tipo_archivo);
+            $this->verRpte_serie($fecha_inicial,$fecha_final,$tipo_archivo,$estado);
     
     }
 
-    function verRpte_serie($fi,$ff,$tipo_archivo) {
+    function verRpte_serie($fi,$ff,$tipo_archivo,$estado) {
+       
 
+if($estado==""){
+    $where2="";
+}else{
+            $where2=" and spr_estado=".$estado;      
+}
+      
            $sql="SELECT
 tab_solprestamo.spr_id,
 tab_fondo.fon_cod,
@@ -94,7 +104,7 @@ INNER JOIN tab_unidad ON tab_unidad.uni_id = tab_series.uni_id
 INNER JOIN tab_fondo ON tab_fondo.fon_id = tab_unidad.fon_id
 INNER JOIN tab_sopfisico ON tab_sopfisico.sof_id = tab_archivo.sof_id
 WHERE
-tab_solprestamo.spr_fecent>='$fi' and  tab_solprestamo.spr_fecent<='$ff'";
+tab_solprestamo.spr_fecent>='$fi' and  tab_solprestamo.spr_fecent<='$ff' $where2";
        // $sql = "SELECT* FROM tab_solprestamo where spr_fecent>='$fi' and spr_fecent<='$ff'";
 //        
 //        //echo ($sql); die ();

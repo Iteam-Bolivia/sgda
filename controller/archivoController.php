@@ -524,11 +524,12 @@ class archivoController extends baseController {
         $this->archivo->setFil_cuerpo(strtoupper($_REQUEST['fil_cuerpo']));
         $this->archivo->setFil_balda(strtoupper($_REQUEST['fil_balda']));
         $this->archivo->setFil_tipoarch($_REQUEST['fil_tipoarch']);
-        $this->archivo->setFil_mrb($_REQUEST['fil_mrb']); 
         
-        if ($_REQUEST['fil_ori']) $this->archivo->setFil_mrb($_REQUEST['fil_ori']); 
-        if ($_REQUEST['fil_cop']) $this->archivo->setFil_mrb($_REQUEST['fil_cop']); 
-        if ($_REQUEST['fil_fot']) $this->archivo->setFil_mrb($_REQUEST['fil_fot']); 
+        $this->archivo->setFil_mrb($_REQUEST['fil_mrb']); 
+       // echo $_REQUEST['fil_mrb']; exit();
+        //if ($_REQUEST['fil_ori']) $this->archivo->setFil_mrb($_REQUEST['fil_ori']); 
+       // if ($_REQUEST['fil_cop']) $this->archivo->setFil_mrb($_REQUEST['fil_cop']); 
+        //if ($_REQUEST['fil_fot']) $this->archivo->setFil_mrb($_REQUEST['fil_fot']); 
                 
         $this->archivo->setFil_confidencialidad($_REQUEST ['fil_confidencialidad']);
         $this->archivo->setFil_obs(strtoupper(utf8_encode($_REQUEST ['fil_obs'])));        
