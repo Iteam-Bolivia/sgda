@@ -577,17 +577,9 @@ class etiqexpedienteController extends baseController {
         );
 
 
-
-
-$codigoaux='';
         foreach ($result as $value) {
             
-            
             $codigo = $value->codigo;
-            if ( $codigo == $codigoaux)
-            {}
-            else
-            {
             $fil_id = str_pad($value->fil_id, 10, "0", STR_PAD_LEFT);
             //  BAR CODE
             // CODE 39 + CHECKSUM
@@ -597,9 +589,7 @@ $codigoaux='';
             $pdf->write1DBarcode($fil_id, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
             $pdf->Ln();
-            }
-            
-            $codigoaux = $codigo;
+          
         }
 
         //Close and output PDF document
