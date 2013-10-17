@@ -608,7 +608,6 @@ class etiqexpedienteController extends baseController {
             'vpadding' => 'auto',
             'fgcolor' => array(0, 0, 0),
             'bgcolor' => false, //array(255,255,255),
-            'text' => true,
             'font' => 'helvetica',
             'fontsize' => 8,
             'stretchtext' => 8
@@ -628,31 +627,6 @@ class etiqexpedienteController extends baseController {
             $pdf->SetFont('helvetica', '', 11);
             $pdf->write1DBarcode($fil_id, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
-
-//            // BAR CODE 2
-//            // define barcode style
-//            $style2 = array(
-//                'position' => '',
-//                'align' => '',
-//                'stretch' => true,
-//                'fitwidth' => false,
-//                'cellfitalign' => '',
-//                'border' => true,
-//                'hpadding' => 'auto',
-//                'vpadding' => 'auto',
-//                'fgcolor' => array(0,0,128),
-//                'bgcolor' => array(255,255,128),
-//                'text' => true,
-//                'label' => $codigo,
-//                'font' => 'helvetica',
-//                'fontsize' => 8,
-//                'stretchtext' => 4
-//            );     
-//            // CODE 39 EXTENDED + CHECKSUM
-//            $pdf->Cell(0, 0, $codigo, 0, 1);
-//            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
-//            $pdf->write1DBarcode($codigo, 'C39E+', '', '', 120, 25, 0.4, $style2, 'N');
-            // New
             $pdf->Ln();
         }
 
