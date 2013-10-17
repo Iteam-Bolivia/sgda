@@ -468,6 +468,7 @@ class etiqexpedienteController extends baseController {
         $exp_id = $_REQUEST['exp_id'];
         $ini = $_REQUEST['nro_inicial'];
         $fin = $_REQUEST['nro_final'];
+      
         if ($fin == NULL) {
             $fin = $ini;
         }
@@ -476,49 +477,11 @@ class etiqexpedienteController extends baseController {
         // Aqui
         $tarchivo = new tab_archivo ();
 
-        $select = "SELECT
+        $select = "SELECT					
                 tab_archivo.fil_id,
-                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) AS fon_codigo,
-                tab_unidad.uni_descripcion,
-                tab_series.ser_categoria,
-                tab_expisadg.exp_titulo,
-                f.fon_cod,
-                tab_unidad.uni_cod,
-                tab_tipocorr.tco_codigo,
-                tab_series.ser_codigo,                
-                tab_expediente.exp_codigo,
-                tab_expediente.exp_id,
-                tab_cuerpos.cue_codigo,
-                tab_archivo.fil_codigo,
-                tab_cuerpos.cue_descripcion,
-                tab_archivo.fil_titulo,
-                tab_archivo.fil_subtitulo,
-                tab_archivo.fil_proc,
-                tab_archivo.fil_firma,
-                tab_archivo.fil_cargo,
-                tab_archivo.fil_nrofoj,
-                tab_archivo.fil_tomovol,
-                tab_archivo.fil_nroejem,
-                tab_archivo.fil_nrocaj,
-                tab_archivo.fil_sala,
-                tab_archivo.fil_estante,
-                tab_archivo.fil_cuerpo,
-                tab_archivo.fil_balda,
-                tab_archivo.fil_tipoarch,
-                tab_archivo.fil_mrb,
-                tab_archivo.fil_ori,
-                tab_archivo.fil_cop,
-                tab_archivo.fil_fot,
-                (CASE tab_exparchivo.exa_condicion 
-                                    WHEN '1' THEN 'DISPONIBLE' 
-                                    WHEN '2' THEN 'PRESTADO' END) AS disponibilidad,
-                (SELECT fil_nomoriginal FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_nomoriginal,
-                (SELECT fil_extension FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_extension,
-                (SELECT fil_tamano/1048576 FROM tab_archivo_digital WHERE tab_archivo_digital.fil_id=tab_archivo.fil_id AND tab_archivo_digital.fil_estado = '1' ) AS fil_tamano,
-                (SELECT fil_nur FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_nur,                
-                (SELECT fil_asunto FROM tab_doccorr WHERE tab_doccorr.fil_id=tab_archivo.fil_id AND tab_doccorr.dco_estado = '1' ) AS fil_asunto,                
-                tab_archivo.fil_obs";
-        $from = "FROM
+                (SELECT fon_codigo from tab_fondo WHERE fon_id=f.fon_par) ||'.'|| f.fon_cod||'.'||tab_unidad.uni_cod ||'.'|| tab_tipocorr.tco_codigo ||'.'||tab_series.ser_codigo||'.'||      
+                tab_expediente.exp_codigo||'.'||tab_cuerpos.cue_codigo||'.'||tab_archivo.fil_codigo as codigo
+        FROM
                 tab_fondo as f
                 INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
                 INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
@@ -541,8 +504,8 @@ class etiqexpedienteController extends baseController {
                 tab_exparchivo.exa_estado = 1 AND
                 tab_expusuario.eus_estado = 1 AND
                 tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
-                tab_expediente.exp_id = '$exp_id' ";
-        $sql = "$select $from ";
+                tab_expediente.exp_id ='$exp_id' ORDER BY 2";
+        $sql = "$select";
         $result = $tarchivo->dbSelectBySQL($sql); //print $sql;   
         // Include the main TCPDF library (search for installation path).
         require_once('tcpdf/tcpdf.php');
@@ -616,9 +579,15 @@ class etiqexpedienteController extends baseController {
 
 
 
-
+$codigoaux='';
         foreach ($result as $value) {
-            $codigo = $value->fon_cod . DELIMITER . $value->uni_cod . DELIMITER . $value->tco_codigo . DELIMITER . $value->ser_codigo . DELIMITER . $value->exp_codigo . DELIMITER . $value->cue_codigo . DELIMITER . $value->fil_codigo;
+            
+            
+            $codigo = $value->codigo;
+            if ( $codigo == $codigoaux)
+            {}
+            else
+            {
             $fil_id = str_pad($value->fil_id, 10, "0", STR_PAD_LEFT);
             //  BAR CODE
             // CODE 39 + CHECKSUM
@@ -628,6 +597,9 @@ class etiqexpedienteController extends baseController {
             $pdf->write1DBarcode($fil_id, 'C39', '', '', '', 18, 0.4, $style, 'N');
 
             $pdf->Ln();
+            }
+            
+            $codigoaux = $codigo;
         }
 
         //Close and output PDF document
