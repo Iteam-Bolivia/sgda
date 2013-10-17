@@ -25,6 +25,7 @@
     <input type="hidden" value="" name="fil_id_open" id="fil_id_open"  />
     <input type="hidden" value="" id="pass_open" name="pass_open" />
 </form>
+
 <script type="text/javascript">
 
     $(function() {
@@ -58,6 +59,7 @@
         }
 		
         $('.viewFicha').click(function(){
+           
             if(confirm("Mostrar ficha del documento?")){
                 window.location.href="<?php echo $PATH_DOMAIN ?>/archivo/viewFicha/"+$('#exp_id').val()+"/"+$(this).attr('tra')+"/"+$(this).attr('cue')+"/";
             }
@@ -148,14 +150,13 @@
 </script>
 <script languaje="javascript">
 function desple(str){ 
-    $("#grupo"+str).slideDown("fast");
+    $("#"+str).slideDown("fast");
    // $("#des"+str).html("<b>a</b>");
    document.getElementById("des"+str).innerHTML="<img src='<?php echo PATH_DOMAIN ?>/web/lib/32/arrow-up.png' title='Cerrar' border='0' width='30' onclick='cerrar("+str+")'/>";
 }
 function cerrar(str2){
- alert(str2)
-    $("#grupo"+str2).slideUp("fast");
+   $("#"+str2).css("display","none");
+   // $("#"+str2).slideUp("fast");
    document.getElementById("des"+str2).innerHTML="<img src='<?php echo PATH_DOMAIN ?>/web/lib/32/arrow-down.png' cue='"+str2+"' title='Desplegar' border='0' width='30' onclick='desple("+str2+")'/>";
-
 }
 </script>

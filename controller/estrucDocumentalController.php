@@ -291,7 +291,7 @@ class estrucDocumentalController extends baseController {
 
         $this->expediente = new expediente ();
         $this->expediente->setRequest2Object(VAR3);
-        $this->tree = $this->expediente->searchTree(VAR3);        
+        $this->tree = $this->expediente->searchTree(VAR3,VAR5);        
         $this->registry->template->tituloEstructura = $this->tituloEstructuraD;
 
 

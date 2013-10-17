@@ -7,7 +7,26 @@
     <input name="exa_id" id="exa_id" type="hidden" value="<?php echo $exa_id; ?>" />
     <input name="fil_id" id="fil_id" type="hidden" value="<?php echo $fil_id ?>">
     <input name="dco_id" id="dco_id" type="hidden" value="<?php echo $dco_id ?>">
-
+   <?php 
+         $v3=$exp_id;
+        
+          $exparchivo = new tab_exparchivo();
+       // $row = $this->exparchivo->dbSelectBySQL("select* from tab_exparchivo where exp_id=$var3 and cue_id=$var5 "); POR SI ACASO SI DECIDE CAMBIAR
+        $row = $exparchivo->dbSelectBySQL("select* from tab_exparchivo where exp_id=$v3");
+        $fil_id="";
+        
+        foreach ($row as $list){
+            $fil_id = $list->fil_id;  
+        }
+          $palclave = new palclave();
+       // $this->registry->template->pac_nombre = $palclave->listaPC();
+          if($fil_id==""){
+        $fil_descripcion = "";
+          }else{
+        $fil_descripcion = $palclave->listaPCFile($fil_id);
+          }
+   ?>
+    
     <table width="100%" border="0">
         <caption class="titulo">DESCRIPCIÓN DEL DOCUMENTO</caption>
     </table>
@@ -180,7 +199,7 @@
         <tr>
             <td width="166">Productor:</td>
             <td colspan="3"><input name="fil_proc" type="text"
-                                   id="fil_proc" maxlength="256" value="<?php echo $fil_proc; ?>" size="120" autocomplete="off"
+                                   id="fil_proc" maxlength="256" value="<?php if($fil_proc==""){echo "ADMINISTRADORA BOLIVIANA DE CARRETERAS (ABC)";}else{echo $fil_proc;} ?>" size="120" autocomplete="off"
                                    class="alphanumeric" title="Nro de ejemplares" /></td>
         </tr>
 
@@ -205,10 +224,10 @@
         
         <tr>
             <td width="166">Soporte Fisico:</td>
-            <td colspan="3"><select name="sof_id" id="sof_id">
-                    <option value="">(Seleccionar)</option>
+            <td colspan="3"><select name="sof_id" id="sof_id" class="required">
+                    <option value="" >(Seleccionar)</option>
                     <?php echo $sof_id ?>
-                </select>
+                </select><span class="error-requerid">*</span>
             </td>
         </tr>
 
@@ -226,7 +245,9 @@
             <td width="166">Nro.Ejemplares:</td>
             <td colspan="3"><input name="fil_nroejem" type="text"
                                    id="fil_nroejem" maxlength="32" value="<?php echo $fil_nroejem; ?>" size="40" autocomplete="off"
-                                   class="alphanumeric" title="Nro de ejemplares" /></td>
+                                   class="onlynumeric" title="Nro de ejemplares" />
+             <span class="error-requerid">*</span>
+            </td>
         </tr>
         
        <tr>
@@ -234,7 +255,9 @@
             <td colspan="3"><input name="fil_nrocaj" type="text"
                                    id="fil_nrocaj" maxlength="10" value="<?php echo $fil_nrocaj; ?>" 
                                    size="40" autocomplete="off"
-                                   class="onlynumeric" title="Nro de caja" /></td>
+                                   class="onlynumeric required" title="Nro de caja"  />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -242,18 +265,22 @@
             <td colspan="3"><input name="fil_sala" type="text"
                                    id="fil_sala" maxlength="16" value="<?php echo $fil_sala; ?>" 
                                    size="40" autocomplete="off"
-                                   class="alphanumeric" 
-                                   title="Sala donde se almacena el documento" /></td>
+                                   class="alphanumeric"
+                                   title="Sala donde se almacena el documento" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
             <td>Estante:</td>
             <td colspan="3">
                 <select name="fil_estante" id="fil_estante" 
-                    title="Estante donde se almacena el documento">
+                        title="Estante donde se almacena el documento" class="required">
                     <option value="" selected="selected">(seleccionar)</option>
                         <?php echo $fil_estante ?>
-                </select></td>
+                </select>
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -261,8 +288,10 @@
             <td colspan="3"><input name="fil_cuerpo" type="text"
                                    id="fil_cuerpo" maxlength="16" value="<?php echo $fil_cuerpo; ?>" 
                                    size="40" autocomplete="off"
-                                   class="alphanumeric" 
-                                   title="Cuerpo donde se almacena el documento" /></td>
+                                   class="alphanumeric required" 
+                                   title="Cuerpo donde se almacena el documento" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>
 
         <tr>
@@ -270,8 +299,10 @@
             <td colspan="3"><input name="fil_balda" type="text"
                                    id="fil_balda" maxlength="16" value="<?php echo $fil_balda; ?>" 
                                    size="40" autocomplete="off"
-                                   class="alphanumeric" 
-                                   title="Balda donde se almacena el documento" /></td>
+                                   class="alphanumeric required" 
+                                   title="Balda donde se almacena el documento" />
+            <span class="error-requerid">*</span>
+            </td>
         </tr>        
         
 
@@ -333,21 +364,21 @@
                         <input name="fil_ori" type="text"
                         id="fil_ori" maxlength="3" value="<?php echo $fil_ori; ?>" 
                         size="1" autocomplete="off"
-                        class="numeric" 
+                        class="numeric" onfocus='if(this.value==0){this.value=""}' onblur='if(this.value==""){this.value="0"}'
                         title="Nro. Documentos Originales" />                 
                                                    
                         Copia(s):
                         <input name="fil_cop" type="text"
                         id="fil_cop" maxlength="3" value="<?php echo $fil_cop ?>" 
                         size="1" autocomplete="off"
-                        class="numeric" 
+                        class="numeric" onfocus='if(this.value==0){this.value=""}' onblur='if(this.value==""){this.value="0"}'
                         title="Nro. Documentos Copia" />                 
                  
-                        Fotocopia(s):
+                        Duplicado(s):
                         <input name="fil_fot" type="text"
                         id="fil_fot" maxlength="3" value="<?php echo $fil_fot; ?>" 
                         size="1" autocomplete="off"
-                        class="numeric" 
+                        class="numeric" onfocus='if(this.value==0){this.value=""}' onblur='if(this.value==""){this.value="0"}'
                         title="Nro. Documentos Fotocopias" /> 
                   <span id="error"></span>                    
             </td>
@@ -360,7 +391,9 @@
                                    id="fil_descripcion" value="<?php echo $fil_descripcion; ?>"
                                    size="120" autocomplete="off" maxlength="255"
                                    class="" title="Descripci&oacute;n o Palabras clave" onblur="caracteres(this.value)" />
-<!--                (<input type="checkbox" name="pac_nombre" value="ON"/> Guardar)-->
+               
+                <!--             
+(<input type="checkbox" name="pac_nombre" value="ON"/> Guardar)-->
                 <br><a href="javascript:void(0)" title="Ver palabras claves" id="verPC">(+ Ver)</a>
             </td>
         </tr>
@@ -462,11 +495,11 @@
        /* $("#btnCargar").click(function(){
             $("#accion").val('cargar');
           $("#formA").submit();
-        });
+        }); */
         $("#btnSub2").click(function(){
             $("#accion").val('cargarnuevo');
             $("#formA").submit();
-        });  */     
+        });      
         $("#btnDigitalizar").click(function(){
             $("#accion").val('digitalizar');
             $("#formA").submit();
@@ -480,9 +513,16 @@
             $("#idPC").toggle();
         });
 
-        $("#palabra").click(function(){
-            $("#fil_descripcion").val($("#fil_descripcion").val() + " " + $(this).val());
-        });
+        $("#palabra").dblclick(function(){
+            
+        if($("#fil_descripcion").val()==""){
+            $("#fil_descripcion").val($(this).val()+"; ");
+        }else{
+            //$("#fil_descripcion").val( + $(this).val()); 
+            document.getElementById("fil_descripcion").value+=$(this).val()+"; ";
+        }
+            
+             });
 
 
         $("#fil_nur").change(function(){
@@ -600,7 +640,6 @@
                 $("#error").html("");
                 $("#fil_nroejem").css("border","1px solid #E3E2E2");
                 $("#fil_nroejem").css("background","#ffffff");
-             
               }
               
         })

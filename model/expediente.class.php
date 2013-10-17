@@ -371,7 +371,7 @@ tab_expediente.exp_id  = $id";
         return $num;
     }
 
-    function searchTree($exp_id) {
+    function searchTree($exp_id,$cue_id2) {
         $tree = "";
         $this->usuario = new tab_usuario ();
         $this->tramite = new tab_tramite ();
@@ -420,11 +420,21 @@ tab_expediente.exp_id  = $id";
                         $tree .= "<ul di='" . $un->tra_id . "aa'>";
                         foreach ($rowc as $unc) {
                             $tree .= "        <li>"
-                                    ."<a href='javascript:void(0)' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "' ><span id='des$unc->cue_id'>"
+                                    ."<a href='javascript:void(0)' onclick='return false;' id='" . $unc->cue_id . "-" . $un->tra_id . "' cue_id='" . $unc->cue_id . "' tra_id='" . $un->tra_id . "'";
+                          if($cue_id2==$unc->cue_id){
+                            $tree.=" style='color:green;font-weight:bold' ";
+                          }
+                            $tree.="><span id='des$unc->cue_id'>"
                                     . "<img src='" . PATH_DOMAIN . "/web/lib/32/arrow-down.png' tra='$un->tra_id' cue='$unc->cue_id' title='Desplegar' border='0' width='30' onclick='desple($unc->cue_id)'/></span>"
-                                    . "<img src='" . PATH_DOMAIN . "/web/lib/32/document-add.png' tra='$un->tra_id' cue='$unc->cue_id' class='addFile icon' title='Adicionar documento'/>"
+                                    . "<img src='" . PATH_DOMAIN . "/web/lib/32/document-add.png' tra='$un->tra_id' cue='$unc->cue_id' class='addFile icon' title='Adicionar documento' />"
                                     . $unc->cue_descripcion . "</a>";
-                            $tree .= "<div style='display:none' id='grupo$unc->cue_id'><ul id='" . $unc->cue_id . "-" . $un->tra_id . "x'>";
+                            $tree .= "<div id='$unc->cue_id'";
+                            if($cue_id2==$unc->cue_id){
+                            $tree .="style='display:block'>";
+                            }else{
+                            $tree .="style='display:none'>";
+                            }
+                            $tree .="<ul id='" . $unc->cue_id . "-" . $un->tra_id . "x'>";
                             $sql = "SELECT
                             usu.uni_id,
                             usu.usu_id,
@@ -463,8 +473,9 @@ tab_expediente.exp_id  = $id";
                                             $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-delete.png' file='$una->fil_id' class='deleteFile icon' title='Borrar Documento'/>";
                                         }
                                         $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/b_view.png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='view icon' title='Ver Datos Documento' />";
+                                        if($una->fil_extension<>""){
                                         $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-". $una->fil_extension .".png' file='$una->fil_id' restric='$una->fil_confidencialidad' class='viewFile icon' title='Ver Documento Digital'   />";                                        
-                                        //$verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-view.png' file='$una->fil_id' class='viewFicha icon' title='Ver Ficha de Documento'/>";
+                                        }//$verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/document-view.png' file='$una->fil_id' class='viewFicha icon' title='Ver Ficha de Documento'/>";
 
 //                                        if ($una->usu_id == $_SESSION ['USU_ID']) {
 //                                            $verarch .= "<img src='" . PATH_DOMAIN . "/web/lib/32/print.png' file='$una->fil_id' class='printFile icon' title='Imprimir Marbete'/>";

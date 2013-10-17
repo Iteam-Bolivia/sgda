@@ -59,7 +59,7 @@ class palclave extends tab_palclave {
                     FROM
                     tab_palclave
                     WHERE
-                    pac_estado =  1 $where order by pac_nombre";
+                    pac_estado =  1 $where";
         $row = $palclave->dbSelectBySQL($sql);
         foreach ($row as $val) {
             $cadena .= ' ' .$val->pac_nombre . SEPARATOR_SEARCH;

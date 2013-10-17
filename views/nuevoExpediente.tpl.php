@@ -119,7 +119,7 @@
                     <select name="exp_nivdes" id="exp_nivdes" class="required">
                         <?php echo $exp_nivdes; ?>
                     </select> 
-                   Tiene documentos<input type="checkbox" id="validarexpediente"  onclick="llenar()">
+                 
                 </td>
             </tr>            
 
@@ -442,7 +442,7 @@
         
         <tr>
             <td width="166">Soporte Fisico:</td>
-            <td colspan="3"><select name="sof_id" id="sof_id">
+            <td colspan="3"><select name="sof_id" id="sof_id" >
                     <option value="">(Seleccionar)</option>
                     <?php echo $sof_id ?>
                 </select>
@@ -526,22 +526,22 @@
                 <input name="exp_ori" type="text"
                 id="exp_ori" maxlength="3" value="<?php echo $exp_ori; ?>" 
                 size="1" autocomplete="off"
-                class="numeric" 
-                title="Nro. Documentos Originales" onfocus="if(this.value==0){this.value='';}" />                 
+                class="numeric" onfocus="if(this.value==0){this.value='';}" onblur="if(this.value==''){this.value=0}"
+                title="Nro. Documentos Originales"  />                 
                                   
                 Copia(s):
                 <input name="exp_cop" type="text"
                 id="exp_cop" maxlength="3" value="<?php echo $exp_cop; ?>" 
                 size="1" autocomplete="off"
-                class="numeric" 
-                title="Nro. Documentos Copia" onfocus="if(this.value==0){this.value='';}"  />                 
+                class="numeric" onfocus="if(this.value==0){this.value='';}" onblur="if(this.value==''){this.value=0}"
+                title="Nro. Documentos Copia"   />                 
                  
                 Fotocopia(s):
                 <input name="exp_fot" type="text"
                 id="exp_fot" maxlength="3" value="<?php echo $exp_fot; ?>" 
                 size="1" autocomplete="off"
-                class="numeric" 
-                title="Nro. Documentos Fotocopias" onfocus="if(this.value==0){this.value='';}" /> 
+                class="numeric" onfocus="if(this.value==0){this.value='';}" onblur="if(this.value==''){this.value=0}"
+                title="Nro. Documentos Fotocopias"  /> 
                 <span id="error"></span>                  
             </td>
         </tr>        
@@ -609,9 +609,29 @@
 
 </form>
 
+
 <script type="text/javascript">
 
+
     jQuery(document).ready(function($) {
+        var exp_codigoSigla="";
+   
+        var exp_codigoSigla="<?php echo $exp_codigoSigla  ?>";
+         // alert(exp_codigoSigla)
+        if(exp_codigoSigla=="I"){
+        
+                    // alert("marcado")
+            
+             $("#div8 table").css("display","block");
+             $("#div8").toggle(500);$("#div8").toggle(500)
+        }else if(exp_codigoSigla=="II"){
+            
+               $("#div8").toggle(0)//alert("no marcado")
+             $("#div8 table").css("display","none");     
+ 
+        }  
+    
+ 
         $("#cancelar").click(function(){
             location.href="<?php echo $PATH_DOMAIN ?>/nuevoExpediente/";
         });
@@ -635,10 +655,16 @@
             $("#idPC").toggle();
         });
         
-        $("#palabra").click(function(){
-            $("#exp_descripcion").val($(this).val());
-        });
-        
+           $("#palabra").dblclick(function(){
+            
+        if($("#exp_descripcion").val()==""){
+            $("#exp_descripcion").val($(this).val()+"; ");
+        }else{
+            //$("#fil_descripcion").val( + $(this).val()); 
+            document.getElementById("exp_descripcion").value+=$(this).val()+"; ";
+        }
+            
+             });
         $("#ser_id").change(function(){
             if($("#ser_id").val()==""){
             }else{
@@ -784,6 +810,10 @@ exp_fot*/
     
     
 </script>
+<?php
+
+?>
+
 <script languaje="javascript">
     function caracteres(s){
         //var mycars = new Array();
@@ -804,19 +834,5 @@ exp_fot*/
         
     }
     
-    function llenar(){
-        if(document.getElementById("validarexpediente").checked==false){
-                    $("#div8").toggle(500)// alert("marcado")
-            
-             $("#div8 table").css("display","block");
-        }else{
-            
-               $("#div8").toggle(0)//alert("no marcado")
-             $("#div8 table").css("display","none");     
- 
-        }
-        
-   
-        
-    }
+
 </script>

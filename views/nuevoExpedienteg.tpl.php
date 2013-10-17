@@ -42,11 +42,11 @@
         usepager: true,
         title:"LISTA DE SERIES",
         useRp: true,
-        rp: 5,
+        rp: 10,
         minimize: <?php echo $GRID_SW ?>,
         showTableToggleBtn: true,
         width: "100%",
-        height: 120,
+        height: 200,
         autoload: true
     });
 
@@ -109,7 +109,13 @@
     function test2(com,grid)
     {
         if (com=='Adicionar')
-        {
+        {  var serid="";
+            serid="<?php echo $_SESSION['SER_ID'] ?>";
+            
+            if(serid=="0"||serid==""){
+                $.msgbox("Seleccioné una serie");
+                return false;
+            }
             $.post("<?php echo $PATH_DOMAIN ?>/nuevoExpediente/verifSeries/", {rand:Math.random()}, function(data){
                 if(data != 'OK'){
                     $.msgbox("No puede adicionar expedientes porque no tiene permiso para ninguna Serie.");

@@ -126,8 +126,13 @@ class expcampo extends tab_expcampo {
                             ORDER BY
                             tab_expcampo.ecp_orden";
                     $row5 = $this->expcampo->dbselectBySQL($sql);
-                    if($row5[0]->ecv_valor){
-                        $valor = $row5[0]->ecl_id;
+                    foreach($row5 as $list){
+                       $ecv_valor=$list->ecv_valor;
+                       $ecl_id=$list->ecl_id;
+                    }
+                    error_reporting(0);
+                    if($ecv_valor){
+                        $valor = $ecl_id;
                         if ($row5[0]->ecl_id == $val2->ecl_id)
                             $option .= $val2->ecl_valor;
                     }else{
@@ -558,9 +563,12 @@ class expcampo extends tab_expcampo {
                             ORDER BY
                             tab_expcampo.ecp_orden";
                     $row5 = $this->expcampo->dbselectBySQL($sql);
-                    $valor = $row5[0]->ecl_id;
+                   // $valor = $row5[0]->ecl_id;
+                    foreach($row5 as $list){
+                       $valor=$list->ecl_id;
+                    }
 
-                    if ($row5[0]->ecl_id == $val2->ecl_id)
+                    if ($valor == $val2->ecl_id)
                         $option .="<option value='" . $val2->ecl_id . "' selected>" . $val2->ecl_valor . "</option>";
                     else
                         $option .="<option value='" . $val2->ecl_id . "'>" . $val2->ecl_valor . "</option>";

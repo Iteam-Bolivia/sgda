@@ -40,7 +40,7 @@ class nuevoExpedienteController Extends baseController {
     }
 
     function add() {
-
+ 
 	//$_SESSION ['SER_ID'] = 1;
         $usuario = new usuario();
         $adm = $usuario->esAdm();
@@ -50,8 +50,10 @@ class nuevoExpedienteController Extends baseController {
         $this->registry->template->series = $this->series->obtenerSelectDefault($_SESSION['USU_ID'], $_SESSION['SER_ID']);
         if ($_SESSION['SER_ID']){
             $this->registry->template->exp_codigo = $this->series->obtenerCodigoSerie($_SESSION['SER_ID']);
+            $this->registry->template->exp_codigoSigla = $this->series->validarCodigoSerie($_SESSION['SER_ID']);
         }else{$this->registry->template->exp_codigo = "";
             $this->registry->template->exp_codigo = "";
+            $this->registry->template->exp_codigoSigla="";
         }        
         
         $sopfisico = new sopfisico();
@@ -471,6 +473,7 @@ class nuevoExpedienteController Extends baseController {
         $this->registry->template->PATH_EVENT = "update";
         $this->registry->template->GRID_SW = "true";
         $this->registry->template->PATH_J = "jquery-1.4.1";
+         $this->registry->template->exp_codigoSigla=$this->series->validarCodigoSerie($ser_id);
         $this->menu = new menu();
         $this->liMenu = $this->menu->imprimirMenu(VAR1, $_SESSION['USU_ID']);
         $this->registry->template->men_titulo = $this->liMenu;

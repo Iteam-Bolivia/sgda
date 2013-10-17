@@ -526,7 +526,33 @@ class series extends tab_series {
         }
         return $option;
     }
-
+function validarCodigoSerie($ser_id){
+      $series = new Tab_series();
+        $ser_cod = "";
+        $rows = "";
+        $sql = "SELECT
+                tab_fondo.fon_cod,
+                tab_unidad.uni_cod,
+                tab_tipocorr.tco_codigo,
+                tab_series.ser_codigo
+                FROM
+                tab_fondo
+                INNER JOIN tab_unidad ON tab_fondo.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                WHERE tab_fondo.fon_estado = 1
+                AND tab_unidad.uni_estado = 1
+                AND tab_tipocorr.tco_estado = 1
+                AND tab_series.ser_estado = 1 
+                AND tab_series.ser_id = '$ser_id' ";
+        
+        $rows = $series->dbselectBySQL($sql);
+        foreach($rows as $listt){
+           $tco_codigo=$listt->tco_codigo;
+        }
+        
+    return $tco_codigo;
+}
     function obtenerCodigoSerie($ser_id) {
         $series = new Tab_series();
         $ser_cod = "";

@@ -330,8 +330,11 @@ class prestamoslinea extends tab_archivo {
                 $json .= ",'<img src=\"" . PATH_DOMAIN . "/web/lib/32/b_view.png\" file=\"$un->fil_id\" valueId=\"" . $un->fil_id . "\" restric=\"" . $un->fil_confidencialidad . "\" class=\"viewFileP icon\" />'";
             } else {
                 //$json .= ",'<img src=\"" . PATH_DOMAIN . "/web/lib/32/b_view.png\" file=\"$un->fil_id\" valueId=\"" . $un->fil_id . "\" restric=\"" . $un->fil_confidencialidad . "\" class=\"viewFile icon\" />'";
-                $json .= ",'<img src=\"" . PATH_DOMAIN . "/web/lib/32/document-$un->fil_extension.png\" file=\"$un->fil_id\" valueId=\"" . $un->fil_id . "\" restric=\"" . $un->fil_confidencialidad . "\" class=\"viewFile icon\" />'";
-                ///web/lib/32/document-". $una->fil_extension .".png'
+               
+                $json .= ",'<img src=\"" . PATH_DOMAIN . "/web/lib/32/document-$un->fil_extension.png\" file=\"$un->fil_id\" valueId=\"" . $un->fil_id . "\" restric=\"" . $un->fil_confidencialidad . "\" class=\"viewFile icon\"  />'";
+                
+
+///web/lib/32/document-". $una->fil_extension .".png'
             }
 
             if ($un->fil_confidencialidad == 3) {

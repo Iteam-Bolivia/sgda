@@ -19,10 +19,10 @@ class archivoController extends baseController {
     }
 
     function addArchivo($seccion) {
+        
         $exp_id = VAR3;
         $tra_id = VAR4;
         $cue_id = VAR5;
-        
         // Descripción expediente
         $exp = new expediente ();
         if ($seccion == "estrucDocumental") {
@@ -93,11 +93,11 @@ class archivoController extends baseController {
         $this->registry->template->fil_ori = "0";        
         $this->registry->template->fil_cop = "0";
         $this->registry->template->fil_fot = "0";
-        
-        
-        $this->registry->template->fil_descripcion = "";
-        
-        //palabras clave
+               // Tab_archivo
+              $var3 = VAR3;
+              $var5 = VAR5;
+        $this->exparchivo = new tab_exparchivo();
+
         $palclave = new palclave();
         $this->registry->template->pac_nombre = $palclave->listaPC();
         $arc = new archivo ();
@@ -120,7 +120,6 @@ class archivoController extends baseController {
         $this->llenaDatos(VAR3);        
         $this->registry->template->show('regarchivo.tpl');
     }
-
     function addArchivo2($seccion) {
         
         $exp_id = $_REQUEST ["exp_id"];
@@ -474,7 +473,7 @@ class archivoController extends baseController {
                 
                 $this->saveExpArchivo($fil_id, $exp_id, $tra_id, $cue_id);
                 if ($_REQUEST ['accion'] == 'cargar') {
-                    header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/");
+                    header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/$cue_id/");
                 } else {
                     if ($_REQUEST ['accion'] == 'cargarnuevo') {
                         $this->addArchivo2("estrucDocumental");
@@ -483,7 +482,7 @@ class archivoController extends baseController {
                     }
                 }
             } else {
-                header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/");
+                header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/$cue_id/");
             }
         }
         
@@ -494,6 +493,8 @@ class archivoController extends baseController {
     
     function saveArchivo() {
         //inserta un archivo
+ 
+          
         $this->archivo = new tab_archivo ();
         $this->archivo->setRequest2Object($_REQUEST);
         $this->archivo->setFil_id('');
@@ -515,8 +516,8 @@ class archivoController extends baseController {
         $this->archivo->setFil_firma(strtoupper(utf8_encode($_REQUEST['fil_firma'])));
         $this->archivo->setFil_cargo(strtoupper(utf8_encode($_REQUEST['fil_cargo'])));
         $this->archivo->setSof_id($_REQUEST['sof_id']);
-        $this->archivo->setFil_nrofoj(strtoupper($_REQUEST['fil_nrofoj']));
-        $this->archivo->setFil_tomovol(strtoupper($_REQUEST['fil_tomovol']));
+        $this->archivo->setFil_nrofoj($_REQUEST['fil_nrofoj']);
+        $this->archivo->setFil_tomovol($_REQUEST['fil_tomovol']);
         $this->archivo->setFil_nroejem(strtoupper($_REQUEST['fil_nroejem']));
         $this->archivo->setFil_nrocaj(strtoupper($_REQUEST['fil_nrocaj']));
         $this->archivo->setFil_sala(strtoupper($_REQUEST['fil_sala']));
@@ -581,7 +582,7 @@ class archivoController extends baseController {
         $exp_id = VAR3;
         $fil_id = VAR4;
         $seccion = VAR5;
-        
+       
         // Find ser_id
         $expediente = new tab_expediente ();
         $tab_expediente = $expediente->dbselectById($exp_id);
@@ -702,8 +703,6 @@ class archivoController extends baseController {
             $this->registry->template->PATH_EVENT = "update_saveReg";
             $this->registry->template->linkTree = $exp->linkTreeReg($exp_id, $exa_row->tra_id, $exa_row->cue_id);
         }
-        
-        
         $this->menu = new menu ();
         $liMenu = $this->menu->imprimirMenu($seccion, $_SESSION ['USU_ID']);
         $this->registry->template->men_titulo = $liMenu;
@@ -716,12 +715,11 @@ class archivoController extends baseController {
         $this->llenaDatos(VAR3);
         $this->registry->template->show('regarchivo.tpl');
     }
-
-    
     // Luego del View
     // Update despues del View
     function update_save() {
         //obtenemos los datos del expediente
+     
         $exp_id = $_REQUEST ["exp_id"];
         $tra_id = $_REQUEST ["tra_id"];
         $cue_id = $_REQUEST ["cue_id"];
@@ -767,6 +765,7 @@ class archivoController extends baseController {
             $this->palclave = new tab_palclave();
             $pac_nombre = trim($_REQUEST['fil_descripcion']);
             $array = explode(SEPARATOR_SEARCH, $pac_nombre);
+            
             for($j=0;$j<count($array);$j++){
                 if ($array[$j]!='') {
                     $sql = "select pac_id from tab_palclave where pac_estado = 1 AND fil_id='$fil_id' AND pac_nombre='" . trim($array[$j]) . "'";
@@ -780,7 +779,8 @@ class archivoController extends baseController {
                     }
                 }
             }
-        }        
+            
+        }   
 
 
                
@@ -925,12 +925,12 @@ class archivoController extends baseController {
                 if ($_REQUEST ['accion'] == 'cargar') {
                     //Header ( "Location: " . PATH_DOMAIN . "/archivo/cargar/$exp_id/$fil_id/" . VAR3 . "/" );
 
-                    header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/");
+                    header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/$cue_id/");
                 } else {
                     Header("Location: " . PATH_DOMAIN . "/archivo/digitalizar/$exp_id/$fil_id/" . VAR3 . "/");
                 }
             } else {
-                header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/");
+                header("location:" . PATH_DOMAIN . "/estrucDocumental/viewTree/" . $exp_id . "/" . $msm_guardado_archivo . "/$cue_id/");
             }
         }
         
@@ -1419,6 +1419,7 @@ class archivoController extends baseController {
                 tab_cuerpos.cue_codigo,
                 tab_archivo.fil_codigo,
                 tab_cuerpos.cue_descripcion,
+                tab_archivo.sof_id,
                 tab_archivo.fil_titulo,
                 tab_archivo.fil_subtitulo,
                 tab_archivo.fil_proc,
@@ -1516,6 +1517,9 @@ class archivoController extends baseController {
         $cadena .= '</span>';
         $cadena .= '</td></tr>';
         foreach ($result as $fila) {
+            $sop_fisico=new tab_sopfisico();
+            $nombresopf=$sop_fisico->dbselectByField("sof_id", $fila->sof_id);
+            $nombresopf=$nombresopf[0];
             $cadena .= '<tr><td align="left">Código: ' . $fila->fon_cod . DELIMITER . $fila->uni_cod . DELIMITER . $fila->tco_codigo . DELIMITER . $fila->ser_codigo . DELIMITER . $fila->exp_codigo . DELIMITER . $fila->cue_codigo .  DELIMITER . $fila->fil_codigo .  '</td></tr>';
             $cadena .= '<tr><td align="left">Fondo: ' . $fila->fon_codigo  . '</td></tr>';
             $cadena .= '<tr><td align="left">Sección: ' . $fila->uni_descripcion . '</td></tr>';
@@ -1525,8 +1529,9 @@ class archivoController extends baseController {
             $cadena .= '<tr><td align="left">Título: ' . $fila->fil_titulo . '</td></tr>';
             $cadena .= '<tr><td align="left">Subtítulo: ' . $fila->fil_subtitulo . '</td></tr>';
             $cadena .= '<tr><td align="left">Procedencia: ' . $fila->fil_proc . '</td></tr>';
-            $cadena .= '<tr><td align="left">Firma: ' . $fila->fil_firma . '</td></tr>';
+            $cadena .= '<tr><td align="left">Responsable: ' . $fila->fil_firma . '</td></tr>';
             $cadena .= '<tr><td align="left">Cargo: ' . $fila->fil_cargo . '</td></tr>';
+            $cadena .= '<tr><td align="left">Soporte fisico: ' . $nombresopf->sof_nombre. '</td></tr>';
             $cadena .= '<tr><td align="left">Nro. Fojas: ' . $fila->fil_nrofoj . '</td></tr>';
             $cadena .= '<tr><td align="left">Tomos (Vols): ' . $fila->fil_tomovol . '</td></tr>';
             $cadena .= '<tr><td align="left">Nro. Ejemplares: ' . $fila->fil_nroejem . '</td></tr>';
@@ -1540,7 +1545,7 @@ class archivoController extends baseController {
             $cadena .= '<tr><td align="left">Estado Doc.: ' . $fila->fil_mrb . '</td></tr>';
             $cadena .= '<tr><td align="left">Nro. Originales: ' . $fila->fil_ori . '</td></tr>';
             $cadena .= '<tr><td align="left">Nro. Copias: ' . $fila->fil_cop . '</td></tr>';
-            $cadena .= '<tr><td align="left">Nro. Fotocopias: ' . $fila->fil_fot . '</td></tr>';
+            $cadena .= '<tr><td align="left">Nro. Duplicados: ' . $fila->fil_fot . '</td></tr>';
             
             $cadena .= '<tr><td align="left">Disponibilidad: ' . $fila->disponibilidad . '</td></tr>';
             $cadena .= '<tr><td align="left">Archivo Digital: ' . $fila->fil_nomoriginal . '</td></tr>';

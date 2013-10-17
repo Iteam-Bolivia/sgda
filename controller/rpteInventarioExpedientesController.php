@@ -30,6 +30,7 @@ class rpteInventarioExpedientesController Extends baseController {
     function verRpte() {
 
         $filtro_serie = $_REQUEST["filtro_serie"];
+        
        // echo $filtro_serie;exit();
         $where = "";
         /*bloque temporal no entiendo
