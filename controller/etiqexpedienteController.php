@@ -407,14 +407,32 @@ class etiqexpedienteController extends baseController {
                     $res['nro_inicial'] = 0;
             }
             // Maximo
-            $sql = "SELECT MAX(tab_archivo.fil_nro) as maximo
-                FROM
-                tab_expediente
+            $sql = "SELECT					
+               count(tab_archivo.fil_id) as maximo
+        FROM
+                tab_fondo as f
+                INNER JOIN tab_unidad ON f.fon_id = tab_unidad.fon_id
+                INNER JOIN tab_series ON tab_unidad.uni_id = tab_series.uni_id
+                INNER JOIN tab_tipocorr ON tab_tipocorr.tco_id = tab_series.tco_id
+                INNER JOIN tab_expediente ON tab_series.ser_id = tab_expediente.ser_id
                 INNER JOIN tab_exparchivo ON tab_expediente.exp_id = tab_exparchivo.exp_id
                 INNER JOIN tab_archivo ON tab_archivo.fil_id = tab_exparchivo.fil_id
-		WHERE 
-                tab_expediente.exp_estado = '1' AND
-                tab_expediente.exp_id =  '$exp_id' ";
+                INNER JOIN tab_expisadg ON tab_expediente.exp_id = tab_expisadg.exp_id
+                INNER JOIN tab_expusuario ON tab_expediente.exp_id = tab_expusuario.exp_id
+                INNER JOIN tab_cuerpos ON tab_cuerpos.cue_id = tab_exparchivo.cue_id
+                INNER JOIN tab_tramitecuerpos ON tab_cuerpos.cue_id = tab_tramitecuerpos.cue_id
+                INNER JOIN tab_tramite ON tab_tramite.tra_id = tab_tramitecuerpos.tra_id
+                WHERE
+                f.fon_estado = 1 AND
+                tab_unidad.uni_estado = 1 AND
+                tab_tipocorr.tco_estado = 1 AND
+                tab_series.ser_estado = 1 AND
+                tab_expediente.exp_estado = 1 AND
+                tab_archivo.fil_estado = 1 AND
+                tab_exparchivo.exa_estado = 1 AND
+                tab_expusuario.eus_estado = 1 AND
+                tab_expusuario.usu_id=" . $_SESSION['USU_ID'] . " AND
+                tab_expediente.exp_id=  '$exp_id' ";
             //$etiquetas = new etiquetas();
             $result = $etiquetas->dbSelectBySQL($sql);
             foreach ($result as $row) {
